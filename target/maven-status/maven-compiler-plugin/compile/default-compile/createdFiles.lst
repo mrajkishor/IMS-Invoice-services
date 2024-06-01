@@ -1,0 +1,5 @@
+com\ims\invoice\UserHandler.class
+com\ims\invoice\HistoryHandler.class
+com\ims\invoice\InvoiceHandler.class
+com\ims\invoice\AuthHandler.class
+com\ims\invoice\ShopHandler.class
