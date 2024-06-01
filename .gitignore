@@ -1,0 +1,56 @@
+# Ignore Maven build directory
+/target/
+
+# Ignore dependency directories
+/.gradle/
+/.gradle/
+/.mvn/
+/node_modules/
+/lib/
+
+# Ignore temporary files
+*.log
+*.tmp
+*.out
+*.class
+
+# Ignore IntelliJ IDEA project files
+/.idea/
+/*.iml
+
+# Ignore Eclipse project files
+/.project
+/.classpath
+/.settings/
+
+# Ignore NetBeans project files
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Ignore VS Code project files
+/.vscode/
+
+# Ignore Mac OS system files
+.DS_Store
+
+# Ignore Windows system files
+Thumbs.db
+desktop.ini
+
+# Ignore AWS SAM build artifacts
+/.aws-sam/build/
+/.aws-sam/cache/
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore compiled bytecode
+*.class
+
+# Ignore AWS CLI credentials
+.aws/credentials
+.aws/config
