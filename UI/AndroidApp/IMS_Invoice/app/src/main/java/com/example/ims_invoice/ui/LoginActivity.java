@@ -17,6 +17,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final String BASE_URL = "https://your-api-base-url.com" ;
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
@@ -39,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        ApiService apiService = RetrofitClient.getClient("https://your-api-base-url.com").create(ApiService.class);
+        ApiService apiService = RetrofitClient.getClient(BASE_URL).create(ApiService.class);
         Call<LoginResponse> call = apiService.login(new LoginRequest(email, password));
         call.enqueue(new Callback<LoginResponse>() {
             @Override
