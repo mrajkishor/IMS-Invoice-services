@@ -77,3 +77,68 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+# Folder Strucuture 
+```
+my-invoice-app/
+├── android/                   # Native Android files
+├── ios/                       # Native iOS files
+├── node_modules/              # Node.js modules
+├── src/                       # Source files
+│   ├── assets/                # Images, fonts, etc.
+│   ├── components/            # Reusable components
+│   │   ├── Button.tsx
+│   │   └── ...
+│   ├── navigation/            # Navigation configuration
+│   │   ├── AppNavigator.tsx
+│   │   └── ...
+│   ├── screens/               # Screen components
+│   │   ├── LoginScreen.tsx
+│   │   ├── RegisterScreen.tsx
+│   │   ├── MainScreen.tsx
+│   │   ├── UserScreen.tsx
+│   │   ├── ShopScreen.tsx
+│   │   ├── InvoiceScreen.tsx
+│   │   └── ...
+│   ├── services/              # API calls and business logic
+│   │   ├── api.ts             # API configuration and utility functions
+│   │   ├── authService.ts     # Auth related API calls
+│   │   ├── userService.ts     # User related API calls
+│   │   ├── shopService.ts     # Shop related API calls
+│   │   ├── invoiceService.ts  # Invoice related API calls
+│   │   └── ...
+│   ├── store/                 # State management (Redux, Redux Saga)
+│   │   ├── actions/           # Redux actions
+│   │   │   ├── authActions.ts
+│   │   │   ├── userActions.ts
+│   │   │   ├── shopActions.ts
+│   │   │   ├── invoiceActions.ts
+│   │   │   └── ...
+│   │   ├── reducers/          # Redux reducers
+│   │   │   ├── authReducer.ts
+│   │   │   ├── userReducer.ts
+│   │   │   ├── shopReducer.ts
+│   │   │   ├── invoiceReducer.ts
+│   │   │   └── ...
+│   │   ├── sagas/             # Redux sagas
+│   │   │   ├── authSaga.ts
+│   │   │   ├── userSaga.ts
+│   │   │   ├── shopSaga.ts
+│   │   │   ├── invoiceSaga.ts
+│   │   │   ├── index.ts
+│   │   │   └── ...
+│   │   ├── store.ts           # Redux store configuration
+│   │   └── types.ts           # Type definitions for Redux state and actions
+│   ├── utils/                 # Utility functions and helpers
+│   │   ├── validation.ts
+│   │   └── ...
+│   ├── App.tsx                # Entry point of the app
+|── index.js                   # Entry point for React Native
+├── .gitignore                 # Git ignore file
+├── app.json                   # Application configuration
+├── babel.config.js            # Babel configuration
+├── metro.config.js            # Metro bundler configuration
+├── package.json               # NPM package configuration
+├── tsconfig.json              # TypeScript configuration
+└── README.md                  # Project readme
+```
