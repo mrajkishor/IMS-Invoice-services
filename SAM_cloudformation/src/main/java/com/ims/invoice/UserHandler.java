@@ -1,20 +1,21 @@
 package com.ims.invoice;
 
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
-import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,14 +28,27 @@ public class UserHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public UserHandler() {
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.defaultClient();
+        String endpoint = System.getenv("DYNAMODB_ENDPOINT");
+        AmazonDynamoDB client;
+
+        if (endpoint != null && !endpoint.isEmpty()) {
+            client = AmazonDynamoDBClientBuilder.standard()
+                    .withEndpointConfiguration(
+                            new AwsClientBuilder.EndpointConfiguration(endpoint, System.getenv("AWS_REGION")))
+                    .build();
+        } else {
+            client = AmazonDynamoDBClientBuilder.defaultClient();
+        }
+
         this.dynamoDB = new DynamoDB(client);
         this.usersTable = dynamoDB.getTable(System.getenv("TABLE_NAME"));
     }
 
-    public APIGatewayProxyResponseEvent handleCreateUserRequest(APIGatewayProxyRequestEvent request, Context context) throws JsonProcessingException {
+    public APIGatewayProxyResponseEvent handleCreateUserRequest(APIGatewayProxyRequestEvent request, Context context)
+            throws JsonProcessingException {
         Map<String, Object> responseBody = new HashMap<>();
         try {
+            @SuppressWarnings("unchecked")
             Map<String, String> requestBody = objectMapper.readValue(request.getBody(), Map.class);
 
             // Generate a unique user ID
@@ -48,11 +62,13 @@ public class UserHandler {
 
             responseBody.put("message", "User created");
             responseBody.put("userId", userId);
-            return new APIGatewayProxyResponseEvent().withStatusCode(201).withBody(objectMapper.writeValueAsString(responseBody));
+            return new APIGatewayProxyResponseEvent().withStatusCode(201)
+                    .withBody(objectMapper.writeValueAsString(responseBody));
         } catch (Exception e) {
             responseBody.put("message", "Internal Server Error");
             responseBody.put("error", e.getMessage());
-            return new APIGatewayProxyResponseEvent().withStatusCode(500).withBody(objectMapper.writeValueAsString(responseBody));
+            return new APIGatewayProxyResponseEvent().withStatusCode(500)
+                    .withBody(objectMapper.writeValueAsString(responseBody));
         }
     }
 
@@ -63,10 +79,12 @@ public class UserHandler {
             if (item != null) {
                 return new APIGatewayProxyResponseEvent().withStatusCode(200).withBody(item.toJSON());
             } else {
-                return new APIGatewayProxyResponseEvent().withStatusCode(404).withBody("{\"message\":\"User not found\"}");
+                return new APIGatewayProxyResponseEvent().withStatusCode(404)
+                        .withBody("{\"message\":\"User not found\"}");
             }
         } catch (Exception e) {
-            return new APIGatewayProxyResponseEvent().withStatusCode(500).withBody("{\"message\":\"Internal Server Error\"}");
+            return new APIGatewayProxyResponseEvent().withStatusCode(500)
+                    .withBody("{\"message\":\"Internal Server Error\"}");
         }
     }
 
@@ -83,7 +101,8 @@ public class UserHandler {
 
             return new APIGatewayProxyResponseEvent().withStatusCode(200).withBody("{\"message\":\"User updated\"}");
         } catch (Exception e) {
-            return new APIGatewayProxyResponseEvent().withStatusCode(500).withBody("{\"message\":\"Internal Server Error\"}");
+            return new APIGatewayProxyResponseEvent().withStatusCode(500)
+                    .withBody("{\"message\":\"Internal Server Error\"}");
         }
     }
 
@@ -93,7 +112,8 @@ public class UserHandler {
             usersTable.deleteItem(new DeleteItemSpec().withPrimaryKey("userId", userId));
             return new APIGatewayProxyResponseEvent().withStatusCode(200).withBody("{\"message\":\"User deleted\"}");
         } catch (Exception e) {
-            return new APIGatewayProxyResponseEvent().withStatusCode(500).withBody("{\"message\":\"Internal Server Error\"}");
+            return new APIGatewayProxyResponseEvent().withStatusCode(500)
+                    .withBody("{\"message\":\"Internal Server Error\"}");
         }
     }
 }

@@ -1,10 +1,21 @@
 version = 0.1
-[default.deploy.parameters]
-stack_name = "InvoiceIMSAppsConsolidated"
-resolve_s3 = true
-s3_prefix = "InvoiceIMSAppsConsolidated"
-region = "ap-south-1"
+
+#[default.deploy.parameters]
+#stack_name = "InvoiceIMSAppsConsolidated"
+#resolve_s3 = true
+#s3_prefix = "InvoiceIMSAppsConsolidated"
+#region = "ap-south-1"
+#confirm_changeset = true
+#capabilities = "CAPABILITY_IAM"
+#image_repositories = []
+#disable_rollback = true
+
+
+[default.local]
+stack_name = "local"
+s3_bucket = "local"
+s3_prefix = "local"
+region = "us-west-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-image_repositories = []
-disable_rollback = true
+parameter_overrides = ""

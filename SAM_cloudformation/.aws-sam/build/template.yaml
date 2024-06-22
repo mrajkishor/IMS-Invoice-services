@@ -17,7 +17,7 @@ Resources:
   AuthLoginFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: com.ims.invoice.AuthHandler::handleLoginRequest
+      Handler: com.ims.invoice.AuthHandler::handleRequest
       Runtime: java17
       CodeUri: AuthLoginFunction
       MemorySize: 512

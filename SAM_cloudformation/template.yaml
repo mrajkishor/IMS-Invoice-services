@@ -14,11 +14,10 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-
   AuthLoginFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
-      Handler: com.ims.invoice.AuthHandler::handleLoginRequest
+      Handler: com.ims.invoice.AuthHandler::handleRequest
       Runtime: java17
       CodeUri: .
       MemorySize: 512
@@ -33,7 +32,8 @@ Resources:
           Properties:
             Path: /auth/login
             Method: post
-
+            
+            
   AuthLogoutFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
