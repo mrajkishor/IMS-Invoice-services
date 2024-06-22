@@ -1,5 +1,11 @@
 ### SAM local/dev env setup guide
 
+Pre-requisites 
+
+- Docker
+- SAM CLI
+- AWS CLI
+
 Build SAM in local
 
     sam build 
@@ -15,15 +21,18 @@ Build lambda in local (only test lambda functions)
 
 
 
-DynamoDB config in local 
+DynamoDB config in local - 
 
-    Configure AWS CLI to use DynamoDB Local
+Download https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html and extract
+
+Configure AWS CLI to use DynamoDB Local
+
     aws configure set aws_access_key_id fakeMyKeyId
     aws configure set aws_secret_access_key fakeSecretAccessKey
     aws configure set region us-west-2
 
 
-Start DynamoDB in local (uses docker contrainer to setup dynamodb)
+Start DynamoDB in local (uses docker contrainer to setup dynamodb). Start from the DynamoDB extracted folder. 
     
     java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
 
