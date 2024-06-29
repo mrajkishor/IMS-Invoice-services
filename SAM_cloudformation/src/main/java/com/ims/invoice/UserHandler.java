@@ -145,8 +145,24 @@ public class UserHandler {
 
     public APIGatewayProxyResponseEvent handleUpdateUserRequest(APIGatewayProxyRequestEvent request, Context context) {
         try {
+            // Extract and verify the token from the Authorization header
+            String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
+            String userIdFromToken = getUserIdFromToken(token);
+
+            // Extract the userId from the path parameters
             String userId = request.getPathParameters().get("userId");
+
+            // Check if the userId from the token matches the userId in the path parameters
+            if (!userId.equals(userIdFromToken)) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(403)
+                        .withBody("{\"message\":\"Forbidden\"}");
+            }
+
+            // Extract the request body
+            @SuppressWarnings("unchecked")
             Map<String, String> requestBody = objectMapper.readValue(request.getBody(), Map.class);
+
+            // Update the user's information in DynamoDB
             usersTable.updateItem(new UpdateItemSpec().withPrimaryKey("userId", userId)
                     .withUpdateExpression("set username = :username, email = :email, password = :password")
                     .withValueMap(new ValueMap()
