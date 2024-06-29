@@ -179,12 +179,28 @@ public class UserHandler {
 
     public APIGatewayProxyResponseEvent handleDeleteUserRequest(APIGatewayProxyRequestEvent request, Context context) {
         try {
+            // Extract and verify the token from the Authorization header
+            String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
+            String userIdFromToken = getUserIdFromToken(token);
+
+            // Extract the userId from the path parameters
             String userId = request.getPathParameters().get("userId");
+
+            // Check if the userId from the token matches the userId in the path parameters
+            if (!userId.equals(userIdFromToken)) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(403)
+                        .withBody("{\"message\":\"Forbidden\"}");
+            }
+
+            // Delete the user's information from DynamoDB
             usersTable.deleteItem(new DeleteItemSpec().withPrimaryKey("userId", userId));
-            return new APIGatewayProxyResponseEvent().withStatusCode(200).withBody("{\"message\":\"User deleted\"}");
+
+            return new APIGatewayProxyResponseEvent().withStatusCode(200)
+                    .withBody("{\"message\":\"User deleted\"}");
         } catch (Exception e) {
             return new APIGatewayProxyResponseEvent().withStatusCode(500)
                     .withBody("{\"message\":\"Internal Server Error\"}");
         }
     }
+
 }
