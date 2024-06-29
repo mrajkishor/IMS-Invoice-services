@@ -1,4 +1,5 @@
 import { call, put, takeEvery, CallEffect, PutEffect } from 'redux-saga/effects';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     LOGIN_REQUEST,
     loginSuccess,
@@ -12,14 +13,19 @@ function* handleLogin(
     action: LoginRequestAction
 ): Generator<CallEffect | PutEffect<any>, void, any> {
     try {
-        const user = yield call(login, action.payload.email, action.payload.password);
+        const { user, token, refreshToken } = yield call(login, action.payload.email, action.payload.password);
+
+        // Save tokens in AsyncStorage
+        yield call(AsyncStorage.setItem, 'accessToken', token);
+        yield call(AsyncStorage.setItem, 'refreshToken', refreshToken);
+
         yield put(loginSuccess(user));
     } catch (error) {
         if (error instanceof Error) {
             yield put(loginFailure(error.message));
         } else {
             // Handle unexpected errors that are not instances of Error
-            yield put(loginFailure('An unknown error occurred'));
+            yield put(loginFailure('An unknown error occurred: authSaga.ts'));
         }
     }
 }

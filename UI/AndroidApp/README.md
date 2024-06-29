@@ -25,11 +25,17 @@ Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _roo
 ### For Android
 
 ```bash
+# check device 
+adb devices
+
+# run on adroid device 
+npx react-native run-android --deviceId=DEVICE_ID
+
 # using npm
-npm run android
+# npm run android
 
 # OR using Yarn
-yarn android
+# yarn android
 ```
 
 ### For iOS
@@ -142,3 +148,14 @@ my-invoice-app/
 ├── tsconfig.json              # TypeScript configuration
 └── README.md                  # Project readme
 ```
+###Debug guide with Hermes / Experimental debugger 
+- Followup with https://reactnative.dev/docs/debugging?js-debugger=hermes
+  - In a Chrome browser window, navigate to chrome://inspect.
+  - Use the "Configure..." button to add the dev server address (typically localhost:8081).
+  - You should now see a "Hermes React Native" target with an "inspect" link. Click this to open the debugger.
+- Source scripts will get loaded/updated everytime you refresh the metro manually on change of code. Live reload not supported yet. 
+
+
+
+
+

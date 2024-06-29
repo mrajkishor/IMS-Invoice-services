@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'https://www.aws-api-gateway.com';
+export const API_BASE_URL = 'https://s67k4h7ckb.execute-api.ap-south-1.amazonaws.com/Prod';
 
 export const AUTH_LOGIN = `${API_BASE_URL}/auth/login`;
 export const AUTH_LOGOUT = `${API_BASE_URL}/auth/logout`;

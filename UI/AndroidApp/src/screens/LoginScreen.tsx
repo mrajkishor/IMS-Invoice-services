@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { View, Text, TextInput, Button, ActivityIndicator, StyleSheet } from 'react-native';
 import { loginRequest } from '../store/actions/authActions';
 import { RootState } from '../store/store'; // Import RootState correctly
+import { getAllData } from '../utils/debug-in-dev/asyncStorage';
 
 const LoginScreen: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ const LoginScreen: React.FC = () => {
 
     const handleLogin = () => {
         dispatch(loginRequest(email, password));
+        getAllData().then((data) => console.log('All AsyncStorage Data:', data));
     };
 
     return (
