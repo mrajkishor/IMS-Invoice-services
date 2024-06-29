@@ -4,7 +4,7 @@ cd SAM_cloudformation
 
 **Generate Jar**
 
-mvn clean build
+mvn clean install
 
 **Deployment** 
 
