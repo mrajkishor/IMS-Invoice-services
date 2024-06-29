@@ -152,7 +152,10 @@ my-invoice-app/
 - Followup with https://reactnative.dev/docs/debugging?js-debugger=hermes
   - In a Chrome browser window, navigate to chrome://inspect.
   - Use the "Configure..." button to add the dev server address (typically localhost:8081).
-  - You should now see a "Hermes React Native" target with an "inspect" link. Click this to open the debugger.
+  - You should now see a "React Native Experimental (Improved Chrome Reloads)" and "Hermes React Native" targets with "inspect" links. Click the link below React Native Experimental (Improved Chrome Reloads)
+  to open the debugger.
+  ![alt text](image.png)
+  ![alt text](image-1.png)
 - Source scripts will get loaded/updated everytime you refresh the metro manually on change of code. Live reload not supported yet. 
 
 
