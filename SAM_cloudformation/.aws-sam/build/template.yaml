@@ -26,6 +26,44 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+  ShopsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Shops
+      AttributeDefinitions:
+      - AttributeName: shopId
+        AttributeType: S
+      KeySchema:
+      - AttributeName: shopId
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  InvoicesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Invoices
+      AttributeDefinitions:
+      - AttributeName: invoiceId
+        AttributeType: S
+      - AttributeName: shopId
+        AttributeType: S
+      KeySchema:
+      - AttributeName: invoiceId
+        KeyType: HASH
+      GlobalSecondaryIndexes:
+      - IndexName: ShopIdIndex
+        KeySchema:
+        - AttributeName: shopId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
   AuthLoginFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -185,7 +223,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: UsersTable
+            Ref: ShopsTable
       Events:
         CreateShop:
           Type: Api
@@ -206,7 +244,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: UsersTable
+            Ref: ShopsTable
       Events:
         GetShop:
           Type: Api
@@ -227,7 +265,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: UsersTable
+            Ref: ShopsTable
       Events:
         UpdateShop:
           Type: Api
@@ -248,7 +286,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: UsersTable
+            Ref: ShopsTable
       Events:
         DeleteShop:
           Type: Api
@@ -269,7 +307,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: UsersTable
+            Ref: InvoicesTable
       Events:
         CreateInvoice:
           Type: Api
@@ -290,7 +328,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: UsersTable
+            Ref: InvoicesTable
       Events:
         GetInvoice:
           Type: Api
@@ -311,7 +349,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: UsersTable
+            Ref: InvoicesTable
       Events:
         UpdateInvoice:
           Type: Api
@@ -332,7 +370,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: UsersTable
+            Ref: InvoicesTable
       Events:
         DeleteInvoice:
           Type: Api
@@ -353,7 +391,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: UsersTable
+            Ref: InvoicesTable
       Events:
         GetShopHistory:
           Type: Api

@@ -52,9 +52,9 @@
 							"raw": "{}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/auth/logout",
+							"raw": "{{base_url}}/auth/logout",
 							"host": [
-								"{{baseUrl}}"
+								"{{base_url}}"
 							],
 							"path": [
 								"auth",
@@ -79,9 +79,9 @@
 							"raw": "{\"refreshToken\": \"your-refresh-token\"}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/auth/refresh",
+							"raw": "{{base_url}}/auth/refresh",
 							"host": [
-								"{{baseUrl}}"
+								"{{base_url}}"
 							],
 							"path": [
 								"auth",
@@ -108,12 +108,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"username\": \"john_doe\", \"email\": \"john@example.com\", \"password\": \"password123\"}"
+							"raw": "{\r\n  \"email\": \"user@example.com\",\r\n  \"username\": \"testuser\",\r\n  \"password\": \"password123\"\r\n}\r\n"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/users",
+							"raw": "{{base_url}}/users",
 							"host": [
-								"{{baseUrl}}"
+								"{{base_url}}"
 							],
 							"path": [
 								"users"
@@ -349,6 +349,16 @@
 				{
 					"name": "Create Invoice",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MmUxODI3MC1iYzA5LTQyOGMtYTkxNy04YzEyZjBlN2IyNDAiLCJleHAiOjE3MTk2MzM1ODJ9.orN3EoZ01BLSVu5H1aNbBI30fw-roQwT6kfUCcYpIAw",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -362,12 +372,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"shopId\": \"shop123\", \"customerId\": \"customer123\", \"items\": [{\"itemId\": \"item1\", \"quantity\": 2, \"price\": 10.0}], \"totalAmount\": 20.0, \"date\": \"2024-05-29\"}"
+							"raw": "{\r\n     \"invoiceId\": \"optional-invoice-id\",\r\n    \"shopId\": \"88602e2c-304c-412b-9644-f3c57c1dbed2\",\r\n    \"userId\":  \"62e18270-bc09-428c-a917-8c12f0e7b240\",\r\n    \"details\": \"Invoice details here\",\r\n    \"amount\": \"100\"\r\n}\r\n"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/invoices",
+							"raw": "{{base_url}}/invoices",
 							"host": [
-								"{{baseUrl}}"
+								"{{base_url}}"
 							],
 							"path": [
 								"invoices"
