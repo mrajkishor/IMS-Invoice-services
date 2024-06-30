@@ -3,8 +3,11 @@ package com.ims.invoice;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.ItemCollection;
+import com.amazonaws.services.dynamodbv2.document.ScanOutcome;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
@@ -20,7 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -105,6 +110,39 @@ public class ShopHandler {
                 return new APIGatewayProxyResponseEvent().withStatusCode(404)
                         .withBody("{\"message\":\"Shop not found\"}");
             }
+        } catch (Exception e) {
+            errorResponse.put("Error Details", e);
+            return new APIGatewayProxyResponseEvent().withStatusCode(500)
+                    .withBody(objectMapper.writeValueAsString(errorResponse));
+        }
+    }
+
+    public APIGatewayProxyResponseEvent handleGetAllShopsRequest(APIGatewayProxyRequestEvent request, Context context)
+            throws JsonProcessingException {
+        try {
+            // Extract and verify the token from the Authorization header
+            String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
+            String userIdFromToken = getUserIdFromToken(token);
+
+            // Ensure the userId in the path matches the userId from the token
+            String userId = request.getPathParameters().get("userId");
+            if (!userId.equals(userIdFromToken)) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}");
+            }
+
+            // Scan for shops with the given ownerId
+            ScanSpec scanSpec = new ScanSpec()
+                    .withFilterExpression("ownerId = :ownerId")
+                    .withValueMap(new ValueMap().withString(":ownerId", userId));
+
+            ItemCollection<ScanOutcome> items = shopsTable.scan(scanSpec);
+            List<Map<String, Object>> shops = new ArrayList<>();
+            for (Item item : items) {
+                shops.add(item.asMap());
+            }
+
+            return new APIGatewayProxyResponseEvent().withStatusCode(200)
+                    .withBody(objectMapper.writeValueAsString(shops));
         } catch (Exception e) {
             errorResponse.put("Error Details", e);
             return new APIGatewayProxyResponseEvent().withStatusCode(500)

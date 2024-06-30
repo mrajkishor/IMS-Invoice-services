@@ -253,6 +253,27 @@ Resources:
             Method: get
     Metadata:
       SamResourceId: GetShopFunction
+  GetAllShopsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.ims.invoice.ShopHandler::handleGetAllShopsRequest
+      Runtime: java17
+      CodeUri: GetAllShopsFunction
+      MemorySize: 512
+      Timeout: 10
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: ShopsTable
+      Events:
+        GetAllShops:
+          Type: Api
+          Properties:
+            Path: /users/{userId}/shops
+            Method: get
+    Metadata:
+      SamResourceId: GetAllShopsFunction
   UpdateShopFunction:
     Type: AWS::Serverless::Function
     Properties:

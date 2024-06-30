@@ -7,6 +7,6 @@ architecture = "x86_64"
 handler = "com.ims.invoice.AuthHandler::handleLoginRequest"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["AuthLoginFunction", "AuthLogoutFunction", "AuthRefreshFunction", "CreateUserFunction", "GetUserFunction", "UpdateUserFunction", "DeleteUserFunction", "CreateShopFunction", "GetShopFunction", "UpdateShopFunction", "DeleteShopFunction", "CreateInvoiceFunction", "GetInvoiceFunction", "UpdateInvoiceFunction", "DeleteInvoiceFunction", "GetShopHistoryFunction"]
+functions = ["AuthLoginFunction", "AuthLogoutFunction", "AuthRefreshFunction", "CreateUserFunction", "GetUserFunction", "UpdateUserFunction", "DeleteUserFunction", "CreateShopFunction", "GetShopFunction", "GetAllShopsFunction", "UpdateShopFunction", "DeleteShopFunction", "CreateInvoiceFunction", "GetInvoiceFunction", "UpdateInvoiceFunction", "DeleteInvoiceFunction", "GetShopHistoryFunction"]
 
 [layer_build_definitions]
