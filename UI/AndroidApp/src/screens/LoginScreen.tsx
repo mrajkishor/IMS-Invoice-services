@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, Text, TextInput, Button, ActivityIndicator, StyleSheet } from 'react-native';
 import { loginRequest } from '../store/actions/authActions';
-import { RootState } from '../store/store'; // Import RootState correctly
+import { RootState } from '../store/store';
 import { getAllData } from '../utils/debug-in-dev/asyncStorage';
+import { useNavigation } from '@react-navigation/native';
+import { LoginScreenNavigationProp } from '../navigationTypes';
 
 const LoginScreen: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
-    const { loading, error } = useSelector((state: RootState) => state.auth); // Use RootState type here
+    const navigation = useNavigation<LoginScreenNavigationProp>();
+    const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
 
     const handleLogin = () => {
         dispatch(loginRequest(email, password));
         getAllData().then((data) => console.log('All AsyncStorage Data:', data));
     };
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigation.navigate('Main');
+        }
+    }, [isAuthenticated, navigation]);
 
     return (
         <View style={styles.container}>

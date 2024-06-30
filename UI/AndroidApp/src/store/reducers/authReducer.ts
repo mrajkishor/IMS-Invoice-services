@@ -1,22 +1,11 @@
-import {
-    LOGIN_REQUEST,
-    LOGIN_SUCCESS,
-    LOGIN_FAILURE,
-    LOGOUT,
-} from '../actions/authActions';
-
-interface AuthState {
-    isLoggedIn: boolean;
-    user: any | null;
-    error: string | null;
-    loading: boolean;
-}
+import { AuthState } from '../types';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS } from '../actions/authActions';
 
 const initialState: AuthState = {
-    isLoggedIn: false,
-    user: null,
-    error: null,
+    isAuthenticated: false,
     loading: false,
+    error: null,
+    user: null, // Adjust based on your user type
 };
 
 const authReducer = (state = initialState, action: any): AuthState => {
@@ -30,20 +19,26 @@ const authReducer = (state = initialState, action: any): AuthState => {
         case LOGIN_SUCCESS:
             return {
                 ...state,
-                isLoggedIn: true,
-                user: action.payload,
                 loading: false,
+                isAuthenticated: true,
+                user: action.payload.user,
             };
         case LOGIN_FAILURE:
             return {
                 ...state,
-                error: action.payload,
                 loading: false,
+                error: action.payload,
             };
-        case LOGOUT:
+        case LOGOUT_REQUEST:
             return {
                 ...state,
-                isLoggedIn: false,
+                loading: true,
+            };
+        case LOGOUT_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                isAuthenticated: false,
                 user: null,
             };
         default:

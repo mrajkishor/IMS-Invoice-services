@@ -1,13 +1,16 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import store from './store/store';
 import AppNavigator from './navigation/AppNavigator';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider as ReduxProvider } from 'react-redux';
 
-const App: React.FC = () => {
+const App = () => {
   return (
-    <Provider store={store}>
-      <AppNavigator />
-    </Provider>
+    <ReduxProvider store={store}>
+      <PaperProvider>
+        <AppNavigator />
+      </PaperProvider>
+    </ReduxProvider>
   );
 };
 

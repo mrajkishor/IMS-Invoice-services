@@ -1,21 +1,26 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack';
 import LoginScreen from '../screens/LoginScreen';
+import MainScreen from '../screens/MainScreen';
+import ShopScreen from '../screens/ShopScreen';
+import InvoiceScreen from '../screens/InvoiceScreen';
+import { RootStackParamList } from '../navigationTypes';
 
+const Stack = createStackNavigator<RootStackParamList>();
 
-// import MainScreen from '../screens/MainScreen';
-// Import other screens as needed
+const screenOptions: StackNavigationOptions = {
+    headerShown: false,
+};
 
-const Stack = createStackNavigator();
-
-const AppNavigator: React.FC = () => {
+const AppNavigator = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Login">
+            <Stack.Navigator initialRouteName="Login" screenOptions={screenOptions}>
                 <Stack.Screen name="Login" component={LoginScreen} />
-                {/* <Stack.Screen name="Main" component={MainScreen} /> */}
-                {/* Add other screens here */}
+                <Stack.Screen name="Main" component={MainScreen} />
+                <Stack.Screen name="Shop" component={ShopScreen} />
+                <Stack.Screen name="Invoice" component={InvoiceScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

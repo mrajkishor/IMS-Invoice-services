@@ -25,6 +25,9 @@ Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _roo
 ### For Android
 
 ```bash
+# connecting the React Native development server on your machine to the Android device/emulator. (OPTIONAL) 
+adb reverse tcp:8081 tcp:8081
+
 # check device 
 adb devices
 

@@ -1,12 +1,11 @@
-import { combineReducers } from '@reduxjs/toolkit';
+import { combineReducers } from 'redux';
 import authReducer from './authReducer';
-// import other reducers as needed
+import invoiceReducer from './invoiceReducer';
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    // add other reducers here
+    invoices: invoiceReducer,
 });
 
 export default rootReducer;
-
 export type RootState = ReturnType<typeof rootReducer>;

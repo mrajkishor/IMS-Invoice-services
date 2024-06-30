@@ -5,6 +5,8 @@ import {
     loginSuccess,
     loginFailure,
     LoginRequestAction,
+    LOGOUT_REQUEST,
+    logoutSuccess,
 } from '../actions/authActions';
 import { login } from '../../services/authService';
 
@@ -30,8 +32,19 @@ function* handleLogin(
     }
 }
 
+function* handleLogout() {
+    try {
+        yield call(AsyncStorage.removeItem, 'accessToken');
+        yield call(AsyncStorage.removeItem, 'refreshToken');
+        yield put(logoutSuccess());
+    } catch (error) {
+        console.error('Logout error:', error);
+    }
+}
+
 function* watchAuth(): Generator<ReturnType<typeof takeEvery>, void, unknown> {
     yield takeEvery(LOGIN_REQUEST, handleLogin);
+    yield takeEvery(LOGOUT_REQUEST, handleLogout);
 }
 
 export default watchAuth;
