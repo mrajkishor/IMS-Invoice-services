@@ -332,7 +332,25 @@ Resources:
           Properties:
             Path: /invoices/{invoiceId}
             Method: get
-
+  GetInvoicesByShopFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: com.ims.invoice.InvoiceHandler::handleGetInvoicesByShopRequest
+      Runtime: java17
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 10
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref InvoicesTable
+      Events:
+        GetInvoicesByShop:
+          Type: Api
+          Properties:
+            Path: /shops/{shopId}/invoices
+            Method: get
+            
   UpdateInvoiceFunction:
     Type: 'AWS::Serverless::Function'
     Properties:

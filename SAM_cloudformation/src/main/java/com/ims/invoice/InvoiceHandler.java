@@ -3,8 +3,11 @@ package com.ims.invoice;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.ItemCollection;
+import com.amazonaws.services.dynamodbv2.document.ScanOutcome;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
@@ -20,7 +23,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -186,4 +191,36 @@ public class InvoiceHandler {
                     .withBody(objectMapper.writeValueAsString(errorResponse));
         }
     }
+
+    public APIGatewayProxyResponseEvent handleGetInvoicesByShopRequest(APIGatewayProxyRequestEvent request,
+            Context context)
+            throws JsonProcessingException {
+        try {
+            String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
+            String userIdFromToken = getUserIdFromToken(token);
+
+            String shopId = request.getPathParameters().get("shopId");
+
+            ScanSpec scanSpec = new ScanSpec()
+                    .withFilterExpression("shopId = :shopId and userId = :userId")
+                    .withValueMap(new ValueMap().withString(":shopId", shopId).withString(":userId", userIdFromToken));
+
+            ItemCollection<ScanOutcome> items = invoicesTable.scan(scanSpec);
+            List<Map<String, Object>> invoices = new ArrayList<>();
+            for (Item item : items) {
+                invoices.add(item.asMap());
+            }
+
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("invoices", invoices);
+
+            return new APIGatewayProxyResponseEvent().withStatusCode(200)
+                    .withBody(objectMapper.writeValueAsString(responseBody));
+        } catch (Exception e) {
+            errorResponse.put("Error Details", e);
+            return new APIGatewayProxyResponseEvent().withStatusCode(500)
+                    .withBody(objectMapper.writeValueAsString(errorResponse));
+        }
+    }
+
 }
