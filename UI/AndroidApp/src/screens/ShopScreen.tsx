@@ -1,53 +1,90 @@
-import React, { useEffect } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Alert } from 'react-native';
+import { TextInput, Button, Card } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, ActivityIndicator, List } from 'react-native-paper';
-import { fetchShopsRequest } from '../store/actions/shopActions';
-import Button from '../components/Button';
-import Text from '../components/Text';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import { RootState } from '../store/reducers';
+import { RootStackParamList } from '../navigationTypes';
+import { fetchShopRequest, updateShopRequest, deleteShopRequest } from '../store/actions/shopActions';
 
-const ShopScreen: React.FC = () => {
+type ShopScreenRouteProp = RouteProp<RootStackParamList, 'Shop'>;
+
+type Props = {
+    route: ShopScreenRouteProp;
+};
+
+const ShopScreen: React.FC<Props> = ({ route }) => {
+    const { shopId } = route.params;
     const dispatch = useDispatch();
-    const { loading, shops, error } = useSelector((state: RootState) => state.shops);
-    const { user } = useSelector((state: RootState) => state.auth);
+    const navigation = useNavigation();
+    const shop = useSelector((state: RootState) => state.shops.shop);
+    const [editMode, setEditMode] = useState(false);
+    const [shopName, setShopName] = useState('');
+    const [address, setAddress] = useState('');
 
     useEffect(() => {
-        if (user?.userId) {
-            dispatch(fetchShopsRequest(user.userId));
+        dispatch(fetchShopRequest(shopId));
+    }, [dispatch, shopId]);
+
+    useEffect(() => {
+        if (shop) {
+            setShopName(shop.shopName);
+            setAddress(shop.address);
         }
-    }, [dispatch, user?.userId]);
+    }, [shop]);
 
-    const renderItem = ({ item }: { item: any }) => (
-        <Card style={styles.card}>
-            <Card.Content>
-                <List.Item
-                    title={item.shopName}
-                    description={`Address d: ${item.address}`}
-                    left={(props) => <List.Icon {...props} icon="store" />}
-                    right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                />
-            </Card.Content>
-        </Card>
-    );
+    const handleUpdate = () => {
+        if (editMode) {
+            dispatch(updateShopRequest(shopId, { shopName, ownerId: shop.ownerId, address }));
+        }
+        setEditMode(!editMode);
+    };
 
-    if (loading) {
-        return <ActivityIndicator animating={true} style={styles.loader} />;
-    }
-
-    if (error) {
-        return <Text style={styles.error}>{error}</Text>;
-    }
+    const handleDelete = () => {
+        Alert.alert(
+            'Confirm Delete',
+            'Are you sure you want to delete this shop?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete',
+                    onPress: () => {
+                        dispatch(deleteShopRequest(shopId));
+                        navigation.goBack();
+                    },
+                    style: 'destructive',
+                },
+            ],
+            { cancelable: true }
+        );
+    };
 
     return (
         <View style={styles.container}>
-            <FlatList
-                data={shops}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.shopId}
-            />
-            <Button style={styles.fab} icon="plus" onPress={() => console.log('Create Shop')}>
-                Create Shop
+            <Card>
+                <Card.Title title="Shop Details" />
+                <Card.Content>
+                    <TextInput
+                        label="Shop Name"
+                        value={shopName}
+                        onChangeText={setShopName}
+                        disabled={!editMode}
+                        style={styles.input}
+                    />
+                    <TextInput
+                        label="Address"
+                        value={address}
+                        onChangeText={setAddress}
+                        disabled={!editMode}
+                        style={styles.input}
+                    />
+                </Card.Content>
+            </Card>
+            <Button mode="contained" onPress={handleUpdate} style={styles.button}>
+                {editMode ? 'Save' : 'Update'}
+            </Button>
+            <Button mode="contained" onPress={handleDelete} style={[styles.button, styles.deleteButton]}>
+                Delete
             </Button>
         </View>
     );
@@ -58,24 +95,14 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
     },
-    card: {
-        marginBottom: 10,
+    input: {
+        marginBottom: 16,
     },
-    loader: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+    button: {
+        marginTop: 16,
     },
-    error: {
-        color: 'red',
-        textAlign: 'center',
-        margin: 20,
-    },
-    fab: {
-        position: 'absolute',
-        margin: 16,
-        right: 0,
-        bottom: 0,
+    deleteButton: {
+        backgroundColor: 'red',
     },
 });
 
