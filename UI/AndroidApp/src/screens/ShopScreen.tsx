@@ -29,7 +29,7 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
     useEffect(() => {
         if (shop) {
             setShopName(shop.shopName);
-            setAddress(shop.address);
+            setAddress(shop.address); ``
         }
     }, [shop]);
 
@@ -39,6 +39,13 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
         }
         setEditMode(!editMode);
     };
+
+    useEffect(() => {
+        if (!editMode && shop) {
+            setShopName(shop.shopName);
+            setAddress(shop.address);
+        }
+    }, [editMode, shop]);
 
     const handleDelete = () => {
         Alert.alert(

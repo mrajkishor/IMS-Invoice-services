@@ -102,7 +102,7 @@ const MainScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     scene: {
         flex: 1,
@@ -111,6 +111,8 @@ const styles = StyleSheet.create({
     },
     card: {
         marginBottom: 10,
+        marginLeft: 20,
+        marginRight: 20,
     },
     loader: {
         flex: 1,
