@@ -4,6 +4,7 @@ import { createStackNavigator, StackNavigationOptions } from '@react-navigation/
 import LoginScreen from '../screens/LoginScreen';
 import MainScreen from '../screens/MainScreen';
 import ShopScreen from '../screens/ShopScreen';
+import CreateShopScreen from '../screens/CreateShopScreen';
 import InvoiceScreen from '../screens/InvoiceScreen';
 import { RootStackParamList } from '../navigationTypes';
 
@@ -20,6 +21,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Main" component={MainScreen} />
                 <Stack.Screen name="Shop" component={ShopScreen} />
+                <Stack.Screen name="CreateShop" component={CreateShopScreen} />
                 <Stack.Screen name="Invoice" component={InvoiceScreen} />
             </Stack.Navigator>
         </NavigationContainer>

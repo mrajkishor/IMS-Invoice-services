@@ -9,7 +9,14 @@ import {
     logoutSuccess,
 } from '../actions/authActions';
 import { login } from '../../services/authService';
+import { jwtDecode } from 'jwt-decode';
 
+
+interface JwtPayload {
+    sub: string; // Subject, typically the user ID
+    exp: number; // Expiration time
+    // Add other fields if needed
+}
 // Define the types for the generator function
 function* handleLogin(
     action: LoginRequestAction
@@ -21,7 +28,12 @@ function* handleLogin(
         yield call(AsyncStorage.setItem, 'accessToken', token);
         yield call(AsyncStorage.setItem, 'refreshToken', refreshToken);
 
-        yield put(loginSuccess(user));
+        // Decode the token to get the user ID
+        const decoded: JwtPayload = jwtDecode(token);
+        const userId = decoded.sub;
+        yield call(AsyncStorage.setItem, 'userId', userId);
+
+        yield put(loginSuccess(token, refreshToken, { userId }));
     } catch (error) {
         if (error instanceof Error) {
             yield put(loginFailure(error.message));

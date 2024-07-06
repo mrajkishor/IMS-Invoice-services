@@ -5,7 +5,9 @@ const initialState: AuthState = {
     isAuthenticated: false,
     loading: false,
     error: null,
-    user: null, // Adjust based on your user type
+    user: null,
+    token: null,
+    refreshToken: null,
 };
 
 const authReducer = (state = initialState, action: any): AuthState => {
@@ -22,6 +24,8 @@ const authReducer = (state = initialState, action: any): AuthState => {
                 loading: false,
                 isAuthenticated: true,
                 user: action.payload.user,
+                token: action.payload.token,
+                refreshToken: action.payload.refreshToken,
             };
         case LOGIN_FAILURE:
             return {
@@ -40,6 +44,8 @@ const authReducer = (state = initialState, action: any): AuthState => {
                 loading: false,
                 isAuthenticated: false,
                 user: null,
+                token: null,
+                refreshToken: null,
             };
         default:
             return state;

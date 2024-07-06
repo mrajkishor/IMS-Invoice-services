@@ -6,6 +6,7 @@ export type RootStackParamList = {
     Main: undefined;
     Shop: { shopId: string };
     Invoice: { invoiceId: string };
+    CreateShop: undefined;
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<
@@ -17,6 +18,7 @@ export type MainScreenNavigationProp = StackNavigationProp<
     RootStackParamList,
     'Main'
 >;
+
 
 export type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 export type MainScreenRouteProp = RouteProp<RootStackParamList, 'Main'>;

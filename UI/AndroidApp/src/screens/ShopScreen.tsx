@@ -2,33 +2,29 @@ import React, { useEffect } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, ActivityIndicator, List } from 'react-native-paper';
-import { useRoute, RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
-import { fetchInvoicesRequest } from '../store/actions/invoiceActions';
+import { fetchShopsRequest } from '../store/actions/shopActions';
 import Button from '../components/Button';
 import Text from '../components/Text';
 import { RootState } from '../store/reducers';
-import { RootStackParamList } from '../navigationTypes';
-
-type ShopScreenRouteProp = RouteProp<RootStackParamList, 'Shop'>;
 
 const ShopScreen: React.FC = () => {
-    const route = useRoute<ShopScreenRouteProp>();
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const { shopId } = route.params;
     const dispatch = useDispatch();
-    const { loading, invoices, error } = useSelector((state: RootState) => state.invoices);
+    const { loading, shops, error } = useSelector((state: RootState) => state.shops);
+    const { user } = useSelector((state: RootState) => state.auth);
 
     useEffect(() => {
-        dispatch(fetchInvoicesRequest(shopId));
-    }, [dispatch, shopId]);
+        if (user?.userId) {
+            dispatch(fetchShopsRequest(user.userId));
+        }
+    }, [dispatch, user?.userId]);
 
     const renderItem = ({ item }: { item: any }) => (
-        <Card style={styles.card} onPress={() => navigation.navigate('Invoice', { invoiceId: item.id })}>
+        <Card style={styles.card}>
             <Card.Content>
                 <List.Item
-                    title={`Invoice ${item.id}`}
-                    description={`Amount: $${item.amount}\nDate: ${item.date}`}
-                    left={(props) => <List.Icon {...props} icon="file-document" />}
+                    title={item.shopName}
+                    description={`Address d: ${item.address}`}
+                    left={(props) => <List.Icon {...props} icon="store" />}
                     right={(props) => <List.Icon {...props} icon="chevron-right" />}
                 />
             </Card.Content>
@@ -46,12 +42,12 @@ const ShopScreen: React.FC = () => {
     return (
         <View style={styles.container}>
             <FlatList
-                data={invoices}
+                data={shops}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.shopId}
             />
-            <Button style={styles.fab} icon="plus" onPress={() => console.log('Create Invoice')}>
-                Create Invoice
+            <Button style={styles.fab} icon="plus" onPress={() => console.log('Create Shop')}>
+                Create Shop
             </Button>
         </View>
     );
