@@ -7,6 +7,7 @@ export type RootStackParamList = {
     Shop: { shopId: string };
     Invoice: { invoiceId: string };
     CreateShop: undefined;
+    ViewInvoice: { invoice: any };
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<

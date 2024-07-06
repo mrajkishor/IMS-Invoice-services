@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
-import { TextInput, Button, Card } from 'react-native-paper';
+import { View, StyleSheet, Alert, FlatList } from 'react-native';
+import { TextInput, Button, Card, List, ActivityIndicator, Text } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootState } from '../store/reducers';
 import { RootStackParamList } from '../navigationTypes';
 import { fetchShopRequest, updateShopRequest, deleteShopRequest } from '../store/actions/shopActions';
+import { fetchInvoicesRequest } from '../store/actions/invoiceActions';
 
 type ShopScreenRouteProp = RouteProp<RootStackParamList, 'Shop'>;
 
@@ -16,20 +17,22 @@ type Props = {
 const ShopScreen: React.FC<Props> = ({ route }) => {
     const { shopId } = route.params;
     const dispatch = useDispatch();
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const shop = useSelector((state: RootState) => state.shops.shop);
+    const invoicesState = useSelector((state: RootState) => state.invoices);
     const [editMode, setEditMode] = useState(false);
     const [shopName, setShopName] = useState('');
     const [address, setAddress] = useState('');
 
     useEffect(() => {
         dispatch(fetchShopRequest(shopId));
+        dispatch(fetchInvoicesRequest(shopId));
     }, [dispatch, shopId]);
 
     useEffect(() => {
         if (shop) {
             setShopName(shop.shopName);
-            setAddress(shop.address); ``
+            setAddress(shop.address);
         }
     }, [shop]);
 
@@ -66,6 +69,18 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
         );
     };
 
+    const renderInvoiceItem = ({ item }: { item: any }) => (
+        <Card style={styles.card} onPress={() => navigation.navigate('ViewInvoice', { invoice: item })}>
+            <Card.Content>
+                <List.Item
+                    title={`Invoice ID: ${item.invoiceId}`}
+                    description={`Amount: ${item.amount}\nDetails: ${item.details}`}
+                    left={(props) => <List.Icon {...props} icon="file-document" />}
+                />
+            </Card.Content>
+        </Card>
+    );
+
     return (
         <View style={styles.container}>
             <Card>
@@ -93,6 +108,18 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
             <Button mode="contained" onPress={handleDelete} style={[styles.button, styles.deleteButton]}>
                 Delete
             </Button>
+            {invoicesState.loading ? (
+                <ActivityIndicator animating={true} style={styles.loader} />
+            ) : invoicesState.error ? (
+                <Text style={styles.error}>{invoicesState.error}</Text>
+            ) : (
+                <FlatList
+                    data={invoicesState.invoices}
+                    renderItem={renderInvoiceItem}
+                    keyExtractor={(item) => item.invoiceId}
+                    style={styles.list}
+                />
+            )}
         </View>
     );
 };
@@ -110,6 +137,20 @@ const styles = StyleSheet.create({
     },
     deleteButton: {
         backgroundColor: 'red',
+    },
+    card: {
+        marginBottom: 10,
+    },
+    loader: {
+        marginTop: 20,
+    },
+    error: {
+        color: 'red',
+        textAlign: 'center',
+        margin: 20,
+    },
+    list: {
+        marginTop: 20,
     },
 });
 
