@@ -8,6 +8,7 @@ import { fetchShopsRequest } from '../store/actions/shopActions';
 import { RootState } from '../store/reducers';
 import { RootStackParamList } from '../navigationTypes';
 import ProfileScreen from './ProfileScreen';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
 const ShopListRoute: React.FC = () => {
@@ -37,8 +38,8 @@ const ShopListRoute: React.FC = () => {
                 <List.Item
                     title={item.shopName}
                     description={`Address: ${item.address}`}
-                    left={(props) => <List.Icon {...props} icon="store" />}
-                    right={(props) => <List.Icon {...props} icon="chevron-right" />}
+                    left={(props) => <MaterialIcons  {...props} name="store" />}
+                    right={(props) => <MaterialIcons  {...props} name="chevron-right" />}
                 />
             </Card.Content>
         </Card>
@@ -70,8 +71,20 @@ const MainScreen: React.FC = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const [index, setIndex] = useState(0);
     const [routes] = useState([
-        { key: 'shops', title: 'Shops', icon: 'store' },
-        { key: 'profile', title: 'Profile', icon: 'account' },
+        {
+            key: 'shops',
+            title: 'Shops',
+            icon: ({ color, size }: { color: string, size: number }) => (
+                <MaterialIcons name="store" color={color} size={size} />
+            ),
+        },
+        {
+            key: 'profile',
+            title: 'Profile',
+            icon: ({ color, size }: { color: string, size: number }) => (
+                <MaterialIcons name="account-circle" color={color} size={size} />
+            ),
+        },
     ]);
 
     const handleLogout = () => {
@@ -94,7 +107,7 @@ const MainScreen: React.FC = () => {
             <FAB
                 style={styles.fab}
                 icon="plus"
-                onPress={() => navigation.navigate('CreateShop')} // Navigate to the CreateShop screen
+                onPress={() => navigation.navigate('CreateShop')}
             />
         </View>
     );

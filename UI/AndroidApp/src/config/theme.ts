@@ -1,7 +1,7 @@
 import { MD3LightTheme as DefaultTheme } from 'react-native-paper';
 
 const myColors = {
-    "colors": {
+    colors: {
         "primary": "rgb(16, 109, 32)",
         "onPrimary": "rgb(255, 255, 255)",
         "primaryContainer": "rgb(157, 248, 152)",
@@ -44,6 +44,7 @@ const myColors = {
         "backdrop": "rgba(44, 50, 42, 0.4)"
     }
 }
+
 const theme = {
     ...DefaultTheme,
     // Specify custom property

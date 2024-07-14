@@ -170,3 +170,7 @@ my-invoice-app/
 MaterialIcons ref : https://oblador.github.io/react-native-vector-icons/ 
 
 ![alt text](image-2.png)
+
+### Theming 
+React Native Paper : https://callstack.github.io/react-native-paper/docs/guides/theming/
+![alt text](image-3.png)
