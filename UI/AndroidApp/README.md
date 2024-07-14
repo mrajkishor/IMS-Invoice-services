@@ -155,7 +155,7 @@ my-invoice-app/
 ├── tsconfig.json              # TypeScript configuration
 └── README.md                  # Project readme
 ```
-###Debug guide with Hermes / Experimental debugger 
+### Debug guide with Hermes / Experimental debugger 
 - Followup with https://reactnative.dev/docs/debugging?js-debugger=hermes
   - In a Chrome browser window, navigate to chrome://inspect.
   - Use the "Configure..." button to add the dev server address (typically localhost:8081).
@@ -166,6 +166,7 @@ my-invoice-app/
 - Source scripts will get loaded/updated everytime you refresh the metro manually on change of code. Live reload not supported yet. 
 
 
+### Icons
+MaterialIcons ref : https://oblador.github.io/react-native-vector-icons/ 
 
-
-
+![alt text](image-2.png)

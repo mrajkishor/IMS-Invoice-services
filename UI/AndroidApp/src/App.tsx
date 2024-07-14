@@ -3,11 +3,13 @@ import store from './store/store';
 import AppNavigator from './navigation/AppNavigator';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider as ReduxProvider } from 'react-redux';
+import theme from './config/theme';
+
 
 const App = () => {
   return (
     <ReduxProvider store={store}>
-      <PaperProvider>
+      <PaperProvider theme={theme}>
         <AppNavigator />
       </PaperProvider>
     </ReduxProvider>
