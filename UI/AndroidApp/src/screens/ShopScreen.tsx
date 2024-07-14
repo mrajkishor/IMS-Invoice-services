@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, FlatList } from 'react-native';
-import { TextInput, Button, Card, List, ActivityIndicator, Text } from 'react-native-paper';
+import { View, StyleSheet, Alert, FlatList, RefreshControl } from 'react-native';
+import { TextInput, Button, Card, List, ActivityIndicator, Text, FAB } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootState } from '../store/reducers';
@@ -23,6 +23,7 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
     const [editMode, setEditMode] = useState(false);
     const [shopName, setShopName] = useState('');
     const [address, setAddress] = useState('');
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         dispatch(fetchShopRequest(shopId));
@@ -81,6 +82,13 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
         </Card>
     );
 
+    const onRefresh = () => {
+        setRefreshing(true);
+        dispatch(fetchShopRequest(shopId));
+        dispatch(fetchInvoicesRequest(shopId));
+        setRefreshing(false);
+    };
+
     return (
         <View style={styles.container}>
             <Card>
@@ -118,8 +126,16 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
                     renderItem={renderInvoiceItem}
                     keyExtractor={(item) => item.invoiceId}
                     style={styles.list}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 />
             )}
+            <FAB
+                style={styles.fab}
+                icon="plus"
+                onPress={() => navigation.navigate('CreateInvoice', { shopId })}
+            />
         </View>
     );
 };
@@ -151,6 +167,12 @@ const styles = StyleSheet.create({
     },
     list: {
         marginTop: 20,
+    },
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 80,
     },
 });
 

@@ -4,6 +4,7 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 
 // Action Creators
 export const loginRequest = (email: string, password: string) => ({
@@ -27,6 +28,10 @@ export const logoutRequest = () => ({
 
 export const logoutSuccess = () => ({
     type: LOGOUT_SUCCESS,
+});
+
+export const logoutFailure = (message: string) => ({
+    type: LOGOUT_FAILURE,
 });
 
 // Define and export action types
@@ -55,9 +60,14 @@ export interface LogoutSuccessAction {
     type: typeof LOGOUT_SUCCESS;
 }
 
+export interface LogoutFailureAction {
+    type: typeof LOGOUT_FAILURE;
+}
+
 export type AuthActionTypes =
     | LoginRequestAction
     | LoginSuccessAction
     | LoginFailureAction
     | LogoutRequestAction
-    | LogoutSuccessAction;
+    | LogoutSuccessAction
+    | LogoutFailureAction;

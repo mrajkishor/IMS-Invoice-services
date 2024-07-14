@@ -7,3 +7,9 @@ export interface AuthState {
     refreshToken: string | null;
 }
 
+export interface User {
+    userId: string;
+    username: string;
+    email: string;
+    password: string;
+}

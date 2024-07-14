@@ -8,6 +8,8 @@ export type RootStackParamList = {
     Invoice: { invoiceId: string };
     CreateShop: undefined;
     ViewInvoice: { invoice: any };
+    CreateInvoice: { shopId: string };
+    Profile: undefined;
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<

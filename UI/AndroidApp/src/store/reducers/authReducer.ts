@@ -1,5 +1,5 @@
 import { AuthState } from '../types';
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS } from '../actions/authActions';
+import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE } from '../actions/authActions';
 
 const initialState: AuthState = {
     isAuthenticated: false,
@@ -46,6 +46,12 @@ const authReducer = (state = initialState, action: any): AuthState => {
                 user: null,
                 token: null,
                 refreshToken: null,
+            };
+        case LOGOUT_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
             };
         default:
             return state;

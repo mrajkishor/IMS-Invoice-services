@@ -7,6 +7,7 @@ import {
     LoginRequestAction,
     LOGOUT_REQUEST,
     logoutSuccess,
+    logoutFailure,
 } from '../actions/authActions';
 import { login } from '../../services/authService';
 import { jwtDecode } from 'jwt-decode';
@@ -44,15 +45,22 @@ function* handleLogin(
     }
 }
 
-function* handleLogout() {
+
+function* handleLogout(): Generator<CallEffect | PutEffect<any>, void, any> {
     try {
         yield call(AsyncStorage.removeItem, 'accessToken');
         yield call(AsyncStorage.removeItem, 'refreshToken');
+        yield call(AsyncStorage.removeItem, 'userId');
         yield put(logoutSuccess());
     } catch (error) {
-        console.error('Logout error:', error);
+        if (error instanceof Error) {
+            yield put(logoutFailure(error.message));
+        } else {
+            yield put(logoutFailure('An unknown error occurred: authSaga.ts'));
+        }
     }
 }
+
 
 function* watchAuth(): Generator<ReturnType<typeof takeEvery>, void, unknown> {
     yield takeEvery(LOGIN_REQUEST, handleLogin);

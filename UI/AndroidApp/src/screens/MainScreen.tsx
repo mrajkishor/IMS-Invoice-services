@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
-import { BottomNavigation, List, Card, ActivityIndicator, FAB } from 'react-native-paper';
+import { BottomNavigation, List, Card, ActivityIndicator, FAB, Button } from 'react-native-paper';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutRequest } from '../store/actions/authActions';
 import { fetchShopsRequest } from '../store/actions/shopActions';
 import { RootState } from '../store/reducers';
 import { RootStackParamList } from '../navigationTypes';
+import ProfileScreen from './ProfileScreen';
 
-const ProfileSettingRoute = () => <Text style={styles.scene}>Profile Setting</Text>;
 
 const ShopListRoute: React.FC = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -79,8 +79,8 @@ const MainScreen: React.FC = () => {
     };
 
     const renderScene = BottomNavigation.SceneMap({
-        profile: ProfileSettingRoute,
-        shops: ShopListRoute, // Use the ShopListRoute here
+        profile: ProfileScreen,
+        shops: ShopListRoute,
     });
 
     return (

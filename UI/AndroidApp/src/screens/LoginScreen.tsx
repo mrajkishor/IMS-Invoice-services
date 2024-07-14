@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { View, Text, TextInput, Button, ActivityIndicator, StyleSheet } from 'react-native';
 import { loginRequest } from '../store/actions/authActions';
 import { RootState } from '../store/store';
-import { getAllData } from '../utils/debug-in-dev/asyncStorage';
+import { getAllData } from '../utils/localStorage/asyncStorage';
 import { useNavigation } from '@react-navigation/native';
 import { LoginScreenNavigationProp } from '../navigationTypes';
 
