@@ -1,11 +1,11 @@
-import React from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Text, Card, FAB } from 'react-native-paper';
 import { useRoute, RouteProp } from '@react-navigation/native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'; // Import the icon set you want to use
 import { RootStackParamList } from '../navigationTypes';
 import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
-import Pdf from 'react-native-pdf';
 
 type ViewInvoiceScreenRouteProp = RouteProp<RootStackParamList, 'ViewInvoice'>;
 
@@ -13,13 +13,22 @@ const ViewInvoiceScreen: React.FC = () => {
     const route = useRoute<ViewInvoiceScreenRouteProp>();
     const { invoice } = route.params;
 
+    useEffect(() => {
+        console.log('Invoice Details:', invoice);
+    }, [invoice]);
+
     const handleShare = async () => {
-        const pdfPath = await createPdf(invoice);
-        Share.open({
-            url: `file://${pdfPath}`,
-            type: 'application/pdf',
-            title: 'Share Invoice'
-        });
+        try {
+            const pdfPath = await createPdf(invoice);
+            console.log('PDF Path:', pdfPath);
+            Share.open({
+                url: `file://${pdfPath}`,
+                type: 'application/pdf',
+                title: 'Share Invoice'
+            });
+        } catch (error) {
+            console.error('Error sharing invoice:', error);
+        }
     };
 
     const createPdf = async (invoice: any) => {
@@ -54,7 +63,7 @@ const ViewInvoiceScreen: React.FC = () => {
             </Card>
             <FAB
                 style={styles.fab}
-                icon="share"
+                icon={() => <MaterialIcons name="share" size={24} />}
                 onPress={handleShare}
             />
         </View>

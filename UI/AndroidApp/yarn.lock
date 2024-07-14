@@ -1766,12 +1766,27 @@
 "@types/prop-types@*":
   "version" "15.7.12"
 
+"@types/react-native-vector-icons@^6.4.18":
+  "integrity" "sha512-YGlNWb+k5laTBHd7+uZowB9DpIK3SXUneZqAiKQaj1jnJCZM0x71GDim5JCTMi4IFkhc9m8H/Gm28T5BjyivUw=="
+  "resolved" "https://registry.npmjs.org/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.18.tgz"
+  "version" "6.4.18"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "^0.70"
+
 "@types/react-native@^0.66.34":
   "integrity" "sha512-ON5oCmPoWvA7dBam7FUx4eNn2uXhEXQ7cCgIf0xO8J9PjVMFdkn2HkTSS1j7xLCxcMnYU5zGY0h+RLi9ZRbQAA=="
   "resolved" "https://registry.npmjs.org/@types/react-native/-/react-native-0.66.34.tgz"
   "version" "0.66.34"
   dependencies:
     "@types/react" "^17"
+
+"@types/react-native@^0.70":
+  "integrity" "sha512-c6WbyCgWTBgKKMESj/8b4w+zWcZSsCforson7UdXtXMecG3MxCinYi6ihhrHVPyUrVzORsvEzK8zg32z4pK6Sg=="
+  "resolved" "https://registry.npmjs.org/@types/react-native/-/react-native-0.70.19.tgz"
+  "version" "0.70.19"
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-redux@^7.1.20":
   "integrity" "sha512-NF8m5AjWCkert+fosDsN3hAlHzpjSiXlVy9EgQEmLoBhaNXbmyeGs/aj5dQzKuF+/q+S7JQagorGDW8pJ28Hmg=="

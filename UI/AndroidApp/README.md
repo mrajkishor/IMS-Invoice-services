@@ -31,6 +31,10 @@ adb reverse tcp:8081 tcp:8081
 # check device 
 adb devices
 
+# clean and rebuild (optional)
+cd android
+./gradlew clean
+
 # run on adroid device 
 npx react-native run-android --deviceId=DEVICE_ID
 

@@ -7,6 +7,7 @@ import { RootState } from '../store/reducers';
 import { RootStackParamList } from '../navigationTypes';
 import { fetchShopRequest, updateShopRequest, deleteShopRequest } from '../store/actions/shopActions';
 import { fetchInvoicesRequest } from '../store/actions/invoiceActions';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type ShopScreenRouteProp = RouteProp<RootStackParamList, 'Shop'>;
 
@@ -76,7 +77,7 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
                 <List.Item
                     title={`Invoice ID: ${item.invoiceId}`}
                     description={`Amount: ${item.amount}\nDetails: ${item.details}`}
-                    left={(props) => <List.Icon {...props} icon="file-document" />}
+                    left={(props) => <MaterialIcons name="description" size={24} color="black" />}
                 />
             </Card.Content>
         </Card>
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         margin: 16,
         right: 0,
-        bottom: 80,
+        bottom: 0,
     },
 });
 
