@@ -84,16 +84,14 @@ const MainScreen: React.FC = () => {
         {
             key: 'shops',
             title: 'Shops',
-            icon: ({ color, size }: { color: string, size: number }) => (
-                <MaterialIcons name="store" color={color} size={size} />
-            ),
+            focusedIcon: 'store',
+            unfocusedIcon: 'store-outline'
         },
         {
             key: 'profile',
             title: 'Profile',
-            icon: ({ color, size }: { color: string, size: number }) => (
-                <MaterialIcons name="account-circle" color={color} size={size} />
-            ),
+            focusedIcon: 'account-circle',
+            unfocusedIcon: 'account-circle-outline'
         },
     ]);
 
