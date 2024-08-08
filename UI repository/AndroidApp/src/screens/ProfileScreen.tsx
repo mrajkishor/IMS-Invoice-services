@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { Button, Card, ActivityIndicator, Text, TextInput } from 'react-native-paper';
+import { Button, Card, ActivityIndicator, Text, TextInput, Appbar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootState } from '../store/reducers';
 import { logoutRequest } from '../store/actions/authActions';
 import { fetchUserRequest, updateUserRequest, deleteUserRequest } from '../store/actions/userActions';
 import { RootStackParamList } from '../navigationTypes';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { myColors } from '../config/theme';
 
 const ProfileScreen: React.FC = () => {
     const dispatch = useDispatch();
@@ -71,29 +73,39 @@ const ProfileScreen: React.FC = () => {
     }
 
     return (
-        <View style={styles.container}>
-            <Card>
-                <Card.Title title="Profile Settings" />
-                <Card.Content>
-                    <TextInput
-                        label="Username"
-                        value={username}
-                        onChangeText={setUsername}
-                        disabled={!editMode}
-                        style={styles.input}
+        <>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => { }} />
+                <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="settings" />} onPress={() => { }} />
+                <Appbar.Content title="Account Settings" />
+            </Appbar.Header>
+            <View style={styles.container}>
+                <Card mode={"elevated"} elevation={0}>
+                    <Card.Title title="Change User Name"
+                        subtitle="Changes appear on the invoice"
                     />
-                </Card.Content>
-            </Card>
-            <Button mode="contained" onPress={handleUpdate} style={styles.button}>
-                {editMode ? 'Save' : 'Update'}
-            </Button>
-            <Button mode="contained" onPress={handleLogout} style={styles.button}>
-                Logout
-            </Button>
-            <Button mode="contained" onPress={handleDelete} style={[styles.button, styles.deleteButton]}>
-                Delete Account
-            </Button>
-        </View>
+                    <Card.Content>
+                        <TextInput
+                            label="Username"
+                            value={username}
+                            onChangeText={setUsername}
+                            disabled={!editMode}
+                            style={styles.input}
+                        />
+                    </Card.Content>
+                </Card>
+                <Button mode="elevated" onPress={handleUpdate} style={styles.button}>
+                    {editMode ? 'Save' : 'Update'}
+                </Button>
+                <Button mode="outlined" onPress={handleLogout} style={styles.button}>
+                    Logout
+                </Button>
+                <Button mode="contained" onPress={handleDelete} style={[styles.button, styles.deleteButton]}>
+                    Delete Account
+                </Button>
+            </View>
+        </>
+
     );
 };
 
@@ -109,7 +121,9 @@ const styles = StyleSheet.create({
         marginTop: 16,
     },
     deleteButton: {
-        backgroundColor: 'red',
+        backgroundColor: myColors.colors.errorContainer,
+        display: 'flex',
+        justifyContent: 'flex-end'
     },
     loader: {
         flex: 1,

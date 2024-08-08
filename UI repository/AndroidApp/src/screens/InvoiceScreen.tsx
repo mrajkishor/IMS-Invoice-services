@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, ActivityIndicator, List } from 'react-native-paper';
+import { Card, ActivityIndicator, List, Appbar } from 'react-native-paper';
 import { fetchInvoicesRequest } from '../store/actions/invoiceActions';
 import Button from '../components/Button';
 import Text from '../components/Text';
 import { RootState } from '../store/reducers'; // Ensure this path is correct
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const InvoiceScreen: React.FC<{ route: any }> = ({ route }) => {
     const { shopId } = route.params;
@@ -37,16 +38,24 @@ const InvoiceScreen: React.FC<{ route: any }> = ({ route }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={invoices}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
-            />
-            <Button style={styles.fab} icon="plus" onPress={() => console.log('Create Invoice')}>
-                Create Invoice
-            </Button>
-        </View>
+        <>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => { }} />
+                <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="store" />} onPress={() => { }} />
+                <Appbar.Content title="My Store" />
+            </Appbar.Header>
+            <View style={styles.container}>
+                <FlatList
+                    data={invoices}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id.toString()}
+                />
+                <Button style={styles.fab} icon="plus" onPress={() => console.log('Create Invoice')}>
+                    Create Invoice
+                </Button>
+            </View>
+        </>
+
     );
 };
 

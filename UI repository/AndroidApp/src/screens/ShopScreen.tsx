@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Alert, FlatList, RefreshControl } from 'react-native';
-import { TextInput, Button, Card, List, ActivityIndicator, Text, FAB } from 'react-native-paper';
+import { TextInput, Button, Card, List, ActivityIndicator, Text, FAB, Appbar, Divider } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootState } from '../store/reducers';
@@ -8,6 +8,7 @@ import { RootStackParamList } from '../navigationTypes';
 import { fetchShopRequest, updateShopRequest, deleteShopRequest } from '../store/actions/shopActions';
 import { fetchInvoicesRequest } from '../store/actions/invoiceActions';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { myColors } from '../config/theme';
 
 type ShopScreenRouteProp = RouteProp<RootStackParamList, 'Shop'>;
 
@@ -72,12 +73,14 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
     };
 
     const renderInvoiceItem = ({ item }: { item: any }) => (
-        <Card style={styles.card} onPress={() => navigation.navigate('ViewInvoice', { invoice: item })}>
+        <Card mode={"elevated"} elevation={0} onPress={() => navigation.navigate('ViewInvoice', { invoice: item })}>
             <Card.Content>
-                <List.Item
+                <Card.Title
                     title={`Invoice ID: ${item.invoiceId}`}
-                    description={`Amount: ${item.amount}\nDetails: ${item.details}`}
-                    left={(props) => <MaterialIcons name="description" size={24} color="black" />}
+                    subtitle={`Amount: ${item.amount}\nDetails: ${item.details}`}
+                    // left={(props) => <MaterialIcons name="description" size={24} color="black" />}
+                    right={(props) => <MaterialIcons name="chevron-right" size={24} color="black" />}
+
                 />
             </Card.Content>
         </Card>
@@ -91,69 +94,80 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <Card>
-                <Card.Title title="Shop Details" />
-                <Card.Content>
-                    <TextInput
-                        label="Shop Name"
-                        value={shopName}
-                        onChangeText={setShopName}
-                        disabled={!editMode}
-                        style={styles.input}
+        <>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => { }} />
+                <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="store" />} onPress={() => { }} />
+                <Appbar.Content title="My Store" />
+            </Appbar.Header>
+            <View style={styles.container}>
+                <Card mode={"elevated"} elevation={0}>
+                    <Card.Title title="Store Details" subtitle="Update your shop name and address" />
+                    <Card.Content >
+                        <TextInput
+                            label="Shop Name"
+                            value={shopName}
+                            onChangeText={setShopName}
+                            disabled={!editMode}
+                        />
+                        <TextInput
+                            label="Address"
+                            value={address}
+                            onChangeText={setAddress}
+                            disabled={!editMode}
+                        />
+                    </Card.Content>
+                </Card>
+                <Button mode="elevated" onPress={handleUpdate} style={styles.button}>
+                    {editMode ? 'Save Changes' : 'Update Store'}
+                </Button>
+                <Button mode="contained" onPress={handleDelete} style={[styles.button, styles.deleteButton]}>
+                    Delete
+                </Button>
+                <Divider />
+                {invoicesState.loading ? (
+                    <ActivityIndicator animating={true} style={styles.loader} />
+                ) : invoicesState.error ? (
+                    <Text style={styles.error}>{invoicesState.error}</Text>
+                ) : invoicesState?.invoices?.length === 0 ? (
+                    <Text style={styles.alert}>No Invoice Found!</Text>
+                ) : (
+                    <FlatList
+                        data={invoicesState.invoices}
+                        renderItem={renderInvoiceItem}
+                        keyExtractor={(item) => item.invoiceId}
+                        style={styles.list}
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                        }
                     />
-                    <TextInput
-                        label="Address"
-                        value={address}
-                        onChangeText={setAddress}
-                        disabled={!editMode}
-                        style={styles.input}
-                    />
-                </Card.Content>
-            </Card>
-            <Button mode="contained" onPress={handleUpdate} style={styles.button}>
-                {editMode ? 'Save' : 'Update'}
-            </Button>
-            <Button mode="contained" onPress={handleDelete} style={[styles.button, styles.deleteButton]}>
-                Delete
-            </Button>
-            {invoicesState.loading ? (
-                <ActivityIndicator animating={true} style={styles.loader} />
-            ) : invoicesState.error ? (
-                <Text style={styles.error}>{invoicesState.error}</Text>
-            ) : (
-                <FlatList
-                    data={invoicesState.invoices}
-                    renderItem={renderInvoiceItem}
-                    keyExtractor={(item) => item.invoiceId}
-                    style={styles.list}
-                    refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    }
+                )}
+                <FAB
+                    style={styles.fab}
+                    icon="plus"
+                    onPress={() => navigation.navigate('CreateInvoice', { shopId })}
                 />
-            )}
-            <FAB
-                style={styles.fab}
-                icon="plus"
-                onPress={() => navigation.navigate('CreateInvoice', { shopId })}
-            />
-        </View>
+            </View>
+
+        </>
+
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
-    },
-    input: {
-        marginBottom: 16,
+        padding: 10,
     },
     button: {
-        marginTop: 16,
+        marginTop: 5,
+        marginBottom: 10,
+        marginLeft: 10,
+        marginRight: 10
+
     },
     deleteButton: {
-        backgroundColor: 'red',
+        backgroundColor: myColors.colors.errorContainer,
     },
     card: {
         marginBottom: 10,
@@ -166,8 +180,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 20,
     },
+    alert: {
+        color: myColors.colors.backdrop,
+        textAlign: 'center',
+        margin: 20,
+    },
     list: {
-        marginTop: 20,
+
     },
     fab: {
         position: 'absolute',

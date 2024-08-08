@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, Appbar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { createShopRequest } from '../store/actions/shopActions';
 import { useNavigation } from '@react-navigation/native';
 import { MainScreenNavigationProp } from 'navigationTypes';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const CreateShopScreen: React.FC = () => {
     const [shopName, setShopName] = useState('');
@@ -28,30 +29,40 @@ const CreateShopScreen: React.FC = () => {
     };
 
     return (
-        <View style={styles.container}>
-            <TextInput
-                label="Shop Name"
-                value={shopName}
-                onChangeText={setShopName}
-                style={styles.input}
-            />
-            <TextInput
-                label="Address"
-                value={address}
-                onChangeText={setAddress}
-                style={styles.input}
-            />
-            <Button mode="contained" onPress={handleCreateShop} style={styles.button}>
-                Create Shop
-            </Button>
-        </View>
+        <>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => { }} />
+                <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="create" />} onPress={() => { }} />
+                <Appbar.Content title="Create Shop" />
+            </Appbar.Header>
+            <View style={styles.container}>
+                <TextInput
+                    label="Shop Name"
+                    mode={"outlined"}
+                    value={shopName}
+                    onChangeText={setShopName}
+                    style={styles.input}
+                />
+                <TextInput
+                    mode={"outlined"}
+                    label="Shop Address"
+                    value={address}
+                    onChangeText={setAddress}
+                    style={styles.input}
+                />
+                <Button mode={'elevated'} onPress={handleCreateShop} style={styles.button}>
+                    Create new Shop
+                </Button>
+            </View>
+        </>
+
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        padding: 30,
         justifyContent: 'center',
     },
     input: {

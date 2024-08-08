@@ -8,6 +8,7 @@ import { getAllData } from '../utils/localStorage/asyncStorage';
 import { useNavigation } from '@react-navigation/native';
 import { LoginScreenNavigationProp } from '../navigationTypes';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AppLogo from '../components/AppLogo';
 
 const LoginScreen: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -21,6 +22,8 @@ const LoginScreen: React.FC = () => {
         getAllData().then((data) => console.log('All AsyncStorage Data:', data));
     };
 
+    const handleRegister = () => { }
+
     useEffect(() => {
         if (isAuthenticated) {
             navigation.navigate('Main');
@@ -29,9 +32,12 @@ const LoginScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            <Image source={require('../assets/images/logo.png')} style={styles.logo} />
+            {/* <Image source={require('../assets/images/logo.png')} style={styles.logo} /> */}
+            <AppLogo />
             <View style={styles.inputContainer}>
-                <MaterialIcons name="email" size={24} color="#1E90FF" style={styles.icon} />
+                {/* <MaterialIcons name="email" size={24}
+                    color="#1E90FF"
+                    style={styles.icon} /> */}
                 <TextInput
                     style={styles.input}
                     label="Email"
@@ -39,11 +45,13 @@ const LoginScreen: React.FC = () => {
                     onChangeText={setEmail}
                     keyboardType="email-address"
                     mode="outlined"
-                    theme={{ colors: { primary: '#1E90FF' } }}
+                // theme={{ colors: { primary: '#1E90FF' } }}
                 />
             </View>
             <View style={styles.inputContainer}>
-                <MaterialIcons name="lock" size={24} color="#1E90FF" style={styles.icon} />
+                {/* <MaterialIcons name="lock" size={24}
+                    color="#1E90FF" 
+                    style={styles.icon} /> */}
                 <TextInput
                     style={styles.input}
                     label="Password"
@@ -51,18 +59,29 @@ const LoginScreen: React.FC = () => {
                     onChangeText={setPassword}
                     secureTextEntry
                     mode="outlined"
-                    theme={{ colors: { primary: '#1E90FF' } }}
+                // theme={{ colors: { primary: '#1E90FF' } }}
                 />
             </View>
-            {loading && <ActivityIndicator animating={true} color="#1E90FF" />}
+            {loading && <ActivityIndicator animating={true}
+            // color="#1E90FF" 
+            />}
             {error && <Text style={styles.error}>{error}</Text>}
             <Button
-                mode="contained"
+                mode="elevated"
                 onPress={handleLogin}
                 style={styles.button}
-                theme={{ colors: { primary: '#1E90FF' } }}
+            // theme={{ colors: { primary: '#1E90FF' } }}
             >
                 Login
+            </Button>
+
+            <Button
+                mode="contained-tonal"
+                onPress={handleRegister}
+                style={styles.button}
+
+            >
+                Create a new Account
             </Button>
         </View>
     );
@@ -72,7 +91,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        padding: 16,
+        padding: 60,
         backgroundColor: '#ffffff',
     },
     logo: {
@@ -81,6 +100,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         alignSelf: 'center',
         marginBottom: 24,
+        borderRadius: 100,
     },
     inputContainer: {
         flexDirection: 'row',

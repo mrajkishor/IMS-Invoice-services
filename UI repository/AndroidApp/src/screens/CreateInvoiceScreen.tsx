@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, Appbar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootState } from '../store/reducers';
 import { RootStackParamList } from '../navigationTypes';
 import { createInvoiceRequest } from '../store/actions/invoiceActions';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type CreateInvoiceScreenRouteProp = RouteProp<RootStackParamList, 'CreateInvoice'>;
 
@@ -35,31 +36,42 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <TextInput
-                label="Details"
-                value={details}
-                onChangeText={setDetails}
-                style={styles.input}
-            />
-            <TextInput
-                label="Amount"
-                value={amount}
-                onChangeText={setAmount}
-                keyboardType="numeric"
-                style={styles.input}
-            />
-            <Button mode="contained" onPress={handleCreateInvoice} style={styles.button}>
-                Create Invoice
-            </Button>
-        </View>
+        <>
+            <Appbar.Header>
+                <Appbar.BackAction onPress={() => { }} />
+                <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="create" />} onPress={() => { }} />
+                <Appbar.Content title="Create Invoice" />
+            </Appbar.Header>
+            <View style={styles.container}>
+                <TextInput
+                    label="Item or Service name"
+                    value={details}
+                    mode={"outlined"}
+                    onChangeText={setDetails}
+                    style={styles.input}
+                />
+                <TextInput
+                    label="Amount"
+                    value={amount}
+                    mode={"outlined"}
+                    onChangeText={setAmount}
+                    keyboardType="numeric"
+                    style={styles.input}
+                />
+                <Button mode={'elevated'} onPress={handleCreateInvoice} style={styles.button}>
+                    Create new Invoice
+                </Button>
+            </View>
+        </>
+
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        padding: 30,
+        justifyContent: 'center',
     },
     input: {
         marginBottom: 16,

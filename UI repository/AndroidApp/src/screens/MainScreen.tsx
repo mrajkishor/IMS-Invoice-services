@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
-import { BottomNavigation, List, Card, ActivityIndicator, FAB, Button } from 'react-native-paper';
+import { BottomNavigation, List, Card, ActivityIndicator, FAB, Button, Surface, Appbar } from 'react-native-paper';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutRequest } from '../store/actions/authActions';
@@ -9,6 +9,7 @@ import { RootState } from '../store/reducers';
 import { RootStackParamList } from '../navigationTypes';
 import ProfileScreen from './ProfileScreen';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { myColors } from '../config/theme';
 
 
 const ShopListRoute: React.FC = () => {
@@ -33,12 +34,12 @@ const ShopListRoute: React.FC = () => {
     };
 
     const renderShopItem = ({ item }: { item: any }) => (
-        <Card style={styles.card} onPress={() => navigation.navigate('Shop', { shopId: item.shopId })}>
+        <Card mode={'elevated'} elevation={0} style={styles.card} onPress={() => navigation.navigate('Shop', { shopId: item.shopId })}>
             <Card.Content>
-                <List.Item
+                <Card.Title
                     title={item.shopName}
-                    description={`Address: ${item.address}`}
-                    left={(props) => <MaterialIcons  {...props} name="store" />}
+                    subtitle={`Address : ${item.address}`}
+                    // left={(props) => <MaterialIcons  {...props} name="store" />}
                     right={(props) => <MaterialIcons  {...props} name="chevron-right" />}
                 />
             </Card.Content>
@@ -54,15 +55,24 @@ const ShopListRoute: React.FC = () => {
     }
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={shops}
-                renderItem={renderShopItem}
-                keyExtractor={(item) => item.shopId}
-                refreshing={refreshing}
-                onRefresh={handleRefresh}
-            />
-        </View>
+        <>
+            <Appbar.Header>
+                <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="store" />} onPress={() => { }} />
+
+                <Appbar.Content title="My Shop Catalogue" />
+            </Appbar.Header>
+            <View style={styles.container}>
+
+                <FlatList
+                    data={shops}
+                    renderItem={renderShopItem}
+                    keyExtractor={(item) => item.shopId}
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
+                />
+            </View>
+        </>
+
     );
 };
 
@@ -121,6 +131,19 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+
+    },
+    surface: {
+        zIndex: 1000,
+        paddingBottom: 2,
+        backgroundColor: "white"
+    },
+    shopListHeader: {
+        fontSize: 20,
+        fontWeight: "600",
+        // textAlign: 'center',
+        padding: 10,
+        backgroundColor: myColors.colors.background,
     },
     card: {
         marginBottom: 10,
