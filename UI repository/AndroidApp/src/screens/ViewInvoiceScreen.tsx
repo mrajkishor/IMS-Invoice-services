@@ -31,6 +31,26 @@ const ViewInvoiceScreen: React.FC = () => {
                     </View>
                     <Divider />
                     <View style={styles.section}>
+                        <Text style={styles.label}>Customer Name:</Text>
+                        <Text style={styles.value}>{invoice.customerName}</Text>
+                    </View>
+                    <Divider />
+                    <View style={styles.section}>
+                        <Text style={styles.label}>Customer Address:</Text>
+                        <Text style={styles.value}>{invoice.customerAddress}</Text>
+                    </View>
+                    <Divider />
+                    <View style={styles.section}>
+                        <Text style={styles.label}>Date:</Text>
+                        <Text style={styles.value}>{invoice.date}</Text>
+                    </View>
+                    <Divider />
+                    <View style={styles.section}>
+                        <Text style={styles.label}>Due Date:</Text>
+                        <Text style={styles.value}>{invoice.dueDate}</Text>
+                    </View>
+                    <Divider />
+                    <View style={styles.section}>
                         <Text style={styles.label}>Details:</Text>
                         <Text style={styles.value}>{invoice.details}</Text>
                     </View>
