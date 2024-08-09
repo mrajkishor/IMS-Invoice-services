@@ -57,6 +57,7 @@ const ShopListRoute: React.FC = () => {
     return (
         <>
             <Appbar.Header>
+
                 <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="store" />} onPress={() => { }} />
 
                 <Appbar.Content title="My Shop Catalogue" />

@@ -1,2 +1,2 @@
 Landing Page / Web App : React (Next JS)
-Android app : Core Java (Android Studio)
+Android app : React Native
