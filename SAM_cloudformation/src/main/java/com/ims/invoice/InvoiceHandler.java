@@ -52,19 +52,16 @@ public class InvoiceHandler {
     public APIGatewayProxyResponseEvent handleCreateInvoiceRequest(APIGatewayProxyRequestEvent request, Context context)
             throws JsonProcessingException {
         try {
-            // Extract and verify the token from the Authorization header
             String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
             String userIdFromToken = getUserIdFromToken(token);
 
             @SuppressWarnings("unchecked")
             Map<String, String> requestBody = objectMapper.readValue(request.getBody(), Map.class);
 
-            // Ensure the userId in the request body matches the userId from the token
             if (!requestBody.get("userId").equals(userIdFromToken)) {
                 return new APIGatewayProxyResponseEvent().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}");
             }
 
-            // Generate a unique invoiceId if not provided
             String invoiceId = requestBody.get("invoiceId");
             if (invoiceId == null || invoiceId.isEmpty()) {
                 invoiceId = UUID.randomUUID().toString();
@@ -74,7 +71,12 @@ public class InvoiceHandler {
                     .withPrimaryKey("invoiceId", invoiceId)
                     .withString("shopId", requestBody.get("shopId"))
                     .withString("userId", requestBody.get("userId"))
+                    .withString("customerName", requestBody.get("customerName"))
+                    .withString("customerAddress", requestBody.get("customerAddress"))
                     .withString("details", requestBody.get("details"))
+                    .withString("invoiceDate", requestBody.get("invoiceDate"))
+                    .withString("dueDate", requestBody.get("dueDate"))
+                    .withString("status", requestBody.get("status"))
                     .withNumber("amount", Integer.parseInt(requestBody.get("amount")))));
 
             Map<String, String> responseBody = new HashMap<>();
@@ -93,7 +95,6 @@ public class InvoiceHandler {
     public APIGatewayProxyResponseEvent handleGetInvoiceRequest(APIGatewayProxyRequestEvent request, Context context)
             throws JsonProcessingException {
         try {
-            // Extract and verify the token from the Authorization header
             String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
             String userIdFromToken = getUserIdFromToken(token);
 
@@ -101,7 +102,6 @@ public class InvoiceHandler {
             Item item = invoicesTable.getItem(new GetItemSpec().withPrimaryKey("invoiceId", invoiceId));
 
             if (item != null) {
-                // Ensure the userId in the invoice matches the userId from the token
                 if (!item.getString("userId").equals(userIdFromToken)) {
                     return new APIGatewayProxyResponseEvent().withStatusCode(403)
                             .withBody("{\"message\":\"Forbidden\"}");
@@ -121,7 +121,6 @@ public class InvoiceHandler {
     public APIGatewayProxyResponseEvent handleUpdateInvoiceRequest(APIGatewayProxyRequestEvent request, Context context)
             throws JsonProcessingException {
         try {
-            // Extract and verify the token from the Authorization header
             String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
             String userIdFromToken = getUserIdFromToken(token);
 
@@ -132,19 +131,24 @@ public class InvoiceHandler {
             Item item = invoicesTable.getItem(new GetItemSpec().withPrimaryKey("invoiceId", invoiceId));
 
             if (item != null) {
-                // Ensure the userId in the invoice matches the userId from the token
                 if (!item.getString("userId").equals(userIdFromToken)) {
                     return new APIGatewayProxyResponseEvent().withStatusCode(403)
                             .withBody("{\"message\":\"Forbidden\"}");
                 }
 
                 invoicesTable.updateItem(new UpdateItemSpec().withPrimaryKey("invoiceId", invoiceId)
-                        .withUpdateExpression(
-                                "set shopId = :shopId, userId = :userId, details = :details, amount = :amount")
+                        .withUpdateExpression("set shopId = :shopId, userId = :userId, customerName = :customerName, " +
+                                "customerAddress = :customerAddress, details = :details, invoiceDate = :invoiceDate, " +
+                                "dueDate = :dueDate, status = :status, amount = :amount")
                         .withValueMap(new ValueMap()
                                 .withString(":shopId", requestBody.get("shopId"))
                                 .withString(":userId", requestBody.get("userId"))
+                                .withString(":customerName", requestBody.get("customerName"))
+                                .withString(":customerAddress", requestBody.get("customerAddress"))
                                 .withString(":details", requestBody.get("details"))
+                                .withString(":invoiceDate", requestBody.get("invoiceDate"))
+                                .withString(":dueDate", requestBody.get("dueDate"))
+                                .withString(":status", requestBody.get("status"))
                                 .withNumber(":amount", Integer.parseInt(requestBody.get("amount")))));
 
                 return new APIGatewayProxyResponseEvent().withStatusCode(200)
@@ -163,7 +167,6 @@ public class InvoiceHandler {
     public APIGatewayProxyResponseEvent handleDeleteInvoiceRequest(APIGatewayProxyRequestEvent request, Context context)
             throws JsonProcessingException {
         try {
-            // Extract and verify the token from the Authorization header
             String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
             String userIdFromToken = getUserIdFromToken(token);
 
@@ -171,7 +174,6 @@ public class InvoiceHandler {
             Item item = invoicesTable.getItem(new GetItemSpec().withPrimaryKey("invoiceId", invoiceId));
 
             if (item != null) {
-                // Ensure the userId in the invoice matches the userId from the token
                 if (!item.getString("userId").equals(userIdFromToken)) {
                     return new APIGatewayProxyResponseEvent().withStatusCode(403)
                             .withBody("{\"message\":\"Forbidden\"}");
@@ -193,8 +195,7 @@ public class InvoiceHandler {
     }
 
     public APIGatewayProxyResponseEvent handleGetInvoicesByShopRequest(APIGatewayProxyRequestEvent request,
-            Context context)
-            throws JsonProcessingException {
+            Context context) throws JsonProcessingException {
         try {
             String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
             String userIdFromToken = getUserIdFromToken(token);
