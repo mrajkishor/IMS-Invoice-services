@@ -17,6 +17,8 @@ AWS.config.update({
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
 interface InvoiceData {
+    userId: string;
+    shopId: string;
     invoiceId: string;
     details: string;
     amount: number;
@@ -28,6 +30,7 @@ interface InvoiceData {
     shopName?: string;
     shopAddress?: string;
     userEmail?: string;
+    templateId?: string;
     // other properties based on your DynamoDB schema
 }
 
@@ -35,7 +38,7 @@ export default function Invoice() {
     const router = useRouter();
     const { id } = router.query as { id: string };
     const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
-    const [template, setTemplate] = useState<number>(2);
+    const [template, setTemplate] = useState<number>(1);
 
     useEffect(() => {
         if (id) {
@@ -65,6 +68,7 @@ export default function Invoice() {
                 shopAddress: shopData.shopAddress,
                 userEmail: customerData.userEmail,
             });
+            setTemplate(Number(invoice.templateId));
         } catch (error) {
             console.error("Error fetching invoice data:", error);
         }

@@ -77,7 +77,8 @@ public class InvoiceHandler {
                     .withString("invoiceDate", requestBody.get("invoiceDate"))
                     .withString("dueDate", requestBody.get("dueDate"))
                     .withString("status", requestBody.get("status"))
-                    .withNumber("amount", Integer.parseInt(requestBody.get("amount")))));
+                    .withNumber("amount", Integer.parseInt(requestBody.get("amount")))
+                    .withNumber("templateId", Integer.parseInt(requestBody.get("templateId")))));
 
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("message", "Invoice created");
@@ -139,7 +140,7 @@ public class InvoiceHandler {
                 invoicesTable.updateItem(new UpdateItemSpec().withPrimaryKey("invoiceId", invoiceId)
                         .withUpdateExpression("set shopId = :shopId, userId = :userId, customerName = :customerName, " +
                                 "customerAddress = :customerAddress, details = :details, invoiceDate = :invoiceDate, " +
-                                "dueDate = :dueDate, status = :status, amount = :amount")
+                                "dueDate = :dueDate, status = :status, amount = :amount, templateId = :templateId")
                         .withValueMap(new ValueMap()
                                 .withString(":shopId", requestBody.get("shopId"))
                                 .withString(":userId", requestBody.get("userId"))
@@ -149,7 +150,8 @@ public class InvoiceHandler {
                                 .withString(":invoiceDate", requestBody.get("invoiceDate"))
                                 .withString(":dueDate", requestBody.get("dueDate"))
                                 .withString(":status", requestBody.get("status"))
-                                .withNumber(":amount", Integer.parseInt(requestBody.get("amount")))));
+                                .withNumber(":amount", Integer.parseInt(requestBody.get("amount")))
+                                .withNumber(":templateId", Integer.parseInt(requestBody.get("templateId")))));
 
                 return new APIGatewayProxyResponseEvent().withStatusCode(200)
                         .withBody("{\"message\":\"Invoice updated\"}");
@@ -223,5 +225,4 @@ public class InvoiceHandler {
                     .withBody(objectMapper.writeValueAsString(errorResponse));
         }
     }
-
 }
