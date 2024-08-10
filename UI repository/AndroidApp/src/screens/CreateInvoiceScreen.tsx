@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TextInput, Button, Appbar, IconButton, Menu, Text } from 'react-native-paper';
+import { TextInput, Button, Appbar, IconButton, Menu, Text, Snackbar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootState } from '../store/reducers';
 import { RootStackParamList } from '../navigationTypes';
 import { createInvoiceRequest } from '../store/actions/invoiceActions';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { IconProps } from 'react-native-vector-icons/Icon';
 
 type CreateInvoiceScreenRouteProp = RouteProp<RootStackParamList, 'CreateInvoice'>;
 
@@ -28,12 +29,60 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
     const [templateId, setTemplateId] = useState<string | null>("1");
     const [statusMenuVisible, setStatusMenuVisible] = useState(false);
 
+    const [errorMessage, setErrorMessage] = useState('');
+    const [showSnackbar, setShowSnackbar] = useState(false);
+
     const dispatch = useDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const user = useSelector((state: RootState) => state.auth.user);
 
+    const validateFields = () => {
+        if (!customerName || customerName.length > 50) {
+            setErrorMessage('Customer Name is required and should be a maximum of 50 characters long.');
+            setShowSnackbar(true);
+            return false;
+        }
+        if (!customerAddress || customerAddress.length > 100) {
+            setErrorMessage('Customer Address is required and should be a maximum of 100 characters long.');
+            setShowSnackbar(true);
+            return false;
+        }
+        const dateRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
+        if (!date || !dateRegex.test(date)) {
+            setErrorMessage('Date is required and should be in the format YYYY-MM-DD HH:MM.');
+            setShowSnackbar(true);
+            return false;
+        }
+        if (!dueDate || !dateRegex.test(dueDate)) {
+            setErrorMessage('Due Date is required and should be in the format YYYY-MM-DD HH:MM.');
+            setShowSnackbar(true);
+            return false;
+        }
+        if (new Date(dueDate) < new Date(date)) {
+            setErrorMessage('Due Date should be the same or after the Invoice Date.');
+            setShowSnackbar(true);
+            return false;
+        }
+        if (!details || details.length > 300) {
+            setErrorMessage('Item or Service Description is required and should be a maximum of 300 characters long.');
+            setShowSnackbar(true);
+            return false;
+        }
+        if (!amount || isNaN(Number(amount))) {
+            setErrorMessage('Amount is required and should be a valid number.');
+            setShowSnackbar(true);
+            return false;
+        }
+        if (!status) {
+            setErrorMessage('Please select a payment status.');
+            setShowSnackbar(true);
+            return false;
+        }
+        return true;
+    };
+
     const handleCreateInvoice = () => {
-        if (user?.userId) {
+        if (validateFields() && user?.userId) {
             const payload = {
                 shopId,
                 userId: user.userId,
@@ -76,7 +125,7 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
         <>
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => navigation.goBack()} />
-                <Appbar.Action icon={(props) => <MaterialIcons {...props} name="create" />} onPress={() => { }} />
+                <Appbar.Action icon={(props: React.JSX.IntrinsicAttributes & React.JSX.IntrinsicClassAttributes<MaterialIcons> & Readonly<IconProps>) => <MaterialIcons {...props} name="create" />} onPress={() => { }} />
                 <Appbar.Content title="Create Invoice" />
             </Appbar.Header>
             <View style={styles.container}>
@@ -103,7 +152,7 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
                         style={[styles.input, styles.dateInput]}
                     />
                     <IconButton
-                        icon={(props) => <MaterialIcons name="today" size={24} color="black" />}
+                        icon={() => <MaterialIcons name="today" size={24} color="black" />}
                         size={20}
                         onPress={handleSetTodayDate}
                     />
@@ -117,7 +166,7 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
                         style={[styles.input, styles.dateInput]}
                     />
                     <IconButton
-                        icon={(props) => <MaterialIcons name="today" size={24} color="black" />}
+                        icon={() => <MaterialIcons name="today" size={24} color="black" />}
                         size={20}
                         onPress={handleSetTodayDueDate}
                     />
@@ -128,6 +177,7 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
                     mode="outlined"
                     onChangeText={setDetails}
                     style={styles.input}
+                    maxLength={300}
                 />
                 <TextInput
                     label="Amount"
@@ -145,14 +195,9 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
                         visible={statusMenuVisible}
                         onDismiss={() => setStatusMenuVisible(false)}
                         anchor={
-
-
-
                             <Text style={styles.preview} variant="bodyMedium">
                                 {status ? `Payment Status : ${status}` : "Please select a payment status"}
                             </Text>
-
-                            // <TextInput style={styles.preview} mode="outlined" value={status} disabled />
                         }
                     >
                         {statusOptions.map((option) => (
@@ -170,10 +215,23 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
                 <Button mode={"elevated"} onPress={openTemplateSelector} style={styles.button}>
                     Select Template ({templateId})
                 </Button>
-                <Button mode={"elevated"} onPress={handleCreateInvoice} style={styles.button}>
+                <Button mode={"contained"} onPress={handleCreateInvoice} style={styles.button}>
                     Create Invoice
                 </Button>
+
             </View>
+            <Snackbar
+                visible={showSnackbar}
+                onDismiss={() => setShowSnackbar(false)}
+                duration={3000}
+                action={{
+                    label: 'Dismiss',
+                    onPress: () => {
+                        setShowSnackbar(false);
+                    },
+                }}>
+                {errorMessage}
+            </Snackbar>
         </>
     );
 };
@@ -181,8 +239,7 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 30,
-        justifyContent: 'center',
+        padding: 30
     },
     input: {
         marginBottom: 10,
@@ -193,9 +250,6 @@ const styles = StyleSheet.create({
     },
     dateInput: {
         flex: 1,
-    },
-    todayButton: {
-        marginLeft: 10
     },
     button: {
         marginTop: 10,

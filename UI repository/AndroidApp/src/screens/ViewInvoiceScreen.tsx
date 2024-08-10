@@ -1,16 +1,22 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, GestureResponderEvent, Share, Linking } from 'react-native';
 import { Text, Card, Divider, Button, SegmentedButtons, Appbar } from 'react-native-paper';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../navigationTypes';
 import { myColors } from '../config/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+
+type TemplateSelectorScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TemplateSelector'>;
+type TemplateSelectorScreenRouteProp = RouteProp<RootStackParamList, 'TemplateSelector'>;
 
 type ViewInvoiceScreenRouteProp = RouteProp<RootStackParamList, 'ViewInvoice'>;
 
 const ViewInvoiceScreen: React.FC = () => {
     const route = useRoute<ViewInvoiceScreenRouteProp>();
     const { invoice } = route.params;
+    const navigation = useNavigation<TemplateSelectorScreenNavigationProp>();
 
     const handleOpenLinkInBrowser = async () => {
         const url = `https://invoguru.com/invoice/${invoice.invoiceId}`;
@@ -42,7 +48,7 @@ const ViewInvoiceScreen: React.FC = () => {
     return (
         <>
             <Appbar.Header>
-                <Appbar.BackAction onPress={() => { }} />
+                <Appbar.BackAction onPress={() => { navigation.goBack() }} />
 
                 <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="details" />} onPress={() => { }} />
 
@@ -78,7 +84,7 @@ const ViewInvoiceScreen: React.FC = () => {
                         </View>
                         <Divider />
                         <View style={styles.section}>
-                            <Text style={styles.label}>Date:</Text>
+                            <Text style={styles.label}>Invoicing Date:</Text>
                             <Text style={styles.value}>{invoice.invoiceDate}</Text>
                         </View>
                         <Divider />
@@ -94,7 +100,7 @@ const ViewInvoiceScreen: React.FC = () => {
                         <Divider />
                         <View style={styles.section}>
                             <Text style={styles.label}>Amount:</Text>
-                            <Text style={styles.value}>${invoice.amount}</Text>
+                            <Text style={styles.value}>Rs {invoice.amount}</Text>
                         </View>
                         <Divider />
                         <View style={styles.footer}>
