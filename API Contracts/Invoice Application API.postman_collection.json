@@ -362,7 +362,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2MmUxODI3MC1iYzA5LTQyOGMtYTkxNy04YzEyZjBlN2IyNDAiLCJleHAiOjE3MTk2MzM1ODJ9.orN3EoZ01BLSVu5H1aNbBI30fw-roQwT6kfUCcYpIAw",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0ZDdlZmJjMi03NDc4LTRmZDctODcwYy04NDU4MTBkMDU3ZGYiLCJleHAiOjE3MjMyNDczNzl9.0TUYdSGz1fpyqDWxZBMVQNo3Rf86vc95__F-jrIPX1c",
 									"type": "string"
 								}
 							]
@@ -380,7 +380,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n     \"invoiceId\": \"optional-invoice-id\",\r\n    \"shopId\": \"88602e2c-304c-412b-9644-f3c57c1dbed2\",\r\n    \"userId\":  \"62e18270-bc09-428c-a917-8c12f0e7b240\",\r\n    \"details\": \"Invoice details here\",\r\n    \"amount\": \"100\"\r\n}\r\n"
+							"raw": "{\r\n     \"shopId\": \"0d286992-bb78-46c1-8f00-2b3553dbb78b\",\r\n        \"ownerId\": \"4d7efbc2-7478-4fd7-870c-845810d057df\",\r\n    \"customerName\": \"Deepak Nayak\",\r\n    \"customerAddress\": \"LIC Colony\",\r\n    \"details\": \"Invoice 2\",\r\n    \"amount\": \"1599\",\r\n    \"invoiceDate\": \"2024-08-10 14:35\",\r\n    \"dueDate\": \"2024-08-15\",\r\n    \"status\": \"Unpaid\"\r\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/invoices",
