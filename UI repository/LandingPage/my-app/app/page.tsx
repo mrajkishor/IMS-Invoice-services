@@ -1,38 +1,53 @@
 import Image from "next/image";
-import "./Home.css"; // Import the CSS file for styling
+import templateImage1 from '../public/images/templates/sample_2.jpg';
+import templateImage2 from '../public/images/templates/sample_3.jpg';
+import appScreenshot from '../public/images/app_screenshots/sample_1.jpg';
+import "./Home.css";
+import { DeviceFrameset } from 'react-device-frameset';
+import 'react-device-frameset/styles/marvel-devices.min.css';
 
 export default function Home() {
   return (
     <main className="main-container">
       {/* Hero Section */}
       <section className="hero-section">
-        <h1 className="hero-title">
-          The Ultimate Invoice App
-        </h1>
-        <p className="hero-description">
-          Simplify your invoicing process and get paid faster with our easy-to-use app.
-        </p>
-        <div className="button-group">
-          <a href="#features" className="btn btn-primary">
-            View Templates
-          </a>
-          <a href="#download" className="btn btn-secondary">
-            Get Started
-          </a>
+        <div className="hero-content">
+          <h1 className="hero-title">
+            The Ultimate Invoice App
+          </h1>
+          <p className="hero-description">
+            Simplify your invoicing process and get paid faster with our easy-to-use app.
+          </p>
+          <div className="button-group">
+            <a href="#features" className="btn btn-primary">
+              View Templates
+            </a>
+            <a href="#download" className="btn btn-secondary">
+              Download on Googlplay
+            </a>
+          </div>
+        </div>
+        <div className="hero-image-container">
+          <DeviceFrameset device="iPhone 8" color="gold" >
+            <Image src={appScreenshot} alt="Invoice App Screenshot" layout="responsive" />
+          </DeviceFrameset>
         </div>
       </section>
 
       {/* Features Section */}
       <section id="features" className="features-section">
         <div className="feature-item">
+          <Image src={templateImage1} alt="Template Image" className="feature-image" layout="responsive" />
           <h2 className="feature-title">Easy Invoicing</h2>
           <p>Create and send invoices in minutes.</p>
         </div>
         <div className="feature-item">
+          <Image src={templateImage2} alt="Template Image" className="feature-image" layout="responsive" />
           <h2 className="feature-title">Track Payments</h2>
           <p>Keep track of paid and unpaid invoices.</p>
         </div>
         <div className="feature-item">
+          <Image src={templateImage1} alt="Template Image" className="feature-image" layout="responsive" />
           <h2 className="feature-title">Get Paid Faster</h2>
           <p>Accept online payments directly through the app.</p>
         </div>
@@ -53,15 +68,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Call to Action Section */}
-      <section id="download" className="cta-section">
-        <h2 className="cta-title">Download the App Today</h2>
-        <div className="button-group">
-          <a href="#" className="btn btn-primary">
-            Google Play
-          </a>
-        </div>
-      </section>
     </main>
   );
 }
