@@ -6,11 +6,14 @@ import api from '../../services/api';
 
 function* createInvoice(action: any): any {
     try {
+        console.log('Creating invoice with payload:', action.payload);
         const response = yield call(api.post, '/invoices', action.payload);
+        console.log('Invoice created successfully:', response.data);
         yield put(createInvoiceSuccess(response.data));
     } catch (error) {
+        console.error('Error creating invoice:', error);
         if (error instanceof Error) {
-            yield put(createInvoiceFailure(error.message));;
+            yield put(createInvoiceFailure(error.message));
         } else {
             yield put(createInvoiceFailure('An unknown error occurred'));
         }

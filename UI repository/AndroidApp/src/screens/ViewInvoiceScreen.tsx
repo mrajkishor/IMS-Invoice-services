@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, GestureResponderEvent, Share, Linking } from 'react-native';
 import { Text, Card, Divider, Button, SegmentedButtons, Appbar } from 'react-native-paper';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigationTypes';
@@ -11,6 +11,33 @@ type ViewInvoiceScreenRouteProp = RouteProp<RootStackParamList, 'ViewInvoice'>;
 const ViewInvoiceScreen: React.FC = () => {
     const route = useRoute<ViewInvoiceScreenRouteProp>();
     const { invoice } = route.params;
+
+    const handleOpenLinkInBrowser = async () => {
+        const url = `https://invoguru.com/invoice/${invoice.invoiceId}`;
+        Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+    };
+
+    const handleShare = async () => {
+        try {
+            const result = await Share.share({
+                message: `Find your invoice at \n https://invoguru.com/invoice/${invoice.invoiceId} \n\n Thanks for chosing InvoGuru. \n We are looking for to deliver the best service for you. \n Thanks and regards, \n InvoGuru Support Team`,
+                // url: `https://invoguru.com/invoice/${invoice.invoiceId}`, // Optional, you can share just the message or both
+                title: 'Share this link',
+            });
+
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    console.log('Shared with activity type of:', result.activityType);
+                } else {
+                    console.log('Shared successfully');
+                }
+            } else if (result.action === Share.dismissedAction) {
+                console.log('Share dismissed');
+            }
+        } catch (error: any) {
+            console.error('Error sharing content:', error.message);
+        }
+    }
 
     return (
         <>
@@ -52,7 +79,7 @@ const ViewInvoiceScreen: React.FC = () => {
                         <Divider />
                         <View style={styles.section}>
                             <Text style={styles.label}>Date:</Text>
-                            <Text style={styles.value}>{invoice.date}</Text>
+                            <Text style={styles.value}>{invoice.invoiceDate}</Text>
                         </View>
                         <Divider />
                         <View style={styles.section}>
@@ -79,14 +106,16 @@ const ViewInvoiceScreen: React.FC = () => {
                                 onValueChange={() => { }}
                                 buttons={[
                                     {
-                                        icon: 'newspaper-variant-multiple-outline',
-                                        value: 'templates',
-                                        label: 'Templates',
+                                        icon: 'eye',
+                                        value: 'preview',
+                                        label: 'Preview',
+                                        onPress: handleOpenLinkInBrowser
                                     },
                                     {
                                         icon: 'share',
                                         value: 'share',
                                         label: 'Share',
+                                        onPress: handleShare
                                     }]}
                             />
                         </View>

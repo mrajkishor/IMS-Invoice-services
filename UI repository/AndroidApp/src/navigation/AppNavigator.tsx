@@ -9,6 +9,7 @@ import InvoiceScreen from '../screens/InvoiceScreen';
 import ViewInvoiceScreen from '../screens/ViewInvoiceScreen';
 import CreateInvoiceScreen from '../screens/CreateInvoiceScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import TemplateSelectorScreen from '../screens/TemplateSelectorScreen'; // Import the new screen
 import { RootStackParamList } from '../navigationTypes';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -28,6 +29,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="Invoice" component={InvoiceScreen} />
                 <Stack.Screen name="ViewInvoice" component={ViewInvoiceScreen} />
                 <Stack.Screen name="CreateInvoice" component={CreateInvoiceScreen} />
+                <Stack.Screen name="TemplateSelector" component={TemplateSelectorScreen} />
                 <Stack.Screen name="Profile" component={ProfileScreen} />
             </Stack.Navigator>
         </NavigationContainer>

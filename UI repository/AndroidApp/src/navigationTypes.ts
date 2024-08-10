@@ -10,6 +10,8 @@ export type RootStackParamList = {
     ViewInvoice: { invoice: any };
     CreateInvoice: { shopId: string };
     Profile: undefined;
+    TemplateSelector: { templateId: string | null, onSelect: (selectedTemplateId: string) => void };
+
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<
