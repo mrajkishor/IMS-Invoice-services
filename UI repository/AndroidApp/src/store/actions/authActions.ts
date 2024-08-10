@@ -5,6 +5,9 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
+export const REGISTER_REQUEST = 'REGISTER_REQUEST';
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
+export const REGISTER_FAILURE = 'REGISTER_FAILURE';
 
 // Action Creators
 export const loginRequest = (email: string, password: string) => ({
@@ -33,6 +36,47 @@ export const logoutSuccess = () => ({
 export const logoutFailure = (message: string) => ({
     type: LOGOUT_FAILURE,
 });
+
+
+
+
+export const registerRequest = (email: string, username: string, password: string) => ({
+    type: REGISTER_REQUEST,
+    payload: { email, username, password },
+});
+
+export const registerSuccess = (user: any) => ({
+    type: REGISTER_SUCCESS,
+    payload: user,
+});
+
+export const registerFailure = (error: string) => ({
+    type: REGISTER_FAILURE,
+    payload: error,
+});
+
+
+
+export interface RegisterRequestAction {
+    type: typeof REGISTER_REQUEST;
+    payload: {
+        email: string;
+        username: string;
+        password: string;
+    };
+}
+
+export interface RegisterSuccessAction {
+    type: typeof REGISTER_SUCCESS;
+    payload: any;
+}
+
+export interface RegisterFailureAction {
+    type: typeof REGISTER_FAILURE;
+    payload: string;
+}
+
+
 
 // Define and export action types
 export interface LoginRequestAction {
@@ -70,4 +114,7 @@ export type AuthActionTypes =
     | LoginFailureAction
     | LogoutRequestAction
     | LogoutSuccessAction
-    | LogoutFailureAction;
+    | LogoutFailureAction
+    | RegisterRequestAction
+    | RegisterSuccessAction
+    | RegisterFailureAction;

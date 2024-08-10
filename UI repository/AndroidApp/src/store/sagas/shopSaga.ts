@@ -3,7 +3,8 @@ import {
     FETCH_SHOP_REQUEST, fetchShopSuccess, fetchShopFailure,
     UPDATE_SHOP_REQUEST, updateShopSuccess, updateShopFailure,
     DELETE_SHOP_REQUEST, deleteShopSuccess, deleteShopFailure,
-    FETCH_SHOPS_REQUEST, fetchShopsSuccess, fetchShopsFailure
+    FETCH_SHOPS_REQUEST, fetchShopsSuccess, fetchShopsFailure,
+    CREATE_SHOP_REQUEST, createShopSuccess, createShopFailure
 } from '../actions/shopActions';
 import api from '../../services/api';
 
@@ -59,7 +60,18 @@ function* handleFetchShops(action: any): Generator<any, void, any> {
         }
     }
 }
-
+function* handleCreateShop(action: any): Generator<any, void, any> {
+    try {
+        const response = yield call(api.post, `/shops`, action.payload);
+        yield put(createShopSuccess(response.data));
+    } catch (error) {
+        if (error instanceof Error) {
+            yield put(createShopFailure(error.message));
+        } else {
+            yield put(createShopFailure('An unknown error occurred'));
+        }
+    }
+}
 function* watchFetchShop() {
     yield takeEvery(FETCH_SHOP_REQUEST, handleFetchShop);
 }
@@ -75,12 +87,15 @@ function* watchDeleteShop() {
 function* watchFetchShops() {
     yield takeEvery(FETCH_SHOPS_REQUEST, handleFetchShops);
 }
-
+function* watchCreateShop() {
+    yield takeEvery(CREATE_SHOP_REQUEST, handleCreateShop);
+}
 export default function* shopSaga() {
     yield all([
         watchFetchShop(),
         watchUpdateShop(),
         watchDeleteShop(),
         watchFetchShops(),
+        watchCreateShop()
     ]);
 }

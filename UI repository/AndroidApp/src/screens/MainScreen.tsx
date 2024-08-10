@@ -16,18 +16,18 @@ const ShopListRoute: React.FC = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const dispatch = useDispatch();
     const { loading, shops, error } = useSelector((state: RootState) => state.shops);
-    const { user } = useSelector((state: RootState) => state.auth);
+    const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
-        if (user?.userId) {
+        if (isAuthenticated && user?.userId) {
             dispatch(fetchShopsRequest(user.userId));
         }
-    }, [dispatch, user?.userId]);
+    }, [dispatch, isAuthenticated, user?.userId]);
 
     const handleRefresh = () => {
         setRefreshing(true);
-        if (user?.userId) {
+        if (isAuthenticated && user?.userId) {
             dispatch(fetchShopsRequest(user.userId));
         }
         setRefreshing(false);

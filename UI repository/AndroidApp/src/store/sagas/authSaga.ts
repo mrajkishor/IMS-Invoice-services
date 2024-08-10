@@ -8,8 +8,12 @@ import {
     LOGOUT_REQUEST,
     logoutSuccess,
     logoutFailure,
+    RegisterRequestAction,
+    registerSuccess, registerFailure,
+    REGISTER_REQUEST,
+    loginRequest
 } from '../actions/authActions';
-import { login } from '../../services/authService';
+import { login, register } from '../../services/authService';
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -45,6 +49,26 @@ function* handleLogin(
     }
 }
 
+function* handleRegister(
+    action: RegisterRequestAction
+): Generator<CallEffect | PutEffect<any>, void, any> {
+    try {
+        const user = yield call(register, action.payload.email, action.payload.username, action.payload.password);
+
+        yield put(registerSuccess(user));
+
+
+        // Auto-login the user after successful registration
+        yield put(loginRequest(action.payload.email, action.payload.password));
+    } catch (error) {
+        if (error instanceof Error) {
+            yield put(registerFailure(error.message));
+        } else {
+            yield put(registerFailure('An unknown error occurred: authSaga.ts'));
+        }
+    }
+}
+
 
 function* handleLogout(): Generator<CallEffect | PutEffect<any>, void, any> {
     try {
@@ -64,6 +88,7 @@ function* handleLogout(): Generator<CallEffect | PutEffect<any>, void, any> {
 
 function* watchAuth(): Generator<ReturnType<typeof takeEvery>, void, unknown> {
     yield takeEvery(LOGIN_REQUEST, handleLogin);
+    yield takeEvery(REGISTER_REQUEST, handleRegister);
     yield takeEvery(LOGOUT_REQUEST, handleLogout);
 }
 

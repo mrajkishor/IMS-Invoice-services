@@ -1,5 +1,5 @@
 import api from './api';
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_REFRESH } from '../constants';
+import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_REFRESH, AUTH_REGISTER } from '../constants';
 
 export const login = async (email: string, password: string) => {
     const response = await api.post(AUTH_LOGIN, { email, password });
@@ -13,5 +13,10 @@ export const logout = async () => {
 
 export const refresh = async (refreshToken: string) => {
     const response = await api.post(AUTH_REFRESH, { refreshToken });
+    return response.data;
+};
+
+export const register = async (email: string, username: string, password: string) => {
+    const response = await api.post(AUTH_REGISTER, { email, username, password });
     return response.data;
 };

@@ -1,5 +1,9 @@
-import { AuthState } from '../types';
-import { LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE } from '../actions/authActions';
+import { AuthState } from '@store/types';
+import {
+    LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
+    LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE,
+    REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_FAILURE
+} from '../actions/authActions';
 
 const initialState: AuthState = {
     isAuthenticated: false,
@@ -13,6 +17,7 @@ const initialState: AuthState = {
 const authReducer = (state = initialState, action: any): AuthState => {
     switch (action.type) {
         case LOGIN_REQUEST:
+        case REGISTER_REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -27,7 +32,15 @@ const authReducer = (state = initialState, action: any): AuthState => {
                 token: action.payload.token,
                 refreshToken: action.payload.refreshToken,
             };
+        case REGISTER_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                isAuthenticated: false,
+                user: action.payload,
+            };
         case LOGIN_FAILURE:
+        case REGISTER_FAILURE:
             return {
                 ...state,
                 loading: false,

@@ -1,28 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { TextInput, Button, ActivityIndicator, Text } from 'react-native-paper';
-import { loginRequest } from '../store/actions/authActions';
+import { loginRequest, registerRequest } from '../store/actions/authActions'; // Import register action
 import { RootState } from '../store/store';
 import { getAllData } from '../utils/localStorage/asyncStorage';
 import { useNavigation } from '@react-navigation/native';
 import { LoginScreenNavigationProp } from '../navigationTypes';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AppLogo from '../components/AppLogo';
+import { validateEmail, validatePassword } from '../utils/validation';
+import { createUsernameFromEmail } from '../utils/common';
 
 const LoginScreen: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const dispatch = useDispatch();
     const navigation = useNavigation<LoginScreenNavigationProp>();
     const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
 
     const handleLogin = () => {
-        dispatch(loginRequest(email, password));
-        getAllData().then((data) => console.log('All AsyncStorage Data:', data));
+        const emailValid = validateEmail(email);
+        const passwordValid = validatePassword(password);
+
+        if (!emailValid) {
+            setEmailError('Please enter a valid email address.');
+        } else {
+            setEmailError('');
+        }
+
+        if (!passwordValid) {
+            setPasswordError('Password must be at least 8 characters long and include a number and a special character.');
+        } else {
+            setPasswordError('');
+        }
+
+        if (emailValid && passwordValid) {
+            dispatch(loginRequest(email, password));
+            getAllData().then((data) => console.log('All AsyncStorage Data:', data));
+        }
     };
 
-    const handleRegister = () => { }
+    const handleRegister = () => {
+        const emailValid = validateEmail(email);
+        const passwordValid = validatePassword(password);
+
+        if (!emailValid) {
+            setEmailError('Please enter a valid email address.');
+        } else {
+            setEmailError('');
+        }
+
+        if (!passwordValid) {
+            setPasswordError('Password must be at least 8 characters long and include a number and a special character.');
+        } else {
+            setPasswordError('');
+        }
+
+        if (emailValid && passwordValid) {
+            dispatch(registerRequest(email, createUsernameFromEmail(email), password));
+            Alert.alert('Account created', 'Your account has been successfully created.');
+        }
+    };
+
+
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -32,12 +74,8 @@ const LoginScreen: React.FC = () => {
 
     return (
         <View style={styles.container}>
-            {/* <Image source={require('../assets/images/logo.png')} style={styles.logo} /> */}
             <AppLogo />
             <View style={styles.inputContainer}>
-                {/* <MaterialIcons name="email" size={24}
-                    color="#1E90FF"
-                    style={styles.icon} /> */}
                 <TextInput
                     style={styles.input}
                     label="Email"
@@ -45,13 +83,11 @@ const LoginScreen: React.FC = () => {
                     onChangeText={setEmail}
                     keyboardType="email-address"
                     mode="outlined"
-                // theme={{ colors: { primary: '#1E90FF' } }}
+                    error={!!emailError}
                 />
             </View>
+            {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
             <View style={styles.inputContainer}>
-                {/* <MaterialIcons name="lock" size={24}
-                    color="#1E90FF" 
-                    style={styles.icon} /> */}
                 <TextInput
                     style={styles.input}
                     label="Password"
@@ -59,18 +95,16 @@ const LoginScreen: React.FC = () => {
                     onChangeText={setPassword}
                     secureTextEntry
                     mode="outlined"
-                // theme={{ colors: { primary: '#1E90FF' } }}
+                    error={!!passwordError}
                 />
             </View>
-            {loading && <ActivityIndicator animating={true}
-            // color="#1E90FF" 
-            />}
+            {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
+            {loading && <ActivityIndicator animating={true} />}
             {error && <Text style={styles.error}>{error}</Text>}
             <Button
                 mode="elevated"
                 onPress={handleLogin}
                 style={styles.button}
-            // theme={{ colors: { primary: '#1E90FF' } }}
             >
                 Login
             </Button>
@@ -79,7 +113,6 @@ const LoginScreen: React.FC = () => {
                 mode="contained-tonal"
                 onPress={handleRegister}
                 style={styles.button}
-
             >
                 Create a new Account
             </Button>
@@ -94,22 +127,10 @@ const styles = StyleSheet.create({
         padding: 60,
         backgroundColor: '#ffffff',
     },
-    logo: {
-        width: 150,
-        height: 150,
-        resizeMode: 'contain',
-        alignSelf: 'center',
-        marginBottom: 24,
-        borderRadius: 100,
-    },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 12,
-    },
-    icon: {
-        marginRight: 8,
-        borderRadius: 10
     },
     input: {
         flex: 1,

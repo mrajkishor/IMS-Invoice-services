@@ -4,7 +4,7 @@ export const AUTH_LOGIN = `${API_BASE_URL}/auth/login`;
 export const AUTH_LOGOUT = `${API_BASE_URL}/auth/logout`;
 export const AUTH_REFRESH = `${API_BASE_URL}/auth/refresh`;
 
-export const CREATE_USER = `${API_BASE_URL}/users`;
+export const AUTH_REGISTER = `${API_BASE_URL}/users`;
 export const GET_USER = (userId: string) => `${API_BASE_URL}/users/${userId}`;
 export const UPDATE_USER = (userId: string) => `${API_BASE_URL}/users/${userId}`;
 export const DELETE_USER = (userId: string) => `${API_BASE_URL}/users/${userId}`;
