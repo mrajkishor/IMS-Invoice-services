@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { View, FlatList, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
 import { BottomNavigation, List, Card, ActivityIndicator, FAB, Button, Surface, Appbar } from 'react-native-paper';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,27 +23,30 @@ const ShopListRoute: React.FC = () => {
         if (isAuthenticated && user?.userId) {
             dispatch(fetchShopsRequest(user.userId));
         }
+        console.log('Shops:', shops);
     }, [dispatch, isAuthenticated, user?.userId]);
 
     const handleRefresh = () => {
         setRefreshing(true);
-        if (isAuthenticated && user?.userId) {
+        if (user?.userId) {
             dispatch(fetchShopsRequest(user.userId));
         }
         setRefreshing(false);
     };
 
     const renderShopItem = ({ item }: { item: any }) => (
-        <Card mode={'elevated'} elevation={0} style={styles.card} onPress={() => navigation.navigate('Shop', { shopId: item.shopId })}>
-            <Card.Content>
-                <Card.Title
-                    title={item.shopName}
-                    subtitle={`Address : ${item.address}`}
-                    // left={(props) => <MaterialIcons  {...props} name="store" />}
-                    right={(props) => <MaterialIcons  {...props} name="chevron-right" />}
-                />
-            </Card.Content>
-        </Card>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('Shop', { shopId: item.shopId })}>
+            <Card mode={'elevated'} elevation={0} style={styles.card} >
+                <Card.Content>
+                    <Card.Title
+                        title={item.shopName}
+                        subtitle={`Address : ${item.address}`}
+                        // left={(props) => <MaterialIcons  {...props} name="store" />}
+                        right={(props) => <MaterialIcons  {...props} name="chevron-right" />}
+                    />
+                </Card.Content>
+            </Card>
+        </TouchableWithoutFeedback>
     );
 
     if (loading && !refreshing) {

@@ -58,11 +58,11 @@ export default function Home() {
         <h2 className="testimonials-title">What Our Users Say</h2>
         <div className="testimonials-grid">
           <div className="testimonial-item">
-            <p className="testimonial-quote">"This app has revolutionized my business!"</p>
+            <p className="testimonial-quote">&quot;This app has revolutionized my business!&quot;</p>
             <p className="testimonial-author">- Alex, Small Business Owner</p>
           </div>
           <div className="testimonial-item">
-            <p className="testimonial-quote">"Invoicing has never been easier."</p>
+            <p className="testimonial-quote">&quot;Invoicing has never been easier.&quot;</p>
             <p className="testimonial-author">- Sam, Freelancer</p>
           </div>
         </div>

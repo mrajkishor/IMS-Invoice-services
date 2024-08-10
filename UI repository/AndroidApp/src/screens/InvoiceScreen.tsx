@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, ActivityIndicator, List, Appbar } from 'react-native-paper';
 import { fetchInvoicesRequest } from '../store/actions/invoiceActions';
@@ -18,15 +18,17 @@ const InvoiceScreen: React.FC<{ route: any }> = ({ route }) => {
     }, [dispatch, shopId]);
 
     const renderItem = ({ item }: { item: any }) => (
-        <Card style={styles.card}>
-            <Card.Content>
-                <List.Item
-                    title={`Invoice ${item.id}`}
-                    description={`Amount: $${item.amount}\nDate: ${item.date}`}
-                    left={(props) => <List.Icon {...props} icon="file-document" />}
-                />
-            </Card.Content>
-        </Card>
+        <TouchableWithoutFeedback >
+            <Card style={styles.card}>
+                <Card.Content>
+                    <List.Item
+                        title={`Invoice ${item.id}`}
+                        description={`Amount: $${item.amount}\nDate: ${item.date}`}
+                        left={(props) => <List.Icon {...props} icon="file-document" />}
+                    />
+                </Card.Content>
+            </Card>
+        </TouchableWithoutFeedback>
     );
 
     if (loading) {

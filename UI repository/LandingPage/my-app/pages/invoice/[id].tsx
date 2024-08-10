@@ -40,12 +40,6 @@ export default function Invoice() {
     const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
     const [template, setTemplate] = useState<number>(1);
 
-    useEffect(() => {
-        if (id) {
-            fetchInvoiceData(id);
-        }
-    }, [id]);
-
     const fetchInvoiceData = async (invoiceId: string) => {
         const params = {
             TableName: "Invoices",
@@ -73,6 +67,14 @@ export default function Invoice() {
             console.error("Error fetching invoice data:", error);
         }
     };
+
+
+    useEffect(() => {
+        if (id) {
+            fetchInvoiceData(id);
+        }
+    }, [id, fetchInvoiceData]);
+
 
     const fetchShopData = async (shopId: string) => {
         const params = {

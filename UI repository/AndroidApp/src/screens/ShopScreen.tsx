@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, FlatList, RefreshControl } from 'react-native';
+import { View, StyleSheet, Alert, FlatList, RefreshControl, TouchableWithoutFeedback } from 'react-native';
 import { TextInput, Button, Card, List, ActivityIndicator, Text, FAB, Appbar, Divider } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
@@ -73,17 +73,19 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
     };
 
     const renderInvoiceItem = ({ item }: { item: any }) => (
-        <Card mode={"elevated"} elevation={0} onPress={() => navigation.navigate('ViewInvoice', { invoice: item })}>
-            <Card.Content>
-                <Card.Title
-                    title={`Invoice ID: ${item.invoiceId}`}
-                    subtitle={`Amount: ${item.amount}\nDetails: ${item.details}`}
-                    // left={(props) => <MaterialIcons name="description" size={24} color="black" />}
-                    right={(props) => <MaterialIcons name="chevron-right" size={24} color="black" />}
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('ViewInvoice', { invoice: item })}>
+            <Card mode={"elevated"} elevation={0} >
+                <Card.Content>
+                    <Card.Title
+                        title={`Invoice ID: ${item.invoiceId}`}
+                        subtitle={`Amount: ${item.amount}\nDetails: ${item.details}`}
+                        // left={(props) => <MaterialIcons name="description" size={24} color="black" />}
+                        right={(props) => <MaterialIcons name="chevron-right" size={24} color="black" />}
 
-                />
-            </Card.Content>
-        </Card>
+                    />
+                </Card.Content>
+            </Card>
+        </TouchableWithoutFeedback>
     );
 
     const onRefresh = () => {
