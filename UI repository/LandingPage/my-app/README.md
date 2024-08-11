@@ -45,3 +45,10 @@ NEXT_PUBLIC_AWS_REGION=ap-***
 NEXT_PUBLIC_AWS_ACCESS_KEY_ID=A*********
 NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY=5******
 ```
+
+- Vercel CI/CD
+```
+vercel env ls #upload aws .env 
+npm run build 
+vercel
+```

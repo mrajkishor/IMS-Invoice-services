@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import AWS from 'aws-sdk';
 import jsPDF from 'jspdf';
@@ -40,7 +40,7 @@ export default function Invoice() {
     const [invoiceData, setInvoiceData] = useState<InvoiceData | null>(null);
     const [template, setTemplate] = useState<number>(1);
 
-    const fetchInvoiceData = async (invoiceId: string) => {
+    const fetchInvoiceData = useCallback(async (invoiceId: string) => {
         const params = {
             TableName: "Invoices",
             Key: {
@@ -66,7 +66,7 @@ export default function Invoice() {
         } catch (error) {
             console.error("Error fetching invoice data:", error);
         }
-    };
+    }, []);// Dependencies: empty array means it only creates the function once
 
 
     useEffect(() => {

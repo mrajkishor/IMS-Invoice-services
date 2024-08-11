@@ -6,6 +6,7 @@ import { RootStackParamList } from '../navigationTypes';
 import { myColors } from '../config/theme';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { INVOICE_PROD_URL } from '../constants/api';
 
 
 type TemplateSelectorScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TemplateSelector'>;
@@ -19,15 +20,14 @@ const ViewInvoiceScreen: React.FC = () => {
     const navigation = useNavigation<TemplateSelectorScreenNavigationProp>();
 
     const handleOpenLinkInBrowser = async () => {
-        const url = `https://invoguru.com/invoice/${invoice.invoiceId}`;
+        const url = `${INVOICE_PROD_URL}/invoice/${invoice.invoiceId}`;
         Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
     };
 
     const handleShare = async () => {
         try {
             const result = await Share.share({
-                message: `Find your invoice at \n https://invoguru.com/invoice/${invoice.invoiceId} \n\n Thanks for chosing InvoGuru. \n We are looking for to deliver the best service for you. \n Thanks and regards, \n InvoGuru Support Team`,
-                // url: `https://invoguru.com/invoice/${invoice.invoiceId}`, // Optional, you can share just the message or both
+                message: `🧾 *Your Invoice is Ready!*\n\nHello, \n\nThank you for choosing *InvoGuru*.\n\n📄 View your invoice here:\n👉 ${INVOICE_PROD_URL}/invoice/${invoice.invoiceId}\n\nWe're committed to delivering the best service to you.\n\nBest regards,\n*InvoGuru Support Team*`,
                 title: 'Share this link',
             });
 
