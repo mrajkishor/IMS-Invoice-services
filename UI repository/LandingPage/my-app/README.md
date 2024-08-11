@@ -39,7 +39,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### AWS Environemnt setup in local 
 
 - Create file .env.local in the root directory
-```# .env.local (this file is ignored by git by default)
+```bash
+# .env.local (this file is ignored by git by default)
 
 NEXT_PUBLIC_AWS_REGION=ap-***
 NEXT_PUBLIC_AWS_ACCESS_KEY_ID=A*********
@@ -47,7 +48,7 @@ NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY=5******
 ```
 
 - Vercel CI/CD
-```
+```bash
 vercel env ls #upload aws .env 
 npm run build 
 vercel
