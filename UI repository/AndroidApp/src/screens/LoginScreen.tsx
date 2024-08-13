@@ -10,6 +10,7 @@ import { LoginScreenNavigationProp } from '../navigationTypes';
 import AppLogo from '../components/AppLogo';
 import { validateEmail, validatePassword } from '../utils/validation';
 import { createUsernameFromEmail } from '../utils/common';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -19,6 +20,22 @@ const LoginScreen: React.FC = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation<LoginScreenNavigationProp>();
     const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
+
+
+    useEffect(() => {
+        const checkSession = async () => {
+            const token = await AsyncStorage.getItem('accessToken');
+            const userId = await AsyncStorage.getItem('userId');
+            if (token && userId) {
+                // Dispatch login success if the token and userId are found
+                dispatch(loginRequest(email, password));
+            }
+        };
+
+        checkSession();
+    }, [dispatch]);
+
+
 
     const handleLogin = () => {
         const emailValid = validateEmail(email);

@@ -9,6 +9,7 @@ import { fetchUserRequest, updateUserRequest, deleteUserRequest } from '../store
 import { RootStackParamList } from '../navigationTypes';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { myColors } from '../config/theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen: React.FC = () => {
     const dispatch = useDispatch();
@@ -35,6 +36,7 @@ const ProfileScreen: React.FC = () => {
     const handleLogout = () => {
         dispatch(logoutRequest());
         navigation.navigate('Login'); // Redirect to the Login screen
+        AsyncStorage.clear()
     };
 
     const handleUpdate = () => {
