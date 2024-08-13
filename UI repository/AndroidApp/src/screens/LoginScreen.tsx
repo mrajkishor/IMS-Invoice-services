@@ -103,7 +103,7 @@ const LoginScreen: React.FC = () => {
             {error && <Text style={styles.error}>{error}</Text>}
             <Button
                 mode="contained-tonal"
-                onPress={handleRegister}
+                onPress={handleLogin}
                 style={styles.button}
             >
                 Sign in / Sign up
