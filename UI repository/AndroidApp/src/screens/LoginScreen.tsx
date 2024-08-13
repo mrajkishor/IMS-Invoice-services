@@ -102,20 +102,20 @@ const LoginScreen: React.FC = () => {
             {loading && <ActivityIndicator animating={true} />}
             {error && <Text style={styles.error}>{error}</Text>}
             <Button
-                mode="elevated"
-                onPress={handleLogin}
+                mode="contained-tonal"
+                onPress={handleRegister}
                 style={styles.button}
             >
-                Login
+                Sign in / Sign up
             </Button>
 
-            <Button
+            {/* <Button
                 mode="contained-tonal"
                 onPress={handleRegister}
                 style={styles.button}
             >
                 Create a new Account
-            </Button>
+            </Button> */}
         </View>
     );
 };

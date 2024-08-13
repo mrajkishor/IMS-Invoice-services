@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -51,6 +52,9 @@ public class AuthHandler {
             String email = requestBody.get("email");
             String password = requestBody.get("password");
 
+            // Extract the username from the email
+            String username = email.substring(0, email.indexOf('@'));
+
             QuerySpec querySpec = new QuerySpec()
                     .withKeyConditionExpression("email = :v_email")
                     .withValueMap(new ValueMap().withString(":v_email", email));
@@ -58,38 +62,55 @@ public class AuthHandler {
             Iterator<Item> iterator = emailIndex.query(querySpec).iterator();
 
             if (iterator.hasNext()) {
+                // User exists, check password
                 Item item = iterator.next();
-                if (item.getString("password").equals(password)) {
-                    String userId = item.getString("userId");
-                    String token = JWT.create()
-                            .withSubject(userId)
-                            .withExpiresAt(new Date(System.currentTimeMillis() + 3600000)) // 1 hour expiration
-                            .sign(jwtAlgorithm);
-
-                    String refreshToken = JWT.create()
-                            .withSubject(userId)
-                            .withExpiresAt(new Date(System.currentTimeMillis() + 86400000)) // 1 day expiration
-                            .sign(jwtAlgorithm);
-
-                    Map<String, String> responseBody = new HashMap<>();
-                    responseBody.put("token", token);
-                    responseBody.put("refreshToken", refreshToken);
-
-                    return new APIGatewayProxyResponseEvent().withStatusCode(200)
-                            .withBody(objectMapper.writeValueAsString(responseBody));
+                if (BCrypt.checkpw(password, item.getString("password"))) { // Check hashed password
+                    return generateTokenResponse(item.getString("userId"));
                 } else {
                     return new APIGatewayProxyResponseEvent().withStatusCode(401)
                             .withBody("{\"message\":\"Invalid credentials\"}");
                 }
             } else {
-                return new APIGatewayProxyResponseEvent().withStatusCode(401)
-                        .withBody("{\"message\":\"Invalid credentials\"}");
+                // User does not exist, create new user
+                String userId = java.util.UUID.randomUUID().toString(); // Generate a unique user ID
+
+                String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt()); // Hash the password
+
+                Item newUser = new Item()
+                        .withPrimaryKey("userId", userId)
+                        .withString("email", email)
+                        .withString("password", hashedPassword) // Store the hashed password
+                        .withString("username", username);
+
+                usersTable.putItem(newUser);
+
+                // Auto-login the newly created user
+                return generateTokenResponse(userId);
             }
         } catch (Exception e) {
             errorResponse.put("Error details", e);
             return new APIGatewayProxyResponseEvent().withStatusCode(500)
                     .withBody(objectMapper.writeValueAsString(errorResponse));
         }
+    }
+
+    private APIGatewayProxyResponseEvent generateTokenResponse(String userId) throws JsonProcessingException {
+        String token = JWT.create()
+                .withSubject(userId)
+                .withExpiresAt(new Date(System.currentTimeMillis() + 3600000)) // 1 hour expiration
+                .sign(jwtAlgorithm);
+
+        String refreshToken = JWT.create()
+                .withSubject(userId)
+                .withExpiresAt(new Date(System.currentTimeMillis() + 86400000)) // 1 day expiration
+                .sign(jwtAlgorithm);
+
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("token", token);
+        responseBody.put("refreshToken", refreshToken);
+
+        return new APIGatewayProxyResponseEvent().withStatusCode(200)
+                .withBody(objectMapper.writeValueAsString(responseBody));
     }
 
     public APIGatewayProxyResponseEvent handleLogoutRequest(APIGatewayProxyRequestEvent request, Context context)
