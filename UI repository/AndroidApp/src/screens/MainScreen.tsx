@@ -66,14 +66,19 @@ const ShopListRoute: React.FC = () => {
                 <Appbar.Content title="My Shop Catalogue" />
             </Appbar.Header>
             <View style={styles.container}>
-
-                <FlatList
+                {shops?.length === 0 ? <>
+                    <View style={styles.noRecordsWrapper}>
+                        <Text style={styles.noRecordsWrapperTitle}>No Shops Found!</Text>
+                        <MaterialIcons name="store" size={50} style={styles.noRecordsWrapperIcon} />
+                    </View>
+                </> : <FlatList
                     data={shops}
                     renderItem={renderShopItem}
                     keyExtractor={(item) => item.shopId}
                     refreshing={refreshing}
                     onRefresh={handleRefresh}
-                />
+                />}
+
             </View>
         </>
 
@@ -167,6 +172,18 @@ const styles = StyleSheet.create({
         margin: 16,
         right: 0,
         bottom: 80,
+    },
+    noRecordsWrapper: {
+        flex: 1,
+        justifyContent: 'center', // Center vertically
+        alignItems: 'center', // Center horizontally
+    },
+    noRecordsWrapperTitle: {
+        fontSize: 18,
+        marginBottom: 10, // Add some space between the text and icon
+    },
+    noRecordsWrapperIcon: {
+        color: 'gray', // Optional: customize the icon color
     },
 });
 
