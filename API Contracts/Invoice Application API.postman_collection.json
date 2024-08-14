@@ -22,12 +22,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"email\": \"test@example.com\", \"password\": \"password123\"}"
+							"raw": "{\r\n  \"identifier\": \"+917683922389\",\r\n  \"password\": \"@Tumujanini123\"\r\n}\r\n"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/auth/login",
+							"raw": "{{base_url}}/auth/login",
 							"host": [
-								"{{baseUrl}}"
+								"{{base_url}}"
 							],
 							"path": [
 								"auth",
@@ -108,7 +108,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"user@example.com\",\r\n  \"username\": \"testuser\",\r\n  \"password\": \"password123\"\r\n}\r\n"
+							"raw": "{\r\n  \"identifier\": \"7683922389\",\r\n  \"username\": \"raj\",\r\n  \"password\": \"@Utejazun420\"\r\n}\r\n"
 						},
 						"url": {
 							"raw": "{{base_url}}/users",
@@ -362,7 +362,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0ZDdlZmJjMi03NDc4LTRmZDctODcwYy04NDU4MTBkMDU3ZGYiLCJleHAiOjE3MjMyNDczNzl9.0TUYdSGz1fpyqDWxZBMVQNo3Rf86vc95__F-jrIPX1c",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0ZDdlZmJjMi03NDc4LTRmZDctODcwYy04NDU4MTBkMDU3ZGYiLCJleHAiOjE3MjMyNTA5MjR9.e5g5IGLdabzAoMKln22t8gy2m_NggkjGC9npFXv3C4s",
 									"type": "string"
 								}
 							]
@@ -380,7 +380,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n     \"shopId\": \"0d286992-bb78-46c1-8f00-2b3553dbb78b\",\r\n        \"ownerId\": \"4d7efbc2-7478-4fd7-870c-845810d057df\",\r\n    \"customerName\": \"Deepak Nayak\",\r\n    \"customerAddress\": \"LIC Colony\",\r\n    \"details\": \"Invoice 2\",\r\n    \"amount\": \"1599\",\r\n    \"invoiceDate\": \"2024-08-10 14:35\",\r\n    \"dueDate\": \"2024-08-15\",\r\n    \"status\": \"Unpaid\"\r\n}"
+							"raw": "{\r\n    \"shopId\": \"0d286992-bb78-46c1-8f00-2b3553dbb78b\",\r\n    \"userId\": \"4d7efbc2-7478-4fd7-870c-845810d057df\",\r\n    \"customerName\": \"Sambit Satpathy\",\r\n    \"customerAddress\": \"RC Road, Bhanjanagar, Ganjam, Odisha, PIN - 761126, IN\",\r\n    \"details\": \"Website project delivery\",\r\n    \"amount\": \"10000\",\r\n    \"invoiceDate\": \"2024-08-10 14:35\",\r\n    \"dueDate\": \"2024-08-30\",\r\n    \"status\": \"Unpaid\", \r\n    \"templateId\": \"4\"\r\n}\r\n\r\n\r\n\r\n"
 						},
 						"url": {
 							"raw": "{{base_url}}/invoices",
