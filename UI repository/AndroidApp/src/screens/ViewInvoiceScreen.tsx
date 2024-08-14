@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, ScrollView, GestureResponderEvent, Share, Linking } from 'react-native';
+import { View, StyleSheet, ScrollView, Linking, Share } from 'react-native';
 import { Text, Card, Divider, Button, SegmentedButtons, Appbar, ActivityIndicator } from 'react-native-paper';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../navigationTypes';
@@ -14,7 +14,6 @@ import { fetchUserRequest } from '../store/actions/userActions';
 
 type TemplateSelectorScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TemplateSelector'>;
 type TemplateSelectorScreenRouteProp = RouteProp<RootStackParamList, 'TemplateSelector'>;
-
 type ViewInvoiceScreenRouteProp = RouteProp<RootStackParamList, 'ViewInvoice'>;
 
 const ViewInvoiceScreen: React.FC = () => {
@@ -25,13 +24,11 @@ const ViewInvoiceScreen: React.FC = () => {
     const { loading: loadingShops, shops, error: errorStateShops } = useSelector((state: RootState) => state?.shops);
     const { loading: loadingUsers, user: fetchedUser, error: errorStateUsers } = useSelector((state: RootState) => state?.users);
 
-
     useEffect(() => {
         // Fetch the shop and user details
         dispatch(fetchShopRequest(invoice.shopId));
         dispatch(fetchUserRequest(invoice.userId));
     }, [dispatch, invoice.shopId, invoice.userId]);
-
 
     const handleOpenLinkInBrowser = async () => {
         const url = `${INVOICE_PROD_URL}/invoice/${invoice.invoiceId}`;
@@ -57,19 +54,16 @@ const ViewInvoiceScreen: React.FC = () => {
         } catch (error: any) {
             console.error('Error sharing content:', error.message);
         }
-    }
+    };
 
     return (
         <>
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => { navigation.goBack() }} />
-
                 <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="details" />} onPress={() => { }} />
-
                 <Appbar.Content title="Share Invoice" />
             </Appbar.Header>
             <ScrollView>
-
                 {loadingShops && loadingUsers ? (
                     <ActivityIndicator animating={true} style={styles.loader} />
                 ) : (
@@ -92,8 +86,10 @@ const ViewInvoiceScreen: React.FC = () => {
                             </View>
                             <Divider />
                             <View style={styles.section}>
-                                <Text style={styles.label}>Owner's Email:</Text>
-                                <Text style={styles.value}>{fetchedUser.email}</Text>
+                                <Text style={styles.label}>Owner's Contact:</Text>
+                                <Text style={styles.value}>
+                                    {fetchedUser.email ? fetchedUser.email : fetchedUser.mobile}
+                                </Text>
                             </View>
                             <Divider />
                             <View style={styles.section}>
@@ -127,9 +123,6 @@ const ViewInvoiceScreen: React.FC = () => {
                             </View>
                             <Divider />
                             <View style={styles.footer}>
-                                {/* <Button icon="share" mode="outlined" onPress={() => console.log('Share Invoice')}>
-                            Share Invoice
-                        </Button> */}
                                 <SegmentedButtons
                                     value={"value"}
                                     onValueChange={() => { }}
@@ -151,11 +144,8 @@ const ViewInvoiceScreen: React.FC = () => {
                         </Card.Content>
                     </Card>
                 )}
-
             </ScrollView>
         </>
-
-
     );
 };
 
