@@ -20,6 +20,8 @@ const ProfileScreen: React.FC = () => {
     const { loading, user: fetchedUser, error } = userState;
     const [editMode, setEditMode] = useState(false);
     const [username, setUsername] = useState('');
+    const [mobile, setMobile] = useState('');
+    const [email, setEmail] = useState('');
 
     useEffect(() => {
         if (user?.userId) {
@@ -30,18 +32,31 @@ const ProfileScreen: React.FC = () => {
     useEffect(() => {
         if (fetchedUser) {
             setUsername(fetchedUser.username);
+            if (fetchedUser.email) {
+                setEmail(fetchedUser.email);
+            } else if (fetchedUser.mobile) {
+                setMobile(fetchedUser.mobile);
+            }
         }
     }, [fetchedUser]);
 
     const handleLogout = () => {
         dispatch(logoutRequest());
         navigation.navigate('Login'); // Redirect to the Login screen
-        AsyncStorage.clear()
+        AsyncStorage.clear();
     };
 
     const handleUpdate = () => {
         if (editMode && user?.userId) {
-            dispatch(updateUserRequest(user.userId, { username }));
+            const updatePayload: { username: string; email?: string; mobile?: string } = { username };
+
+            if (email) {
+                updatePayload.email = email;
+            } else if (mobile) {
+                updatePayload.mobile = mobile;
+            }
+
+            dispatch(updateUserRequest(user.userId, updatePayload));
         }
         setEditMode(!editMode);
     };
@@ -77,8 +92,8 @@ const ProfileScreen: React.FC = () => {
     return (
         <>
             <Appbar.Header>
-                <Appbar.BackAction onPress={() => { }} />
-                <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="settings" />} onPress={() => { }} />
+                <Appbar.BackAction onPress={() => navigation.goBack()} />
+                <Appbar.Action icon={(props) => <MaterialIcons {...props} name="settings" />} onPress={() => { }} />
                 <Appbar.Content title="Account Settings" />
             </Appbar.Header>
             <View style={styles.container}>
@@ -94,6 +109,23 @@ const ProfileScreen: React.FC = () => {
                             disabled={!editMode}
                             style={styles.input}
                         />
+                        {email ? (
+                            <TextInput
+                                label="Email"
+                                value={email}
+                                onChangeText={setEmail}
+                                disabled={!editMode}
+                                style={styles.input}
+                            />
+                        ) : (
+                            <TextInput
+                                label="Mobile Number"
+                                value={mobile}
+                                onChangeText={setMobile}
+                                disabled={!editMode}
+                                style={styles.input}
+                            />
+                        )}
                     </Card.Content>
                 </Card>
                 <Button mode="elevated" onPress={handleUpdate} style={styles.button}>
@@ -107,7 +139,6 @@ const ProfileScreen: React.FC = () => {
                 </Button>
             </View>
         </>
-
     );
 };
 
@@ -125,7 +156,7 @@ const styles = StyleSheet.create({
     deleteButton: {
         backgroundColor: myColors.colors.errorContainer,
         display: 'flex',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
     loader: {
         flex: 1,
