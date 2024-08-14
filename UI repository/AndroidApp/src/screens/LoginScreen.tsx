@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { TextInput, Button, ActivityIndicator, Text } from 'react-native-paper';
-import { loginRequest, registerRequest } from '../store/actions/authActions'; // Import register action
+import { loginRequest, registerRequest } from '../store/actions/authActions';
 import { RootState } from '../store/store';
 import { getAllData } from '../utils/localStorage/asyncStorage';
 import { useNavigation } from '@react-navigation/native';
 import { LoginScreenNavigationProp } from '../navigationTypes';
 import AppLogo from '../components/AppLogo';
-import { validateEmail, validatePassword } from '../utils/validation';
+import { validateEmail, validatePassword, validateMobileNumber } from '../utils/validation';
 import { createUsernameFromEmail } from '../utils/common';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { myColors } from '../config/theme';
 
 const LoginScreen: React.FC = () => {
-    const [email, setEmail] = useState('');
+    const [loginMethod, setLoginMethod] = useState<'email' | 'mobile'>('email');
+    const [emailOrMobile, setEmailOrMobile] = useState('');
     const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState('');
+    const [inputError, setInputError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const dispatch = useDispatch();
     const navigation = useNavigation<LoginScreenNavigationProp>();
     const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);
-
 
     useEffect(() => {
         const checkSession = async () => {
@@ -28,60 +29,32 @@ const LoginScreen: React.FC = () => {
             const userId = await AsyncStorage.getItem('userId');
             if (token && userId) {
                 // Dispatch login success if the token and userId are found
-                dispatch(loginRequest(email, password));
+                dispatch(loginRequest(emailOrMobile, password));
             }
         };
 
         checkSession();
     }, [dispatch]);
 
-
-
     const handleLogin = () => {
-        const emailValid = validateEmail(email);
+        let isValid = false;
+
+        if (loginMethod === 'email') {
+            isValid = validateEmail(emailOrMobile);
+            setInputError(isValid ? '' : 'Please enter a valid email address.');
+        } else {
+            isValid = validateMobileNumber(emailOrMobile);
+            setInputError(isValid ? '' : 'Please enter a valid mobile number.');
+        }
+
         const passwordValid = validatePassword(password);
+        setPasswordError(passwordValid ? '' : 'Password must be at least 8 characters long and include a number and a special character.');
 
-        if (!emailValid) {
-            setEmailError('Please enter a valid email address.');
-        } else {
-            setEmailError('');
-        }
-
-        if (!passwordValid) {
-            setPasswordError('Password must be at least 8 characters long and include a number and a special character.');
-        } else {
-            setPasswordError('');
-        }
-
-        if (emailValid && passwordValid) {
-            dispatch(loginRequest(email, password));
+        if (isValid && passwordValid) {
+            dispatch(loginRequest(emailOrMobile, password));
             getAllData().then((data) => console.log('All AsyncStorage Data:', data));
         }
     };
-
-    const handleRegister = () => {
-        const emailValid = validateEmail(email);
-        const passwordValid = validatePassword(password);
-
-        if (!emailValid) {
-            setEmailError('Please enter a valid email address.');
-        } else {
-            setEmailError('');
-        }
-
-        if (!passwordValid) {
-            setPasswordError('Password must be at least 8 characters long and include a number and a special character.');
-        } else {
-            setPasswordError('');
-        }
-
-        if (emailValid && passwordValid) {
-            dispatch(registerRequest(email, createUsernameFromEmail(email), password));
-            Alert.alert('Account created', 'Your account has been successfully created.');
-        }
-    };
-
-
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -92,18 +65,30 @@ const LoginScreen: React.FC = () => {
     return (
         <View style={styles.container}>
             <AppLogo />
+            <View style={styles.switchContainer}>
+                <TouchableOpacity onPress={() => setLoginMethod('email')}>
+                    <Text style={loginMethod === 'email' ? styles.activeSwitch : styles.inactiveSwitch}>
+                        Login via Email
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setLoginMethod('mobile')}>
+                    <Text style={loginMethod === 'mobile' ? styles.activeSwitch : styles.inactiveSwitch}>
+                        Login via Mobile
+                    </Text>
+                </TouchableOpacity>
+            </View>
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    label="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
+                    label={loginMethod === 'email' ? 'Email' : 'Mobile Number'}
+                    value={emailOrMobile}
+                    onChangeText={setEmailOrMobile}
+                    keyboardType={loginMethod === 'email' ? 'email-address' : 'phone-pad'}
                     mode="outlined"
-                    error={!!emailError}
+                    error={!!inputError}
                 />
             </View>
-            {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+            {inputError ? <Text style={styles.error}>{inputError}</Text> : null}
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
@@ -125,14 +110,6 @@ const LoginScreen: React.FC = () => {
             >
                 Sign in / Sign up
             </Button>
-
-            {/* <Button
-                mode="contained-tonal"
-                onPress={handleRegister}
-                style={styles.button}
-            >
-                Create a new Account
-            </Button> */}
         </View>
     );
 };
@@ -143,6 +120,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 60,
         backgroundColor: '#ffffff',
+    },
+    switchContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 20,
+    },
+    activeSwitch: {
+        color: myColors.colors.primary,
+        fontWeight: 'bold',
+        marginHorizontal: 10,
+        fontSize: 16,
+    },
+    inactiveSwitch: {
+        color: '#757575',
+        marginHorizontal: 10,
+        fontSize: 16,
     },
     inputContainer: {
         flexDirection: 'row',
