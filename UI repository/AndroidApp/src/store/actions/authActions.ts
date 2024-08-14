@@ -10,9 +10,9 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAILURE = 'REGISTER_FAILURE';
 
 // Action Creators
-export const loginRequest = (email: string, password: string) => ({
+export const loginRequest = (identifier: string, password: string) => ({
     type: LOGIN_REQUEST,
-    payload: { email, password },
+    payload: { identifier, password },
 });
 
 export const loginSuccess = (token: string, refreshToken: string, user: any) => ({
@@ -82,7 +82,7 @@ export interface RegisterFailureAction {
 export interface LoginRequestAction {
     type: typeof LOGIN_REQUEST;
     payload: {
-        email: string;
+        identifier: string;
         password: string;
     };
 }

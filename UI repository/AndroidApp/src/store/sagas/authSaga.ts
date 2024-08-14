@@ -27,7 +27,7 @@ function* handleLogin(
     action: LoginRequestAction
 ): Generator<CallEffect | PutEffect<any>, void, any> {
     try {
-        const { user, token, refreshToken } = yield call(login, action.payload.email, action.payload.password);
+        const { user, token, refreshToken } = yield call(login, action.payload.identifier, action.payload.password);
 
         // Save tokens in AsyncStorage
         yield call(AsyncStorage.setItem, 'accessToken', token);

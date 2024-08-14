@@ -10,6 +10,8 @@ Resources:
           AttributeType: S
         - AttributeName: email
           AttributeType: S
+        - AttributeName: mobile
+          AttributeType: S
       KeySchema:
         - AttributeName: userId
           KeyType: HASH
@@ -17,6 +19,15 @@ Resources:
         - IndexName: EmailIndex
           KeySchema:
             - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
+        - IndexName: MobileIndex   # index for mobile number queries
+          KeySchema:
+            - AttributeName: mobile
               KeyType: HASH
           Projection:
             ProjectionType: ALL

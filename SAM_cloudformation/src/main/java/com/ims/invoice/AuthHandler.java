@@ -31,6 +31,7 @@ public class AuthHandler {
     private final DynamoDB dynamoDB;
     private final Table usersTable;
     private final Index emailIndex;
+    private final Index mobileIndex;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Algorithm jwtAlgorithm = Algorithm.HMAC256("your-256-bit-secret");
     private final JWTVerifier jwtVerifier = JWT.require(jwtAlgorithm).build();
@@ -41,6 +42,7 @@ public class AuthHandler {
         this.dynamoDB = new DynamoDB(client);
         this.usersTable = dynamoDB.getTable(System.getenv("TABLE_NAME"));
         this.emailIndex = usersTable.getIndex("EmailIndex");
+        this.mobileIndex = usersTable.getIndex("MobileIndex");
     }
 
     public APIGatewayProxyResponseEvent handleLoginRequest(APIGatewayProxyRequestEvent request, Context context)
@@ -49,17 +51,26 @@ public class AuthHandler {
         try {
             @SuppressWarnings("unchecked")
             Map<String, String> requestBody = objectMapper.readValue(request.getBody(), Map.class);
-            String email = requestBody.get("email");
+            String identifier = requestBody.get("identifier"); // Identifier could be email or mobile number
             String password = requestBody.get("password");
 
-            // Extract the username from the email
-            String username = email.substring(0, email.indexOf('@'));
+            QuerySpec querySpec;
 
-            QuerySpec querySpec = new QuerySpec()
-                    .withKeyConditionExpression("email = :v_email")
-                    .withValueMap(new ValueMap().withString(":v_email", email));
-
-            Iterator<Item> iterator = emailIndex.query(querySpec).iterator();
+            // Determine if the identifier is an email or a mobile number
+            Iterator<Item> iterator;
+            if (identifier.contains("@")) {
+                // Identifier is an email, query using emailIndex
+                querySpec = new QuerySpec()
+                        .withKeyConditionExpression("email = :v_identifier")
+                        .withValueMap(new ValueMap().withString(":v_identifier", identifier));
+                iterator = emailIndex.query(querySpec).iterator();
+            } else {
+                // Identifier is a mobile number, query using mobileIndex
+                querySpec = new QuerySpec()
+                        .withKeyConditionExpression("mobile = :v_identifier")
+                        .withValueMap(new ValueMap().withString(":v_identifier", identifier));
+                iterator = mobileIndex.query(querySpec).iterator();
+            }
 
             if (iterator.hasNext()) {
                 // User exists, check password
@@ -76,11 +87,15 @@ public class AuthHandler {
 
                 String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt()); // Hash the password
 
+                // Assuming you store both email and mobile number for a user, you'll need to
+                // handle this
                 Item newUser = new Item()
                         .withPrimaryKey("userId", userId)
-                        .withString("email", email)
+                        .withString(identifier.contains("@") ? "email" : "mobile", identifier)
                         .withString("password", hashedPassword) // Store the hashed password
-                        .withString("username", username);
+                        .withString("username",
+                                identifier.contains("@") ? identifier.substring(0, identifier.indexOf('@'))
+                                        : "user_" + userId);
 
                 usersTable.putItem(newUser);
 

@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,13 +69,20 @@ public class UserHandler {
                 .withKeySchema(new KeySchemaElement("userId", KeyType.HASH))
                 .withAttributeDefinitions(
                         new AttributeDefinition("userId", ScalarAttributeType.S),
-                        new AttributeDefinition("email", ScalarAttributeType.S))
+                        new AttributeDefinition("email", ScalarAttributeType.S),
+                        new AttributeDefinition("mobile", ScalarAttributeType.S))
                 .withProvisionedThroughput(new ProvisionedThroughput(5L, 5L))
-                .withGlobalSecondaryIndexes(new GlobalSecondaryIndex()
-                        .withIndexName("EmailIndex")
-                        .withKeySchema(new KeySchemaElement("email", KeyType.HASH))
-                        .withProjection(new Projection().withProjectionType("ALL"))
-                        .withProvisionedThroughput(new ProvisionedThroughput(5L, 5L)));
+                .withGlobalSecondaryIndexes(
+                        new GlobalSecondaryIndex()
+                                .withIndexName("EmailIndex")
+                                .withKeySchema(new KeySchemaElement("email", KeyType.HASH))
+                                .withProjection(new Projection().withProjectionType("ALL"))
+                                .withProvisionedThroughput(new ProvisionedThroughput(5L, 5L)),
+                        new GlobalSecondaryIndex()
+                                .withIndexName("MobileIndex")
+                                .withKeySchema(new KeySchemaElement("mobile", KeyType.HASH))
+                                .withProjection(new Projection().withProjectionType("ALL"))
+                                .withProvisionedThroughput(new ProvisionedThroughput(5L, 5L)));
 
         client.createTable(request);
 
@@ -96,11 +104,35 @@ public class UserHandler {
             // Generate a unique user ID
             String userId = UUID.randomUUID().toString();
 
-            usersTable.putItem(new PutItemSpec().withItem(new Item()
+            String email = requestBody.get("email");
+            String mobile = requestBody.get("mobile");
+            String username = requestBody.get("username");
+            String password = requestBody.get("password");
+
+            // Hash the password using BCrypt
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+            // Check which identifier is provided and throw an error if both or none are
+            // provided
+            if (email == null && mobile == null) {
+                throw new IllegalArgumentException("Either email or mobile must be provided");
+            } else if (email != null && mobile != null) {
+                throw new IllegalArgumentException("Only one of email or mobile can be provided");
+            }
+
+            // Create the user item to put into DynamoDB
+            Item newUser = new Item()
                     .withPrimaryKey("userId", userId)
-                    .withString("email", requestBody.get("email"))
-                    .withString("username", requestBody.get("username"))
-                    .withString("password", requestBody.get("password"))));
+                    .withString("username", username)
+                    .withString("password", hashedPassword); // Store hashed password
+
+            if (email != null) {
+                newUser.withString("email", email);
+            } else {
+                newUser.withString("mobile", mobile);
+            }
+
+            usersTable.putItem(new PutItemSpec().withItem(newUser));
 
             responseBody.put("message", "User created");
             responseBody.put("userId", userId);
@@ -162,13 +194,39 @@ public class UserHandler {
             @SuppressWarnings("unchecked")
             Map<String, String> requestBody = objectMapper.readValue(request.getBody(), Map.class);
 
+            // Hash the password using BCrypt
+            String hashedPassword = BCrypt.hashpw(requestBody.get("password"), BCrypt.gensalt());
+
+            // Check which identifier is provided and ensure only one is being updated
+            String email = requestBody.get("email");
+            String mobile = requestBody.get("mobile");
+            if (email != null && mobile != null) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(400)
+                        .withBody("{\"message\":\"Only one of email or mobile can be updated\"}");
+            }
+
             // Update the user's information in DynamoDB
-            usersTable.updateItem(new UpdateItemSpec().withPrimaryKey("userId", userId)
-                    .withUpdateExpression("set username = :username, email = :email, password = :password")
+            UpdateItemSpec updateItemSpec = new UpdateItemSpec().withPrimaryKey("userId", userId)
+                    .withUpdateExpression("set username = :username, password = :password")
                     .withValueMap(new ValueMap()
                             .withString(":username", requestBody.get("username"))
-                            .withString(":email", requestBody.get("email"))
-                            .withString(":password", requestBody.get("password"))));
+                            .withString(":password", hashedPassword)); // Store hashed password
+
+            if (email != null) {
+                updateItemSpec.withUpdateExpression("set username = :username, email = :email, password = :password")
+                        .withValueMap(new ValueMap()
+                                .withString(":username", requestBody.get("username"))
+                                .withString(":email", email)
+                                .withString(":password", hashedPassword));
+            } else if (mobile != null) {
+                updateItemSpec.withUpdateExpression("set username = :username, mobile = :mobile, password = :password")
+                        .withValueMap(new ValueMap()
+                                .withString(":username", requestBody.get("username"))
+                                .withString(":mobile", mobile)
+                                .withString(":password", hashedPassword));
+            }
+
+            usersTable.updateItem(updateItemSpec);
 
             return new APIGatewayProxyResponseEvent().withStatusCode(200).withBody("{\"message\":\"User updated\"}");
         } catch (Exception e) {
@@ -202,5 +260,4 @@ public class UserHandler {
                     .withBody("{\"message\":\"Internal Server Error\"}");
         }
     }
-
 }

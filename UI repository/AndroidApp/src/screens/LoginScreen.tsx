@@ -12,10 +12,13 @@ import { validateEmail, validatePassword, validateMobileNumber } from '../utils/
 import { createUsernameFromEmail } from '../utils/common';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { myColors } from '../config/theme';
+import CountryPicker, { CountryCode } from 'react-native-country-picker-modal';
 
 const LoginScreen: React.FC = () => {
     const [loginMethod, setLoginMethod] = useState<'email' | 'mobile'>('email');
     const [emailOrMobile, setEmailOrMobile] = useState('');
+    const [countryCode, setCountryCode] = useState('IN');
+    const [callingCode, setCallingCode] = useState('91');
     const [password, setPassword] = useState('');
     const [inputError, setInputError] = useState('');
     const [passwordError, setPasswordError] = useState('');
@@ -43,7 +46,7 @@ const LoginScreen: React.FC = () => {
             isValid = validateEmail(emailOrMobile);
             setInputError(isValid ? '' : 'Please enter a valid email address.');
         } else {
-            isValid = validateMobileNumber(emailOrMobile);
+            isValid = validateMobileNumber(`+${callingCode}${emailOrMobile}`);
             setInputError(isValid ? '' : 'Please enter a valid mobile number.');
         }
 
@@ -77,6 +80,22 @@ const LoginScreen: React.FC = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
+            {loginMethod === 'mobile' && (
+                <View style={styles.countryPickerContainer}>
+                    <CountryPicker
+                        countryCode={countryCode as CountryCode}
+                        withFilter
+                        withFlag
+                        withCallingCode
+                        withCountryNameButton
+                        onSelect={(country) => {
+                            setCountryCode(country.cca2);
+                            setCallingCode(country.callingCode[0]);
+                        }}
+                    />
+                    <Text style={styles.callingCode}>+{callingCode}</Text>
+                </View>
+            )}
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
@@ -136,6 +155,15 @@ const styles = StyleSheet.create({
         color: '#757575',
         marginHorizontal: 10,
         fontSize: 16,
+    },
+    countryPickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    callingCode: {
+        fontSize: 16,
+        marginLeft: 10,
     },
     inputContainer: {
         flexDirection: 'row',
