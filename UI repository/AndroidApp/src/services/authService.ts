@@ -2,8 +2,7 @@ import api from './api';
 import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_REFRESH, AUTH_REGISTER } from '../constants';
 
 export const login = async (identifier: string, password: string) => {
-    const isEmail = identifier.includes('@'); // Simple check to differentiate email from mobile
-    const payload = isEmail ? { email: identifier, password } : { mobile: identifier, password };
+    const payload = { identifier: identifier, password };
 
     const response = await api.post(AUTH_LOGIN, payload);
     return response.data;
