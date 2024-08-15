@@ -97,7 +97,8 @@
 /* Buttons */
 .invoice-actions {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    justify-content: center;
     margin-top: 2.5rem;
     flex-wrap: wrap;
 }
@@ -123,6 +124,7 @@
     background-color: #48bb78;
     color: white;
     border: none;
+    margin-left: 1vw;
 }
 
 .btn:hover {
@@ -157,6 +159,7 @@
         width: auto;
         margin-bottom: 0;
     }
+
 }
 
 /* Desktop and Up */
@@ -186,12 +189,15 @@
     }
 }
 
-
-/** modern template **/
+/** Modern Template **/
 
 .template-modern {
     font-family: 'Arial', sans-serif;
     color: #333;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .invoice-header-modern {
@@ -199,33 +205,142 @@
     justify-content: space-between;
     border-bottom: 2px solid #333;
     padding-bottom: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .invoice-title-modern {
     font-size: 24px;
     font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.invoice-id-modern {
+    font-size: 16px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.invoice-company-modern {
+    text-align: right;
+    flex: 1 1 100%; /* Full width on mobile */
+    margin-top: 10px; /* Adjust margin on small screens */
 }
 
 .invoice-company-modern h2 {
     font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.invoice-company-modern p {
+    font-size: 14px;
+    color: #666;
 }
 
 .invoice-section-modern {
     margin-top: 20px;
 }
 
+.invoice-details-modern {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-top: 15px;
+}
+
 .invoice-details-modern p {
     margin: 5px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.qr-code-modern {
+    text-align: center;
+    margin-top: 20px;
 }
 
 .invoice-footer-modern {
     margin-top: 30px;
     font-size: 14px;
     text-align: center;
+    color: #666;
+}
+
+/* Responsive Design for Modern Template */
+
+/* Tablet and Up */
+@media (min-width: 768px) {
+    .invoice-header-modern {
+        flex-wrap: nowrap; /* Do not wrap on larger screens */
+    }
+
+    .invoice-title-modern {
+        font-size: 28px;
+    }
+
+    .invoice-id-modern {
+        font-size: 18px;
+    }
+
+    .invoice-company-modern {
+        flex: unset; /* Reset flex to auto */
+        text-align: right;
+        margin-top: 0;
+    }
+
+    .invoice-company-modern h2 {
+        font-size: 20px;
+    }
+
+    .invoice-company-modern p {
+        font-size: 16px;
+    }
+
+    .invoice-details-modern p {
+        font-size: 16px;
+    }
+
+    .invoice-footer-modern {
+        font-size: 16px;
+    }
+
+
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 767px) {
+    .invoice-title-modern {
+        font-size: 20px;
+        margin-bottom: 0.5rem;
+    }
+
+    .invoice-id-modern {
+        font-size: 14px;
+        margin-top: 0.5rem;
+    }
+
+    .invoice-company-modern {
+        text-align: left;
+        margin-top: 10px;
+    }
+
+    .invoice-company-modern h2 {
+        font-size: 16px;
+    }
+
+    .invoice-company-modern p {
+        font-size: 14px;
+    }
+
+    .invoice-footer-modern {
+        font-size: 14px;
+    }
 }
 
 
-/*stylish*/
+/* Stylish Template */
 
 .template-stylish {
     font-family: 'Poppins', sans-serif;
@@ -243,10 +358,13 @@
     border-bottom: 2px solid #444;
     padding-bottom: 15px;
     margin-bottom: 20px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .header-left-stylish {
     text-align: left;
+    flex: 1 1 100%; /* Full width on mobile */
+    margin-bottom: 10px;
 }
 
 .invoice-title-stylish {
@@ -259,6 +377,12 @@
 .invoice-id-stylish {
     font-size: 18px;
     color: #888;
+}
+
+.header-right-stylish {
+    text-align: right;
+    flex: 1 1 100%; /* Full width on mobile */
+    margin-top: 10px; /* Adjust margin on small screens */
 }
 
 .header-right-stylish h2 {
@@ -313,8 +437,70 @@
     margin-bottom: 10px;
 }
 
+/* Responsive Design for Stylish Template */
 
-/**premium template**/
+/* Tablet and Up */
+@media (min-width: 768px) {
+    .invoice-header-stylish {
+        flex-wrap: nowrap; /* Do not wrap on larger screens */
+    }
+
+    .header-left-stylish, .header-right-stylish {
+        flex: unset; /* Reset flex to auto */
+        margin: 0; /* Remove margins */
+    }
+
+    .invoice-title-stylish {
+        font-size: 32px;
+    }
+
+    .invoice-id-stylish {
+        font-size: 16px;
+    }
+
+    .header-right-stylish h2 {
+        font-size: 20px;
+    }
+
+    .header-right-stylish p {
+        font-size: 14px;
+    }
+ 
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 767px) {
+    .invoice-title-stylish {
+        font-size: 24px;
+        margin-bottom: 0.5rem;
+    }
+
+    .invoice-id-stylish {
+        font-size: 14px;
+        margin-bottom: 1rem;
+    }
+
+    .header-right-stylish {
+        text-align: left;
+    }
+
+    .header-right-stylish h2 {
+        font-size: 20px;
+    }
+
+    .header-right-stylish p {
+        font-size: 14px;
+    }
+
+    .invoice-footer-stylish p {
+        font-size: 14px;
+    }
+
+    .thank-you-stylish {
+        font-size: 18px;
+    }
+}
+/** Premium Template **/
 
 .template-premium {
     font-family: 'Georgia', serif;
@@ -332,10 +518,13 @@
     border-bottom: 3px solid #bfa145;
     padding-bottom: 20px;
     margin-bottom: 30px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
 }
 
 .header-left-premium {
     text-align: left;
+    flex: 1 1 100%; /* Full width on mobile */
+    margin-bottom: 10px; /* Adjust margin for small screens */
 }
 
 .invoice-title-premium {
@@ -349,6 +538,13 @@
 .invoice-id-premium {
     font-size: 20px;
     color: #888;
+    margin-top: 10px;
+}
+
+.header-right-premium {
+    text-align: right;
+    flex: 1 1 100%; /* Full width on mobile */
+    margin-top: 10px; /* Adjust margin for small screens */
 }
 
 .header-right-premium h2 {
@@ -402,4 +598,67 @@
     font-size: 26px;
     font-weight: bold;
     margin-bottom: 15px;
+}
+
+/* Responsive Design for Premium Template */
+
+/* Tablet and Up */
+@media (min-width: 768px) {
+    .invoice-header-premium {
+        flex-wrap: nowrap; /* Do not wrap on larger screens */
+    }
+
+    .header-left-premium, .header-right-premium {
+        flex: unset; /* Reset flex to auto */
+        margin: 0; /* Remove margins */
+    }
+
+    .invoice-title-premium {
+        font-size: 36px;
+    }
+
+    .invoice-id-premium {
+        font-size: 18px;
+    }
+
+    .header-right-premium h2 {
+        font-size: 24px;
+    }
+
+    .header-right-premium p {
+        font-size: 16px;
+    }
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 767px) {
+    .invoice-title-premium {
+        font-size: 28px;
+        margin-bottom: 0.5rem;
+    }
+
+    .invoice-id-premium {
+        font-size: 16px;
+        margin-top: 0.5rem;
+    }
+
+    .header-right-premium {
+        text-align: left;
+    }
+
+    .header-right-premium h2 {
+        font-size: 22px;
+    }
+
+    .header-right-premium p {
+        font-size: 14px;
+    }
+
+    .invoice-footer-premium p {
+        font-size: 16px;
+    }
+
+    .thank-you-premium {
+        font-size: 20px;
+    }
 }

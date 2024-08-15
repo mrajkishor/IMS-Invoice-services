@@ -29,7 +29,7 @@ interface InvoiceData {
     status: string;
     shopName?: string;
     shopAddress?: string;
-    userEmail?: string;
+    userEmailorMobile?: string;
     templateId?: string;
     // other properties based on your DynamoDB schema
 }
@@ -60,7 +60,7 @@ export default function Invoice() {
                 ...invoice,
                 shopName: shopData.shopName,
                 shopAddress: shopData.shopAddress,
-                userEmail: customerData.userEmail,
+                userEmailorMobile: customerData.userEmailorMobile,
             });
             setTemplate(Number(invoice.templateId));
         } catch (error) {
@@ -106,12 +106,13 @@ export default function Invoice() {
 
         try {
             const data = await dynamoDB.get(params).promise();
+            console.log(data);
             return {
-                userEmail: data?.Item?.email || "Unknown Email",
+                userEmailorMobile: data?.Item?.email || data?.Item?.mobile || "Unknown Contact",
             };
         } catch (error) {
             console.error("Error fetching customer data:", error);
-            return { userEmail: "Unknown Email" };
+            return { userEmailorMobile: "Unknown Email" };
         }
     };
 
@@ -169,7 +170,7 @@ export default function Invoice() {
                             <div className="invoice-company">
                                 <h2>{invoiceData.shopName}</h2>  {/* Display shop name */}
                                 <p>{invoiceData.shopAddress}</p>  {/* Display shop address */}
-                                <p>{invoiceData.userEmail}</p>    {/* Display user email */}
+                                <p>Contact : {invoiceData.userEmailorMobile}</p>    {/* Display user email */}
                             </div>
                         </header>
 
@@ -215,7 +216,7 @@ export default function Invoice() {
                             <div className="invoice-company-modern">
                                 <h2>{invoiceData.shopName}</h2>
                                 <p>{invoiceData.shopAddress}</p>
-                                <p>{invoiceData.userEmail}</p>
+                                <p>Contact : {invoiceData.userEmailorMobile}</p>
                             </div>
                         </header>
 
@@ -262,7 +263,7 @@ export default function Invoice() {
                             <div className="header-right-stylish">
                                 <h2>{invoiceData.shopName}</h2>
                                 <p>{invoiceData.shopAddress}</p>
-                                <p>{invoiceData.userEmail}</p>
+                                <p>Contact : {invoiceData.userEmailorMobile}</p>
                             </div>
                         </header>
 
@@ -306,7 +307,7 @@ export default function Invoice() {
                             <div className="header-right-premium">
                                 <h2>{invoiceData.shopName}</h2>
                                 <p>{invoiceData.shopAddress}</p>
-                                <p>{invoiceData.userEmail}</p>
+                                <p>Contact : {invoiceData.userEmailorMobile}</p>
                             </div>
                         </header>
 
