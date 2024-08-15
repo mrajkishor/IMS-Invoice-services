@@ -88,7 +88,7 @@ const ViewInvoiceScreen: React.FC = () => {
                             <View style={styles.section}>
                                 <Text style={styles.label}>Owner's Contact:</Text>
                                 <Text style={styles.value}>
-                                    {fetchedUser.email ? fetchedUser.email : fetchedUser.mobile}
+                                    {fetchedUser?.email ? fetchedUser?.email : fetchedUser?.mobile}
                                 </Text>
                             </View>
                             <Divider />
