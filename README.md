@@ -1,3 +1,8 @@
+Prior to git commit remove .next cache (for landing page changes only)
+```bash
+git rm --cached -r UI\LandingPage\my-app\.next
+```
+
 **BackEnd update**
 
 cd SAM_cloudformation
