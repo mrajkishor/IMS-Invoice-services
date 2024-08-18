@@ -1,2 +1,0 @@
-Landing Page / Web App : React (Next JS)
-Android app : React Native

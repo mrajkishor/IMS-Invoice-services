@@ -1,8 +1,8 @@
 // File: E:\IMS\IMS-Invoice-services\UI repository\LandingPage\my-app\app\page.tsx
-import * as entry from '../../../app/page.js'
+import * as entry from '../../../app/page1.jsx'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../app/page.js')
+type TEntry = typeof import('../../../app/page1.jsx')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{
