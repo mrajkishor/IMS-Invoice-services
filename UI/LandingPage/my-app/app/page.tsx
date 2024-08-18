@@ -81,7 +81,7 @@ export default function Home() {
                           <a className="page-scroll" href="#faq">FAQ</a>
                         </li>
                         <li className="nav-item">
-                          <a className="page-scroll" href="#footer">Contact</a>
+                          <a className="page-scroll" href="#footer">Download</a>
                         </li>
                       </ul>
                     </div>
@@ -102,7 +102,7 @@ export default function Home() {
                   <p className="wow fadeInUp" data-wow-delay=".4s">
                     Generate, manage, and share invoices with ease. Chalaan streamlines your invoicing process, so you can focus on growing your business.
                   </p>
-                  <a href="#footer" className="main-btn btn-hover wow fadeInUp" data-wow-delay=".6s">Get Started</a>
+                  <a href="#feature" className="main-btn btn-hover wow fadeInUp" data-wow-delay=".6s">Get Started</a>
                 </div>
               </div>
               <div className="col-lg-6">
@@ -131,7 +131,7 @@ export default function Home() {
               <div className="col-lg-4 col-md-8 col-sm-10">
                 <div className="single-feature">
                   <div className="icon color-1">
-                    <i className="lni lni-file"></i>
+                    <i className="lni lni-write"></i>
                   </div>
                   <div className="content">
                     <h3>Create and Customize</h3>
@@ -249,7 +249,7 @@ export default function Home() {
                   <div className="footer-widget">
                     <h3>Contact Us</h3>
                     <ul className="links">
-                      <li><a href="#" onClick={(e) => e.preventDefault()}>Email: mrajkishor331@gmail.com</a></li>
+                      <li><a href="#" onClick={(e) => e.preventDefault()}>Email: quickroutes@gmail.com</a></li>
                       <li><a href="#" onClick={(e) => e.preventDefault()}>Phone: +91-7683922389</a></li>
                       <li><a href="#" onClick={(e) => e.preventDefault()}>Address: Tarnaka, Hyderabad, IN</a></li>
                     </ul>
@@ -286,10 +286,9 @@ export default function Home() {
                   <div className="footer-widget">
                     <h3>Support</h3>
                     <ul className="links">
-                      <li><a href="#" onClick={(e) => e.preventDefault()}>Help Center</a></li>
-                      <li><a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a></li>
-                      <li><a href="#" onClick={(e) => e.preventDefault()}>Terms of Service</a></li>
-                      <li><a href="#" onClick={(e) => e.preventDefault()}>Contact Us</a></li>
+                      <li><a href="feedback">Help Center</a></li>
+                      <li><a href="privacypolicy">Privacy Policy</a></li>
+                      <li><a href="terms">Terms of Service</a></li>
                     </ul>
                   </div>
                 </div>

@@ -5,12 +5,12 @@ const PrivacyPolicy = () => {
     return (
         <>
             <Head>
-                <title>Privacy Policy - InvoGuru</title>
-                <meta name="description" content="Privacy Policy for InvoGuru" />
+                <title>Privacy Policy - Chalaan</title>
+                <meta name="description" content="Privacy Policy for Chalaan" />
             </Head>
             <div style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", padding: '1em' }}>
                 <h1>Privacy Policy</h1>
-                <p>This privacy policy applies to the InvoGuru app (hereby referred to as &quot;Application&quot;) for mobile devices that was created by Rajkishor Maharana (hereby referred to as &quot;Service Provider&quot;) as a Free service. This service is intended for use &quot;AS IS&quot;.</p>
+                <p>This privacy policy applies to the Chalaan app (hereby referred to as &quot;Application&quot;) for mobile devices that was created by Rajkishor Maharana (hereby referred to as &quot;Service Provider&quot;) as a Free service. This service is intended for use &quot;AS IS&quot;.</p>
 
                 <h2>Information Collection and Use</h2>
                 <p>The Application collects information when you download and use it. This information may include information such as:</p>
