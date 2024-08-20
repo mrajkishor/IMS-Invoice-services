@@ -9,6 +9,8 @@ import '../public/assets/css/main.css';
 
 
 export default function Home() {
+
+
   return (
     <>
       <Head>
@@ -17,7 +19,7 @@ export default function Home() {
         <title>Chalaan || Invoice App</title>
         <meta name="description" content="Chalaan is your go-to solution for generating, managing, and sharing invoices seamlessly." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.svg" />
+        <link rel="shortcut icon" type="image/x-icon" href="/images/apple-touch-icon.png" />
       </Head>
 
       <body>
@@ -303,7 +305,7 @@ export default function Home() {
                         </a>
                       </li> */}
                       <li>
-                        <a href="#" onClick={(e) => e.preventDefault()}>
+                        <a href="https://play.google.com/store/apps/details?id=com.invoiceproject" target="_blank" rel="noopener noreferrer" >
                           <span className="icon"><i className="lni lni-play-store"></i></span>
                           <span className="text">GET IT ON <b>Play Store</b></span>
                         </a>
