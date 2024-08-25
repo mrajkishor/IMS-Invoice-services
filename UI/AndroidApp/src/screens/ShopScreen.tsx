@@ -8,6 +8,7 @@ import { RootStackParamList } from '../navigationTypes';
 import { fetchShopRequest, updateShopRequest, deleteShopRequest } from '../store/actions/shopActions';
 import { fetchInvoicesRequest } from '../store/actions/invoiceActions';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { myColors } from '../config/theme';
 
 type ShopScreenRouteProp = RouteProp<RootStackParamList, 'Shop'>;
@@ -16,20 +17,17 @@ type Props = {
     route: ShopScreenRouteProp;
 };
 
-const ShopScreen: React.FC<Props> = ({ route }) => {
+const BusinessUpdateScreen: React.FC<Props> = ({ route }) => {
     const { shopId } = route.params;
     const dispatch = useDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const shop = useSelector((state: RootState) => state.shops.shop);
-    const invoicesState = useSelector((state: RootState) => state.invoices);
     const [editMode, setEditMode] = useState(false);
     const [shopName, setShopName] = useState('');
     const [address, setAddress] = useState('');
-    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         dispatch(fetchShopRequest(shopId));
-        dispatch(fetchInvoicesRequest(shopId));
     }, [dispatch, shopId]);
 
     useEffect(() => {
@@ -45,13 +43,6 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
         }
         setEditMode(!editMode);
     };
-
-    useEffect(() => {
-        if (!editMode && shop) {
-            setShopName(shop.shopName);
-            setAddress(shop.address);
-        }
-    }, [editMode, shop]);
 
     const handleDelete = () => {
         Alert.alert(
@@ -72,16 +63,54 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
         );
     };
 
+    return (
+        <View style={styles.container}>
+            <Card mode={"elevated"} elevation={0}>
+                <Card.Title title="Business Details" subtitle="Update your Business name and address" />
+                <Card.Content>
+                    <TextInput
+                        label="Business Name"
+                        value={shopName}
+                        onChangeText={setShopName}
+                        disabled={!editMode}
+                    />
+                    <TextInput
+                        label="Address"
+                        value={address}
+                        onChangeText={setAddress}
+                        disabled={!editMode}
+                    />
+                </Card.Content>
+            </Card>
+            <Button mode="elevated" onPress={handleUpdate} style={styles.button}>
+                {editMode ? 'Save Changes' : 'Update Business'}
+            </Button>
+            <Button mode="contained" onPress={handleDelete} style={[styles.button, styles.deleteButton]}>
+                Delete
+            </Button>
+        </View>
+    );
+};
+
+const InvoiceListScreen: React.FC<Props> = ({ route }) => {
+    const { shopId } = route.params;
+    const dispatch = useDispatch();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const invoicesState = useSelector((state: RootState) => state.invoices);
+    const [refreshing, setRefreshing] = useState(false);
+
+    useEffect(() => {
+        dispatch(fetchInvoicesRequest(shopId));
+    }, [dispatch, shopId]);
+
     const renderInvoiceItem = ({ item }: { item: any }) => (
         <TouchableWithoutFeedback onPress={() => navigation.navigate('ViewInvoice', { invoice: item })}>
-            <Card mode={"elevated"} elevation={0} >
+            <Card mode={"elevated"} elevation={0}>
                 <Card.Content>
                     <Card.Title
                         title={`Invoice ID: ${item.invoiceId}`}
                         subtitle={`Amount: ${item.amount}\nDetails: ${item.details}`}
-                        // left={(props) => <MaterialIcons name="description" size={24} color="black" />}
-                        right={(props) => <MaterialIcons name="chevron-right" size={24} color="black" />}
-
+                        right={() => <MaterialIcons name="chevron-right" size={24} color="black" />}
                     />
                 </Card.Content>
             </Card>
@@ -90,11 +119,55 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
 
     const onRefresh = () => {
         setRefreshing(true);
-        dispatch(fetchShopRequest(shopId));
         dispatch(fetchInvoicesRequest(shopId));
         setRefreshing(false);
     };
 
+    return (
+        <View style={styles.container}>
+            {invoicesState.loading ? (
+                <ActivityIndicator animating={true} style={styles.loader} />
+            ) : invoicesState.error ? (
+                <Text style={styles.error}>{invoicesState.error}</Text>
+            ) : invoicesState?.invoices?.length === 0 ? (
+                <Text style={styles.alert}>No Invoice Found!</Text>
+            ) : (
+                <FlatList
+                    data={invoicesState.invoices}
+                    renderItem={renderInvoiceItem}
+                    keyExtractor={(item) => item.invoiceId}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
+                />
+            )}
+            <FAB
+                style={styles.fab}
+                icon="plus"
+                onPress={() => navigation.navigate('CreateInvoice', { shopId })}
+            />
+        </View>
+    );
+};
+
+const ShopScreen: React.FC<Props> = ({ route }) => {
+    const [index, setIndex] = useState(0);
+    const [routes] = useState([
+        { key: 'invoices', title: 'Invoices' },
+        { key: 'business', title: 'Business Update' }
+    ]);
+
+    const renderScene = SceneMap({
+        invoices: () => <InvoiceListScreen route={route} />,
+        business: () => <BusinessUpdateScreen route={route} />
+    });
+    const renderTabBar = (props: any) => (
+        <TabBar
+            {...props}
+            indicatorStyle={{ backgroundColor: 'white' }}
+            style={styles.tabBar}
+        />
+    );
     return (
         <>
             <Appbar.Header>
@@ -102,57 +175,15 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
                 <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="store" />} onPress={() => { }} />
                 <Appbar.Content title="My Business" />
             </Appbar.Header>
-            <View style={styles.container}>
-                <Card mode={"elevated"} elevation={0}>
-                    <Card.Title title="Business Details" subtitle="Update your Business name and address" />
-                    <Card.Content >
-                        <TextInput
-                            label="Business Name"
-                            value={shopName}
-                            onChangeText={setShopName}
-                            disabled={!editMode}
-                        />
-                        <TextInput
-                            label="Address"
-                            value={address}
-                            onChangeText={setAddress}
-                            disabled={!editMode}
-                        />
-                    </Card.Content>
-                </Card>
-                <Button mode="elevated" onPress={handleUpdate} style={styles.button}>
-                    {editMode ? 'Save Changes' : 'Update Business'}
-                </Button>
-                <Button mode="contained" onPress={handleDelete} style={[styles.button, styles.deleteButton]}>
-                    Delete
-                </Button>
-                <Divider />
-                {invoicesState.loading ? (
-                    <ActivityIndicator animating={true} style={styles.loader} />
-                ) : invoicesState.error ? (
-                    <Text style={styles.error}>{invoicesState.error}</Text>
-                ) : invoicesState?.invoices?.length === 0 ? (
-                    <Text style={styles.alert}>No Invoice Found!</Text>
-                ) : (
-                    <FlatList
-                        data={invoicesState.invoices}
-                        renderItem={renderInvoiceItem}
-                        keyExtractor={(item) => item.invoiceId}
-                        style={styles.list}
-                        refreshControl={
-                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                        }
-                    />
-                )}
-                <FAB
-                    style={styles.fab}
-                    icon="plus"
-                    onPress={() => navigation.navigate('CreateInvoice', { shopId })}
-                />
-            </View>
-
+            <TabView
+                renderTabBar={renderTabBar}
+                navigationState={{ index, routes }}
+                renderScene={renderScene}
+                onIndexChange={setIndex}
+                initialLayout={{ width: 100 }}
+                style={styles.tabView}
+            />
         </>
-
     );
 };
 
@@ -164,15 +195,9 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 5,
         marginBottom: 10,
-        marginLeft: 10,
-        marginRight: 10
-
     },
     deleteButton: {
         backgroundColor: myColors.colors.errorContainer,
-    },
-    card: {
-        marginBottom: 10,
     },
     loader: {
         marginTop: 20,
@@ -187,15 +212,19 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 20,
     },
-    list: {
-
-    },
     fab: {
         position: 'absolute',
         margin: 16,
         right: 0,
         bottom: 0,
     },
+    tabView: {
+        flex: 1,
+        backgroundColor: myColors.colors.onPrimary
+    },
+    tabBar: {
+        backgroundColor: myColors.colors.inversePrimary
+    }
 });
 
 export default ShopScreen;

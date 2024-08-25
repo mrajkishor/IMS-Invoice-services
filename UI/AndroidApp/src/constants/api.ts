@@ -21,4 +21,5 @@ export const DELETE_INVOICE = (invoiceId: string) => `${API_BASE_URL}/invoices/$
 
 export const GET_SHOP_HISTORY = (shopId: string) => `${API_BASE_URL}/shops/${shopId}/history`;
 
-export const INVOICE_PROD_URL = 'https://my-app-three-zeta-98.vercel.app';
+// export const INVOICE_PROD_URL = 'https://my-app-three-zeta-98.vercel.app';
+export const INVOICE_PROD_URL = 'https://chalaan.com';
