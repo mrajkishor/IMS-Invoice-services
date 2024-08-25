@@ -7,7 +7,7 @@ import { Text, Title } from 'react-native-paper';
 const AppLogo = () => {
     return (
         <View style={styles.container}>
-            <Title style={styles.logoText}>InvoGuru</Title>
+            <Title style={styles.logoText}>Chalaan</Title>
             <Text style={styles.sloganText}>Effortless Invoicing, Expertly Managed</Text>
         </View>
     );

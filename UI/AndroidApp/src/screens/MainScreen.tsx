@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
-import { BottomNavigation, List, Card, ActivityIndicator, FAB, Button, Surface, Appbar } from 'react-native-paper';
+import { BottomNavigation, List, Card, ActivityIndicator, FAB, Button, Surface, Appbar, Tooltip } from 'react-native-paper';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutRequest } from '../store/actions/authActions';
@@ -63,12 +63,12 @@ const ShopListRoute: React.FC = () => {
 
                 <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="store" />} onPress={() => { }} />
 
-                <Appbar.Content title="My Shop Catalogue" />
+                <Appbar.Content title="My Catalogue" />
             </Appbar.Header>
             <View style={styles.container}>
                 {shops?.length === 0 ? <>
                     <View style={styles.noRecordsWrapper}>
-                        <Text style={styles.noRecordsWrapperTitle}>No Shops Found!</Text>
+                        <Text style={styles.noRecordsWrapperTitle}>No Business Found!</Text>
                         <MaterialIcons name="store" size={50} style={styles.noRecordsWrapperIcon} />
                     </View>
                 </> : <FlatList
@@ -92,7 +92,7 @@ const MainScreen: React.FC = () => {
     const [routes] = useState([
         {
             key: 'shops',
-            title: 'Shops',
+            title: 'Business',
             focusedIcon: 'store',
             unfocusedIcon: 'store-outline'
         },
@@ -121,11 +121,13 @@ const MainScreen: React.FC = () => {
                 renderScene={renderScene}
                 style={styles.container}
             />
-            <FAB
-                style={styles.fab}
-                icon="plus"
-                onPress={() => navigation.navigate('CreateShop')}
-            />
+            {index === 0 && <Tooltip title="Create Business">
+                <FAB
+                    style={styles.fab}
+                    icon="plus"
+                    onPress={() => navigation.navigate('CreateShop')}
+                />
+            </Tooltip>}
         </View>
     );
 };

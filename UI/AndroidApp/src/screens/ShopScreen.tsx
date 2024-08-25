@@ -100,14 +100,14 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => { }} />
                 <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="store" />} onPress={() => { }} />
-                <Appbar.Content title="My Store" />
+                <Appbar.Content title="My Business" />
             </Appbar.Header>
             <View style={styles.container}>
                 <Card mode={"elevated"} elevation={0}>
-                    <Card.Title title="Store Details" subtitle="Update your shop name and address" />
+                    <Card.Title title="Business Details" subtitle="Update your Business name and address" />
                     <Card.Content >
                         <TextInput
-                            label="Shop Name"
+                            label="Business Name"
                             value={shopName}
                             onChangeText={setShopName}
                             disabled={!editMode}
@@ -121,7 +121,7 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
                     </Card.Content>
                 </Card>
                 <Button mode="elevated" onPress={handleUpdate} style={styles.button}>
-                    {editMode ? 'Save Changes' : 'Update Store'}
+                    {editMode ? 'Save Changes' : 'Update Business'}
                 </Button>
                 <Button mode="contained" onPress={handleDelete} style={[styles.button, styles.deleteButton]}>
                     Delete

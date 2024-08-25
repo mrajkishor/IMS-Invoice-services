@@ -54,7 +54,11 @@ const LoginScreen: React.FC = () => {
         setPasswordError(passwordValid ? '' : 'Password must be at least 8 characters long and include a number and a special character.');
 
         if (isValid && passwordValid) {
-            dispatch(loginRequest(emailOrMobile, password));
+            if (loginMethod === 'email') {
+                dispatch(loginRequest(emailOrMobile, password));
+            } else {
+                dispatch(loginRequest(`+${callingCode}${emailOrMobile}`, password));
+            }
             getAllData().then((data) => console.log('All AsyncStorage Data:', data));
         }
     };

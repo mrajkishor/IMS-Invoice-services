@@ -33,11 +33,11 @@ const CreateShopScreen: React.FC = () => {
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => { }} />
                 <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="create" />} onPress={() => { }} />
-                <Appbar.Content title="Create Shop" />
+                <Appbar.Content title="Create" />
             </Appbar.Header>
             <View style={styles.container}>
                 <TextInput
-                    label="Shop Name"
+                    label="Business Name"
                     mode={"outlined"}
                     value={shopName}
                     onChangeText={setShopName}
@@ -45,13 +45,13 @@ const CreateShopScreen: React.FC = () => {
                 />
                 <TextInput
                     mode={"outlined"}
-                    label="Shop Address"
+                    label="Business Address"
                     value={address}
                     onChangeText={setAddress}
                     style={styles.input}
                 />
                 <Button mode={'elevated'} onPress={handleCreateShop} style={styles.button}>
-                    Create new Shop
+                    Create new Business
                 </Button>
             </View>
         </>
