@@ -56,29 +56,39 @@ public class InvoiceHandler {
             String userIdFromToken = getUserIdFromToken(token);
 
             @SuppressWarnings("unchecked")
-            Map<String, String> requestBody = objectMapper.readValue(request.getBody(), Map.class);
+            Map<String, Object> requestBody = objectMapper.readValue(request.getBody(), Map.class);
 
             if (!requestBody.get("userId").equals(userIdFromToken)) {
                 return new APIGatewayProxyResponseEvent().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}");
             }
 
-            String invoiceId = requestBody.get("invoiceId");
-            if (invoiceId == null || invoiceId.isEmpty()) {
-                invoiceId = UUID.randomUUID().toString();
-            }
+            String invoiceId = requestBody.get("invoiceId") != null
+                    && !requestBody.get("invoiceId").toString().isEmpty()
+                            ? requestBody.get("invoiceId").toString()
+                            : UUID.randomUUID().toString();
 
-            invoicesTable.putItem(new PutItemSpec().withItem(new Item()
+            @SuppressWarnings("unchecked")
+            Item invoiceItem = new Item()
                     .withPrimaryKey("invoiceId", invoiceId)
-                    .withString("shopId", requestBody.get("shopId"))
-                    .withString("userId", requestBody.get("userId"))
-                    .withString("customerName", requestBody.get("customerName"))
-                    .withString("customerAddress", requestBody.get("customerAddress"))
-                    .withString("details", requestBody.get("details"))
-                    .withString("invoiceDate", requestBody.get("invoiceDate"))
-                    .withString("dueDate", requestBody.get("dueDate"))
-                    .withString("status", requestBody.get("status"))
-                    .withNumber("amount", Integer.parseInt(requestBody.get("amount")))
-                    .withNumber("templateId", Integer.parseInt(requestBody.get("templateId")))));
+                    .withString("shopId", requestBody.get("shopId").toString())
+                    .withString("userId", requestBody.get("userId").toString())
+                    .withMap("billedTo", (Map<String, Object>) requestBody.get("billedTo"))
+                    .withMap("invoiceCreator", (Map<String, Object>) requestBody.get("invoiceCreator"))
+                    .withMap("paymentMethod", (Map<String, Object>) requestBody.get("paymentMethod"))
+                    .withMap("business", (Map<String, Object>) requestBody.get("business"))
+                    .withString("invoiceDateTimeStamp", requestBody.get("invoiceDateTimeStamp").toString())
+                    .withString("dueDateTimeStamp", requestBody.get("dueDateTimeStamp").toString())
+                    .withString("paymentStatus", requestBody.get("paymentStatus").toString())
+                    .withString("invoiceTemplateId", requestBody.get("invoiceTemplateId").toString())
+                    .withMap("invoiceTable", (Map<String, Object>) requestBody.get("invoiceTable"))
+                    .withString("subTotal", requestBody.get("subTotal").toString())
+                    .withMap("tax", (Map<String, Object>) requestBody.get("tax"))
+                    .withMap("packageDiscount", (Map<String, Object>) requestBody.get("packageDiscount"))
+                    .withString("total", requestBody.get("total").toString())
+                    .withString("thankYouNote", requestBody.get("thankYouNote").toString())
+                    .withMap("termsNServicesMessage", (Map<String, Object>) requestBody.get("termsNServicesMessage"));
+
+            invoicesTable.putItem(invoiceItem);
 
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("message", "Invoice created");

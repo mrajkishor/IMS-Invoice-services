@@ -15,6 +15,8 @@ mvn clean install
 
 sam build
 
+sam deploy
+or,
 sam deploy --guided
 
 

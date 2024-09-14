@@ -362,7 +362,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0ZDdlZmJjMi03NDc4LTRmZDctODcwYy04NDU4MTBkMDU3ZGYiLCJleHAiOjE3MjMyNTA5MjR9.e5g5IGLdabzAoMKln22t8gy2m_NggkjGC9npFXv3C4s",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhODE0NGI1OS0yNWYyLTRjZGMtOGI3OC1iN2E3ODg2NGFjZDYiLCJleHAiOjE3MjYyOTQ0MTJ9.1i8vKCC-bvJjZkEUCPyvfK8Or--k1dyXTzcM5ckdTvU",
 									"type": "string"
 								}
 							]
@@ -380,7 +380,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"shopId\": \"0d286992-bb78-46c1-8f00-2b3553dbb78b\",\r\n    \"userId\": \"4d7efbc2-7478-4fd7-870c-845810d057df\",\r\n    \"customerName\": \"Sambit Satpathy\",\r\n    \"customerAddress\": \"RC Road, Bhanjanagar, Ganjam, Odisha, PIN - 761126, IN\",\r\n    \"details\": \"Website project delivery\",\r\n    \"amount\": \"10000\",\r\n    \"invoiceDate\": \"2024-08-10 14:35\",\r\n    \"dueDate\": \"2024-08-30\",\r\n    \"status\": \"Unpaid\", \r\n    \"templateId\": \"4\"\r\n}\r\n\r\n\r\n\r\n"
+							"raw": "{\r\n  \"userId\": \"a8144b59-25f2-4cdc-8b78-b7a78864acd6\",\r\n  \"shopId\": \"shop-67890\",\r\n  \"billedTo\": {\r\n    \"customer\": {\r\n      \"name\": \"Abhishek Prasad\",\r\n      \"phone\": \"+91-7893495048\",\r\n      \"email\": \"abhishek.prasad@gmail.com\",\r\n      \"address\": \"Mira road, Navi Mumbai, IN\"\r\n    }\r\n  },\r\n  \"invoiceCreator\": {\r\n    \"name\": \"Braja Kishor Maharana\",\r\n    \"signaturePhoto\": \"https://adsflakjdsf.com/asdlfa.jpg\",\r\n    \"signatureInWords\": \"Braja Kishor Maharana\",\r\n    \"designation\": \"Administrator\"\r\n  },\r\n  \"paymentMethod\": {\r\n    \"isCash\": true,\r\n    \"isUPI\": false,\r\n    \"isBank\": false,\r\n    \"UpisMaxLimit\": 3,\r\n    \"Upis\": [\"7683922389@ybl\", \"88998383722@okAxis\", \"99902302383@ybl\"],\r\n    \"bank\": {\r\n      \"accountHolderName\": \"Braja Kishor Maharana\",\r\n      \"accountNumber\": \"232379823462\"\r\n    }\r\n  },\r\n  \"business\": {\r\n    \"address\": \"RC Road, Bhanjanagar, Ganajam, IN\",\r\n    \"email\": \"abhishek.prasad@gmail.com\",\r\n    \"mobile\": \"+91-7873228311\",\r\n    \"logo\": \"https://asdfasdfds/asdfas.jpg\",\r\n    \"name\": \"Maharana Work Shop\",\r\n    \"slogan\": \"shaana service\"\r\n  },\r\n  \"invoiceDateTimeStamp\": \"2024-08-10 14:35\",\r\n  \"dueDateTimeStamp\": \"2024-08-30 14:35\",\r\n  \"paymentStatus\": \"Unpaid\",\r\n  \"invoiceTemplateId\": \"4\",\r\n  \"invoiceTable\": {\r\n    \"maxColLimit\": 6,\r\n    \"columns\": [\"Description\", \"unitPrice\", \"QTY\", \"Total\"],\r\n    \"value\": [\r\n      [\"kurkure\", \"5\", \"2\", \"10\"],\r\n      [\"rice\", \"30\", \"1\", \"30\"]\r\n    ],\r\n    \"totalableIndex\": 3\r\n  },\r\n  \"subTotal\": \"40\",\r\n  \"tax\": {\r\n    \"isTaxable\": true,\r\n    \"amount\": 1,\r\n    \"percentage\": \"1%\"\r\n  },\r\n  \"packageDiscount\": {\r\n    \"amount\": 3,\r\n    \"percentage\": \"2%\"\r\n  },\r\n  \"total\": \"38\",\r\n  \"thankYouNote\": \"Thank you for choosing us!\",\r\n  \"termsNServicesMessage\": {\r\n    \"toShow\": true,\r\n    \"showDefaultMsg\": false,\r\n    \"defaultMessage\": \"Please send payment within {##}time{##} days of receiving this invoice\",\r\n    \"customMessage\": \"Please send payment within 30 days of receiving this invoice. There will be 10% interest charge per month on late invoice\"\r\n  }\r\n}\r\n"
 						},
 						"url": {
 							"raw": "{{base_url}}/invoices",
