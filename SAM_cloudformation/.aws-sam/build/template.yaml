@@ -75,6 +75,37 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+  LambdaExecutionRoleWithoutLogs:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+      - PolicyName: DynamoDBAccessPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:Scan
+            - dynamodb:Query
+            Resource:
+            - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Customers
+            - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Shops
+            - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Invoices
+            - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Customers/index/*
+            - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Shops/index/*
+            - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Invoices/index/*
+      Path: /
   AuthLoginFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -83,7 +114,10 @@ Resources:
       CodeUri: AuthLoginFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -104,7 +138,10 @@ Resources:
       CodeUri: AuthLogoutFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -125,7 +162,10 @@ Resources:
       CodeUri: AuthRefreshFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -146,7 +186,10 @@ Resources:
       CodeUri: CreateUserFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -167,7 +210,10 @@ Resources:
       CodeUri: GetUserFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -188,7 +234,10 @@ Resources:
       CodeUri: UpdateUserFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -209,7 +258,10 @@ Resources:
       CodeUri: DeleteUserFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -230,7 +282,10 @@ Resources:
       CodeUri: CreateShopFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -251,7 +306,10 @@ Resources:
       CodeUri: GetShopFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -272,7 +330,10 @@ Resources:
       CodeUri: GetAllShopsFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -293,7 +354,10 @@ Resources:
       CodeUri: UpdateShopFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -314,7 +378,10 @@ Resources:
       CodeUri: DeleteShopFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -335,7 +402,10 @@ Resources:
       CodeUri: CreateInvoiceFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -356,7 +426,10 @@ Resources:
       CodeUri: GetInvoiceFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -377,7 +450,10 @@ Resources:
       CodeUri: GetInvoicesByShopFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -398,7 +474,10 @@ Resources:
       CodeUri: UpdateInvoiceFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -419,7 +498,10 @@ Resources:
       CodeUri: DeleteInvoiceFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:
@@ -440,7 +522,10 @@ Resources:
       CodeUri: GetShopHistoryFunction
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRoleWithoutLogs
+        - Arn
       Environment:
         Variables:
           TABLE_NAME:

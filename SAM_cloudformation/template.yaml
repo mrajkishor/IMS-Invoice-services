@@ -78,6 +78,43 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
+
+  # Custom Role Without CloudWatch Permissions (Disabling logs to avoid costs- Temporary)
+  LambdaExecutionRoleWithoutLogs:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: "DynamoDBAccessPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:Scan
+                  - dynamodb:Query
+                Resource:
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Customers"
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Shops"
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Invoices"
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Customers/index/*"
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Shops/index/*"
+                  - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Invoices/index/*"
+      Path: "/"
+
+
+                     
+
   AuthLoginFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -86,7 +123,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref UsersTable
@@ -105,7 +142,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref UsersTable
@@ -124,7 +161,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref UsersTable
@@ -143,7 +180,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref UsersTable
@@ -162,7 +199,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref UsersTable
@@ -181,7 +218,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref UsersTable
@@ -200,7 +237,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref UsersTable
@@ -219,7 +256,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref ShopsTable
@@ -238,7 +275,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref ShopsTable
@@ -257,7 +294,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref ShopsTable
@@ -276,7 +313,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref ShopsTable
@@ -295,7 +332,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref ShopsTable
@@ -314,7 +351,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref InvoicesTable
@@ -333,7 +370,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref InvoicesTable
@@ -351,7 +388,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref InvoicesTable
@@ -370,7 +407,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref InvoicesTable
@@ -389,7 +426,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref InvoicesTable
@@ -408,7 +445,7 @@ Resources:
       CodeUri: .
       MemorySize: 512
       Timeout: 10
-      Policies: AmazonDynamoDBFullAccess
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
       Environment:
         Variables:
           TABLE_NAME: !Ref InvoicesTable
