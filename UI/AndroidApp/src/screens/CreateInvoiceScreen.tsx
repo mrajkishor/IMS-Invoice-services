@@ -783,7 +783,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonText: {
-        color: '#ffffff',
+        color: myColors.colors.primaryContainer,
         fontWeight: 'bold',
         fontSize: 16,
     },
