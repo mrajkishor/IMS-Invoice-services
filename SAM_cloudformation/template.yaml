@@ -113,8 +113,6 @@ Resources:
       Path: "/"
 
 
-                     
-
   AuthLoginFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
