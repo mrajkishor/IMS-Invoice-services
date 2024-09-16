@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, FlatList, RefreshControl, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, Alert, FlatList, RefreshControl, TouchableWithoutFeedback, Image } from 'react-native';
 import { TextInput, Button, Card, List, ActivityIndicator, Text, FAB, Appbar, Divider } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
@@ -10,7 +10,21 @@ import { fetchInvoicesRequest } from '../store/actions/invoiceActions';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { myColors } from '../config/theme';
-import { RNS3 } from 'react-native-aws3';
+
+import { launchImageLibrary } from 'react-native-image-picker';
+import AWS from 'aws-sdk';
+
+// Configure AWS
+AWS.config.update({
+    accessKeyId: 'AKIAVKQ3NZATRAVRR7H3', // replace with your access key
+    secretAccessKey: '5jaybFr510WWEtxuXcrwbAc0AWT4XYtI5HJATDGs', // replace with your secret key
+    region: 'ap-south-1', // e.g., 'us-east-1'
+});
+
+const s3 = new AWS.S3({
+    apiVersion: '2006-03-01',
+    params: { Bucket: 'imsinvoicelogos' },
+});
 
 type ShopScreenRouteProp = RouteProp<RootStackParamList, 'Shop'>;
 
@@ -83,30 +97,62 @@ const BusinessUpdateScreen: React.FC<Props> = ({ route }) => {
     };
 
     const handleLogoUpload = async () => {
-        // Code to select and upload the image to S3 goes here
-        // For example, using RNS3.put() or any other S3 service
-        const file = {
-            // File details like uri, name, type will go here
-        };
-        const options = {
-            // S3 configuration options go here
-        };
+        launchImageLibrary({ mediaType: 'photo', includeBase64: false }, async (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.errorMessage) {
+                console.log('ImagePicker Error: ', response.errorMessage);
+            } else if (response.assets) {
+                const image = response.assets[0];
 
-        setIsUploading(true);
-        try {
-            const response = await RNS3.put(file, options);
-            if (response.status === 201) {
-                setLogoUrl(response.body.postResponse.location); // Save the S3 URL
-            } else {
-                Alert.alert('Upload Failed', 'Please try again');
+                // Ensure the image has a valid URI before attempting to fetch it
+                if (!image.uri) {
+                    Alert.alert('Error', 'Image URI is not available.');
+                    return;
+                }
+
+                // Check if the image size is less than 20KB
+                // const imageSizeInKB = image.fileSize / 1024;
+                // if (imageSizeInKB > 20) {
+                //     Alert.alert('Error', 'Image size should be less than 20KB.');
+                //     return;
+                // }
+
+                setIsUploading(true);
+
+                try {
+                    // Fetch the file from the local URI and convert it to a Blob
+                    const fetchResponse = await fetch(image.uri);
+                    const blob = await fetchResponse.blob();
+
+                    // Prepare S3 upload parameters without ACL
+                    const params = {
+                        Bucket: 'imsinvoicelogos',
+                        Key: `uploads/${image.fileName}`, // Customize the folder structure
+                        Body: blob, // Use Blob as the body
+                        ContentType: image.type, // Use the image type
+                    };
+
+                    // Upload to S3
+                    s3.upload(params, (err: any, data: { Location: React.SetStateAction<string>; }) => {
+                        if (err) {
+                            console.log('Error uploading image: ', err);
+                            setIsUploading(false);
+                        } else {
+                            console.log('Successfully uploaded image: ', data);
+                            setLogoUrl(data.Location); // Update your state with the uploaded image URL
+                            setIsUploading(false);
+                        }
+                    });
+                } catch (error) {
+                    console.log('Upload error: ', error);
+                    setIsUploading(false);
+                }
             }
-        } catch (error) {
-            console.error(error);
-            Alert.alert('Upload Error', 'There was an issue uploading the logo');
-        } finally {
-            setIsUploading(false);
-        }
+        });
     };
+
+
 
     return (
         <View style={styles.container}>
