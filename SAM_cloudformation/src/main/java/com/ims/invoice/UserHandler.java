@@ -139,6 +139,7 @@ public class UserHandler {
             return new APIGatewayProxyResponseEvent().withStatusCode(201)
                     .withBody(objectMapper.writeValueAsString(responseBody));
         } catch (Exception e) {
+            context.getLogger().log("Error occurred: " + e.getMessage());
             responseBody.put("message", "Internal Server Error");
             responseBody.put("error", e.getMessage());
             return new APIGatewayProxyResponseEvent().withStatusCode(500)

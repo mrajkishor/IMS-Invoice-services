@@ -103,6 +103,8 @@ Resources:
                   - dynamodb:DeleteItem
                   - dynamodb:Scan
                   - dynamodb:Query
+                  - dynamodb:DescribeTable   # <-- used in tableExists
+
                 Resource:
                   - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Customers"
                   - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Shops"

@@ -74,7 +74,11 @@ public class ShopHandler {
                     .withPrimaryKey("shopId", shopId)
                     .withString("shopName", requestBody.get("shopName"))
                     .withString("ownerId", requestBody.get("ownerId"))
-                    .withString("address", requestBody.get("address"))));
+                    .withString("address", requestBody.get("address"))
+                    .withString("email", requestBody.get("email"))
+                    .withString("mobile", requestBody.get("mobile"))
+                    .withString("logo", requestBody.get("logo"))
+                    .withString("slogan", requestBody.get("slogan"))));
 
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("message", "Shop created");
@@ -171,11 +175,16 @@ public class ShopHandler {
                 }
 
                 shopsTable.updateItem(new UpdateItemSpec().withPrimaryKey("shopId", shopId)
-                        .withUpdateExpression("set shopName = :shopName, ownerId = :ownerId, address = :address")
+                        .withUpdateExpression(
+                                "set shopName = :shopName, ownerId = :ownerId, address = :address, email = :email, mobile = :mobile, logo = :logo, slogan = :slogan")
                         .withValueMap(new ValueMap()
                                 .withString(":shopName", requestBody.get("shopName"))
                                 .withString(":ownerId", requestBody.get("ownerId"))
-                                .withString(":address", requestBody.get("address"))));
+                                .withString(":address", requestBody.get("address"))
+                                .withString(":email", requestBody.get("email"))
+                                .withString(":mobile", requestBody.get("mobile"))
+                                .withString(":logo", requestBody.get("logo"))
+                                .withString(":slogan", requestBody.get("slogan"))));
 
                 return new APIGatewayProxyResponseEvent().withStatusCode(200)
                         .withBody("{\"message\":\"Shop updated\"}");

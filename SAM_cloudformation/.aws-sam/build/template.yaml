@@ -98,6 +98,7 @@ Resources:
             - dynamodb:DeleteItem
             - dynamodb:Scan
             - dynamodb:Query
+            - dynamodb:DescribeTable
             Resource:
             - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Customers
             - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Shops
