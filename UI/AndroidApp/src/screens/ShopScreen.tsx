@@ -357,10 +357,10 @@ const styles = StyleSheet.create({
     tabBar: {
         backgroundColor: myColors.colors.inversePrimary
     },
-    // container: {
-    //     flex: 1,
-    //     padding: 10,
-    // },
+    container: {
+        flex: 1,
+        padding: 10,
+    },
     // button: {
     //     marginTop: 5,
     //     marginBottom: 10,

@@ -195,8 +195,11 @@ public class UserHandler {
             @SuppressWarnings("unchecked")
             Map<String, String> requestBody = objectMapper.readValue(request.getBody(), Map.class);
 
-            // Hash the password using BCrypt
-            String hashedPassword = BCrypt.hashpw(requestBody.get("password"), BCrypt.gensalt());
+            // Hash the password if it's being updated
+            String hashedPassword = null;
+            if (requestBody.containsKey("password")) {
+                hashedPassword = BCrypt.hashpw(requestBody.get("password"), BCrypt.gensalt());
+            }
 
             // Check which identifier is provided and ensure only one is being updated
             String email = requestBody.get("email");
@@ -206,30 +209,60 @@ public class UserHandler {
                         .withBody("{\"message\":\"Only one of email or mobile can be updated\"}");
             }
 
-            // Update the user's information in DynamoDB
-            UpdateItemSpec updateItemSpec = new UpdateItemSpec().withPrimaryKey("userId", userId)
-                    .withUpdateExpression("set username = :username, password = :password")
-                    .withValueMap(new ValueMap()
-                            .withString(":username", requestBody.get("username"))
-                            .withString(":password", hashedPassword)); // Store hashed password
+            // New fields to be updated
+            String fullName = requestBody.get("fullName");
+            String signaturePhoto = requestBody.get("signaturePhoto");
+            String signatureInWords = requestBody.get("signatureInWords");
+            String designation = requestBody.get("designation");
 
-            if (email != null) {
-                updateItemSpec.withUpdateExpression("set username = :username, email = :email, password = :password")
-                        .withValueMap(new ValueMap()
-                                .withString(":username", requestBody.get("username"))
-                                .withString(":email", email)
-                                .withString(":password", hashedPassword));
-            } else if (mobile != null) {
-                updateItemSpec.withUpdateExpression("set username = :username, mobile = :mobile, password = :password")
-                        .withValueMap(new ValueMap()
-                                .withString(":username", requestBody.get("username"))
-                                .withString(":mobile", mobile)
-                                .withString(":password", hashedPassword));
+            // Build the update expression
+            StringBuilder updateExpression = new StringBuilder("set username = :username");
+            ValueMap valueMap = new ValueMap().withString(":username", requestBody.get("username"));
+
+            if (hashedPassword != null) {
+                updateExpression.append(", password = :password");
+                valueMap.withString(":password", hashedPassword);
             }
 
+            if (email != null) {
+                updateExpression.append(", email = :email");
+                valueMap.withString(":email", email);
+            } else if (mobile != null) {
+                updateExpression.append(", mobile = :mobile");
+                valueMap.withString(":mobile", mobile);
+            }
+
+            if (fullName != null) {
+                updateExpression.append(", fullName = :fullName");
+                valueMap.withString(":fullName", fullName);
+            }
+
+            if (signaturePhoto != null) {
+                updateExpression.append(", signaturePhoto = :signaturePhoto");
+                valueMap.withString(":signaturePhoto", signaturePhoto);
+            }
+
+            if (signatureInWords != null) {
+                updateExpression.append(", signatureInWords = :signatureInWords");
+                valueMap.withString(":signatureInWords", signatureInWords);
+            }
+
+            if (designation != null) {
+                updateExpression.append(", designation = :designation");
+                valueMap.withString(":designation", designation);
+            }
+
+            // Create the UpdateItemSpec
+            UpdateItemSpec updateItemSpec = new UpdateItemSpec()
+                    .withPrimaryKey("userId", userId)
+                    .withUpdateExpression(updateExpression.toString())
+                    .withValueMap(valueMap);
+
+            // Update the item in DynamoDB
             usersTable.updateItem(updateItemSpec);
 
-            return new APIGatewayProxyResponseEvent().withStatusCode(200).withBody("{\"message\":\"User updated\"}");
+            return new APIGatewayProxyResponseEvent().withStatusCode(200)
+                    .withBody("{\"message\":\"User updated\"}");
         } catch (Exception e) {
             return new APIGatewayProxyResponseEvent().withStatusCode(500)
                     .withBody("{\"message\":\"Internal Server Error\"}");
