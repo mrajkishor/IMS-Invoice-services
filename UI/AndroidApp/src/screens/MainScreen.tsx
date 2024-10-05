@@ -10,80 +10,10 @@ import { RootStackParamList } from '../navigationTypes';
 import ProfileScreen from './ProfileScreen';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { myColors } from '../config/theme';
+import ShopListRoute from './ShopListRoute';
 
 
-const ShopListRoute: React.FC = () => {
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const dispatch = useDispatch();
-    const { loading, shops, error } = useSelector((state: RootState) => state.shops);
-    const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
-    const [refreshing, setRefreshing] = useState(false);
 
-    useEffect(() => {
-        if (isAuthenticated && user?.userId) {
-            dispatch(fetchShopsRequest(user.userId));
-        }
-        console.log('Shops:', shops);
-    }, [dispatch, isAuthenticated, user?.userId]);
-
-    const handleRefresh = () => {
-        setRefreshing(true);
-        if (user?.userId) {
-            dispatch(fetchShopsRequest(user.userId));
-        }
-        setRefreshing(false);
-    };
-
-    const renderShopItem = ({ item }: { item: any }) => (
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('Shop', { shopId: item.shopId })}>
-            <Card mode={'elevated'} elevation={0} style={styles.card} >
-                <Card.Content>
-                    <Card.Title
-                        title={item.shopName}
-                        subtitle={`Address : ${item.address}`}
-                        // left={(props) => <MaterialIcons  {...props} name="store" />}
-                        right={(props) => <MaterialIcons  {...props} name="chevron-right" />}
-                    />
-                </Card.Content>
-            </Card>
-        </TouchableWithoutFeedback>
-    );
-
-    if (loading && !refreshing) {
-        return <ActivityIndicator animating={true} style={styles.loader} />;
-    }
-
-    if (error) {
-        return <Text style={styles.error}>{error}</Text>;
-    }
-
-    return (
-        <>
-            <Appbar.Header>
-
-                <Appbar.Action icon={(props) => <MaterialIcons  {...props} name="store" />} onPress={() => { }} />
-
-                <Appbar.Content title="My Catalogue" />
-            </Appbar.Header>
-            <View style={styles.container}>
-                {shops?.length === 0 ? <>
-                    <View style={styles.noRecordsWrapper}>
-                        <Text style={styles.noRecordsWrapperTitle}>No Business Found!</Text>
-                        <MaterialIcons name="store" size={50} style={styles.noRecordsWrapperIcon} />
-                    </View>
-                </> : <FlatList
-                    data={shops}
-                    renderItem={renderShopItem}
-                    keyExtractor={(item) => item.shopId}
-                    refreshing={refreshing}
-                    onRefresh={handleRefresh}
-                />}
-
-            </View>
-        </>
-
-    );
-};
 
 const MainScreen: React.FC = () => {
     const dispatch = useDispatch();
@@ -187,6 +117,8 @@ const styles = StyleSheet.create({
     noRecordsWrapperIcon: {
         color: 'gray', // Optional: customize the icon color
     },
+
+
 });
 
 export default MainScreen;
