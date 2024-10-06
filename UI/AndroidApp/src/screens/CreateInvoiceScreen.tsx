@@ -231,11 +231,11 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
                 subTotal,
                 tax: {
                     isTaxable: true,
-                    amount: tax,
+                    amount: taxValue,
                     percentage: "1%"
                 },
                 packageDiscount: {
-                    amount: discount,
+                    amount: discountValue,
                     percentage: "2%"
                 },
                 total,
