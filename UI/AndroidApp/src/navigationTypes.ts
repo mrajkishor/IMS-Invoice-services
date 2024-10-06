@@ -4,14 +4,13 @@ import { RouteProp } from '@react-navigation/native';
 export type RootStackParamList = {
     Login: undefined;
     Main: undefined;
-    Shop: { shopId: string };
+    Shop: { shopId: string; initialTab?: 'invoices' | 'business' };
     Invoice: { invoiceId: string };
     CreateShop: undefined;
     ViewInvoice: { invoice: any };
     CreateInvoice: { shopId: string };
     Profile: undefined;
     TemplateSelector: { templateId: string | null, onSelect: (selectedTemplateId: string) => void };
-
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<

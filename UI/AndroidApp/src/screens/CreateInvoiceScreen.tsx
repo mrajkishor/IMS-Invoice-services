@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Switch, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, Switch, TouchableOpacity, Image } from 'react-native';
 import { TextInput, Button, Appbar, IconButton, Menu, Text, Snackbar, Divider, RadioButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteProp, useNavigation, NavigationProp } from '@react-navigation/native';
@@ -10,6 +10,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { IconProps } from 'react-native-vector-icons/Icon';
 import { myColors } from '../config/theme';
 import LinearGradient from 'react-native-linear-gradient';
+import { fetchShopRequest } from '../store/actions/shopActions';
+import { fetchUserRequest } from '../store/actions/userActions';
 
 
 type CreateInvoiceScreenRouteProp = RouteProp<RootStackParamList, 'CreateInvoice'>;
@@ -21,6 +23,8 @@ type Props = {
 const statusOptions = ['Unpaid', 'Pending', 'Paid', 'Overdue', 'Partially Paid', 'Cancelled', 'Disputed', 'Draft', 'Processing'];
 
 const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
+    const dispatch = useDispatch();
+
     const { shopId } = route.params;
     // Customer Info
     const [customerName, setCustomerName] = useState('');
@@ -44,13 +48,55 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
     const [bankAccountNumber, setBankAccountNumber] = useState('');
 
 
+
     // Business Info
-    const [businessName, setBusinessName] = useState('');
-    const [businessEmail, setBusinessEmail] = useState('');
-    const [businessMobile, setBusinessMobile] = useState('');
-    const [businessAddress, setBusinessAddress] = useState('');
-    const [businessLogo, setBusinessLogo] = useState('');
-    const [businessSlogan, setBusinessSlogan] = useState('');
+    const [businessName, setBusinessName] = useState<string | null>(null);
+    const [businessEmail, setBusinessEmail] = useState<string | null>(null);
+    const [businessMobile, setBusinessMobile] = useState<string | null>(null);
+    const [businessAddress, setBusinessAddress] = useState<string | null>(null);
+    const [businessLogo, setBusinessLogo] = useState<string | null>(null);
+    const [businessSlogan, setBusinessSlogan] = useState<string | null>(null);
+
+    const authState = useSelector((state: RootState) => state.auth);
+    const userState = useSelector((state: RootState) => state.users);
+    const { user } = authState;
+    const { user: fetchedUser } = userState;
+
+    useEffect(() => {
+        if (user?.userId) {
+            dispatch(fetchUserRequest(user.userId));
+        }
+    }, [dispatch, user?.userId]);
+
+    useEffect(() => {
+        if (fetchedUser) {
+            setCreatorName(fetchedUser.fullName || '');
+            setSignatureInWords(fetchedUser.signatureInWords || '');
+            setDesignation(fetchedUser.designation || '');
+            if (fetchedUser.signaturePhoto) {
+                setSignaturePhoto(fetchedUser.signaturePhoto);
+            }
+        }
+    }, [fetchedUser]);
+
+    const shop = useSelector((state: RootState) => state.shops.shop);
+
+    useEffect(() => {
+        if (shopId) {
+            dispatch(fetchShopRequest(shopId)); // Fetch the shop details
+        }
+    }, [dispatch, shopId]);
+
+    useEffect(() => {
+        if (shop) {
+            setBusinessName(shop.shopName);
+            setBusinessEmail(shop.email);
+            setBusinessMobile(shop.mobile);
+            setBusinessAddress(shop.address);
+            setBusinessLogo(shop.logo);
+            setBusinessSlogan(shop.slogan);
+        }
+    }, [shop]);
 
     // Invoice Info
     const [date, setDate] = useState('');
@@ -93,9 +139,8 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [showSnackbar, setShowSnackbar] = useState(false);
 
-    const dispatch = useDispatch();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const user = useSelector((state: RootState) => state.auth.user);
+    // const user = useSelector((state: RootState) => state.auth.user);
 
     const validateFields = () => {
         if (!customerName || customerName.length > 50) {
@@ -387,10 +432,38 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
                 <Divider />
                 {/* Invoice Creator Information Section */}
                 <Text style={styles.sectionTitle}>Your Information</Text>
-                <TextInput mode="outlined" label="Full Name" value={creatorName} onChangeText={setCreatorName} style={styles.input} />
-                <TextInput mode="outlined" label="Signature Photo URL" value={signaturePhoto} onChangeText={setSignaturePhoto} style={styles.input} />
-                <TextInput mode="outlined" label="Signature in Words" value={signatureInWords} onChangeText={setSignatureInWords} style={styles.input} />
-                <TextInput mode="outlined" label="Designation" value={designation} onChangeText={setDesignation} style={styles.input} />
+
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Full Name:</Text>
+                    <Text>{creatorName || fetchedUser?.fullName || "Not Provided"}</Text>
+                </View>
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Signature Photo:</Text>
+                    {signaturePhoto || fetchedUser?.signaturePhoto ? (
+                        <Image
+                            source={{ uri: signaturePhoto || fetchedUser?.signaturePhoto }}
+                            style={styles.imagePreview}
+                            resizeMode="contain"
+                        />
+                    ) : (
+                        <Text>Not Provided</Text>
+                    )}
+                </View>
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Signature In Words:</Text>
+                    <Text>{signatureInWords || fetchedUser?.signatureInWords || "Not Provided"}</Text>
+                </View>
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Designation:</Text>
+                    <Text>{designation || fetchedUser?.designation || "Not Provided"}</Text>
+                </View>
+
+                <Button style={styles.updateInfoLink}
+                    mode="outlined"
+                    onPress={() => navigation.navigate('Profile')}>
+                    Update Your Information
+                </Button>
+
                 <Divider />
                 {/* Payment Method Section */}
                 <Text style={styles.sectionTitle}>Payment Method</Text>
@@ -431,14 +504,49 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
                     </>
                 )}
                 <Divider />
-                {/* Business Information Section */}
+                {/* Business Information Section (Read-Only) */}
                 <Text style={styles.sectionTitle}>Business Information</Text>
-                <TextInput mode="outlined" label="Business Name" value={businessName} onChangeText={setBusinessName} style={styles.input} />
-                <TextInput mode="outlined" label="Business Email" value={businessEmail} onChangeText={setBusinessEmail} style={styles.input} />
-                <TextInput mode="outlined" label="Business Mobile" value={businessMobile} onChangeText={setBusinessMobile} style={styles.input} />
-                <TextInput mode="outlined" label="Business Address" value={businessAddress} onChangeText={setBusinessAddress} style={styles.input} />
-                <TextInput mode="outlined" label="Business Logo URL" value={businessLogo} onChangeText={setBusinessLogo} style={styles.input} />
-                <TextInput mode="outlined" label="Business Slogan" value={businessSlogan} onChangeText={setBusinessSlogan} style={styles.input} />
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Business Name:</Text>
+                    <Text>{businessName || "Not Provided"}</Text>
+                </View>
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Business Email:</Text>
+                    <Text>{businessEmail || "Not Provided"}</Text>
+                </View>
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Business Mobile:</Text>
+                    <Text>{businessMobile || "Not Provided"}</Text>
+                </View>
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Business Address:</Text>
+                    <Text>{businessAddress || "Not Provided"}</Text>
+                </View>
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Business Logo:</Text>
+                    {businessLogo ? (
+                        <Image
+                            source={{ uri: businessLogo }}
+                            style={styles.imagePreview}
+                            resizeMode="contain"
+                        />
+                    ) : (
+                        <Text>Not Provided</Text>
+                    )}
+                </View>
+                <View style={styles.readOnlyContainer}>
+                    <Text style={styles.readOnlyLabel}>Business Slogan:</Text>
+                    <Text>{businessSlogan || "Not Provided"}</Text>
+                </View>
+
+                <Button style={styles.updateInfoLink}
+                    mode="outlined"
+                    onPress={() => navigation.navigate('Shop', { shopId, initialTab: 'business' })}>
+                    Update Business Information
+                </Button>
+
+
+
                 <Divider />
                 {/* Invoice Info Section */}
                 <Text style={styles.sectionTitle}>Invoice Information</Text>
@@ -799,6 +907,27 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         textAlign: 'center',
     },
+    readOnlyContainer: {
+        marginBottom: 10,
+        padding: 10,
+        backgroundColor: myColors.colors.background,
+        borderRadius: 5,
+        borderColor: myColors.colors.surfaceVariant,
+        borderWidth: 1,
+    },
+    readOnlyLabel: {
+        fontWeight: 'bold',
+        color: myColors.colors.onPrimaryContainer,
+    },
+    imagePreview: {
+        width: 100,
+        height: 100,
+        borderRadius: 5,
+        marginTop: 10,
+    },
+    updateInfoLink: {
+        marginBottom: 10
+    }
 });
 
 export default CreateInvoiceScreen;

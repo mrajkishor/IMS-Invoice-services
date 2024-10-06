@@ -283,7 +283,19 @@ const InvoiceListScreen: React.FC<Props> = ({ route }) => {
 };
 
 const ShopScreen: React.FC<Props> = ({ route }) => {
+
+    const { initialTab } = route.params;
+
     const [index, setIndex] = useState(0);
+    useEffect(() => {
+        // Set the index based on the initialTab parameter
+        if (initialTab === 'business') {
+            setIndex(1); // Set to 1 for business tab
+        } else {
+            setIndex(0); // Default to invoices tab
+        }
+    }, [initialTab]);
+
     const [routes] = useState([
         { key: 'invoices', title: 'Invoices' },
         { key: 'business', title: 'Business Update' }
@@ -315,6 +327,7 @@ const ShopScreen: React.FC<Props> = ({ route }) => {
                 initialLayout={{ width: 100 }}
                 style={styles.tabView}
             />
+
         </>
     );
 };
