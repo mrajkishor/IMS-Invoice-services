@@ -1,6 +1,8 @@
 'use client';
 
 import Head from 'next/head';
+import Link from 'next/link';
+
 import '../public/assets/css/bootstrap-5.0.0-beta2.min.css';
 import '../public/assets/css/LineIcons.2.0.css';
 import '../public/assets/css/tiny-slider.css';
@@ -137,7 +139,11 @@ export default function Home() {
                   </div>
                   <div className="content">
                     <h3>Create and Customize</h3>
-                    <p>Easily create and customize invoices to fit your brand. Choose from a variety of templates and add your own logo and colors.</p>
+                    <p>
+                      Easily create and customize invoices to fit your brand. Choose from a variety of
+                      <Link href="/preview"> templates </Link> {" "}
+                      and add your own logo and colors.
+                    </p>
                   </div>
                 </div>
               </div>

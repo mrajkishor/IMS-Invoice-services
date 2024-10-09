@@ -30,10 +30,10 @@ const TemplateSelectorScreen: React.FC<Props> = ({ route }) => {
     };
 
     const templateImages = {
-        "1": require('../assets/images/templates/1.png'),
-        "2": require('../assets/images/templates/2.png'),
-        "3": require('../assets/images/templates/3.png'),
-        "4": require('../assets/images/templates/4.png'),
+        "1": require('../assets/images/templates/1.jpg'),
+        "2": require('../assets/images/templates/2.jpg'),
+        "3": require('../assets/images/templates/3.jpg'),
+        "4": require('../assets/images/templates/4.jpg'),
     };
 
     return (
