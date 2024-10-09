@@ -11,6 +11,7 @@ export type RootStackParamList = {
     CreateInvoice: { shopId: string };
     Profile: undefined;
     TemplateSelector: { templateId: string | null, onSelect: (selectedTemplateId: string) => void };
+    WebViewScreen: undefined;
 };
 
 export type LoginScreenNavigationProp = StackNavigationProp<

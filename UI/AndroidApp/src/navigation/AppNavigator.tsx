@@ -11,6 +11,7 @@ import CreateInvoiceScreen from '../screens/CreateInvoiceScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import TemplateSelectorScreen from '../screens/TemplateSelectorScreen'; // Import the new screen
 import { RootStackParamList } from '../navigationTypes';
+import WebViewScreen from '../screens/WebViewScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -31,6 +32,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="CreateInvoice" component={CreateInvoiceScreen} />
                 <Stack.Screen name="TemplateSelector" component={TemplateSelectorScreen} />
                 <Stack.Screen name="Profile" component={ProfileScreen} />
+                <Stack.Screen name="WebViewScreen" component={WebViewScreen} options={{ title: 'Template Preview' }} />
             </Stack.Navigator>
         </NavigationContainer>
     );

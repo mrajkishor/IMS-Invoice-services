@@ -12,6 +12,7 @@ import { myColors } from '../config/theme';
 import LinearGradient from 'react-native-linear-gradient';
 import { fetchShopRequest } from '../store/actions/shopActions';
 import { fetchUserRequest } from '../store/actions/userActions';
+import TemplateSelector from '../components/TemplateSelector';
 
 
 type CreateInvoiceScreenRouteProp = RouteProp<RootStackParamList, 'CreateInvoice'>;
@@ -141,6 +142,12 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     // const user = useSelector((state: RootState) => state.auth.user);
+
+
+    const handleTemplateSelect = (selectedTemplateId: string) => {
+        setTemplateId(selectedTemplateId);
+    };
+
 
     const validateFields = () => {
         if (!customerName || customerName.length > 50) {
@@ -577,9 +584,18 @@ const CreateInvoiceScreen: React.FC<Props> = ({ route }) => {
                         ))}
                     </Menu>
                 </View>
-                <Button mode={"elevated"} onPress={openTemplateSelector} style={styles.button}>
+
+                <Divider />
+                <Text style={styles.preview} variant="bodyMedium">{"Select a template design.."}</Text>
+                {/* Template selection */}
+                {/* <Button mode={"elevated"} onPress={openTemplateSelector} style={styles.button}>
                     Select Template ({templateId})
-                </Button>
+                </Button> */}
+
+                <TemplateSelector />
+
+
+
 
                 <Divider />
                 {/* Invoice Table Section */}
