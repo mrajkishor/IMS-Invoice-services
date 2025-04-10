@@ -34,6 +34,9 @@ adb reverse tcp:8081 tcp:8081
 # check device 
 adb devices
 
+# uninstall project from cmd
+adb uninstall com.invoiceproject
+
 # clean and rebuild (optional)
 cd android
 ./gradlew clean
@@ -177,3 +180,7 @@ MaterialIcons ref : https://oblador.github.io/react-native-vector-icons/
 ### Theming 
 React Native Paper : https://callstack.github.io/react-native-paper/docs/guides/theming/
 ![alt text](image-3.png)
+
+---
+### Special thanks to 
+- Onboarding screen Images generated with https://www.craiyon.com/

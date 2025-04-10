@@ -39,7 +39,7 @@ const MainScreen: React.FC = () => {
     };
 
     const renderScene = BottomNavigation.SceneMap({
-        profile: ProfileScreen,
+        profile: () => <ProfileScreen setIndex={setIndex} />, // Pass setIndex to ProfileScreen
         shops: ShopListRoute,
     });
 

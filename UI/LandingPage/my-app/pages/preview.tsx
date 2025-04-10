@@ -4,9 +4,9 @@ import "./preview.css"; // Import the CSS file for styling
 
 
 // List of template names and paths to images
-const templates = Array.from({ length: 14 }, (_, index) => ({
+const templates = Array.from({ length: 2 }, (_, index) => ({
     name: `Template ${index + 1}`,
-    imagePath: require(`../public/assets/templates/${index + 1}.webp`)
+    imagePath: require(`../public/assets/templates/${index + 1}.png`)
 }));
 
 

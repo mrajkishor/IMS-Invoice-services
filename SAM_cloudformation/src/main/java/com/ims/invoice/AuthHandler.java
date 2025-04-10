@@ -123,6 +123,7 @@ public class AuthHandler {
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("token", token);
         responseBody.put("refreshToken", refreshToken);
+        responseBody.put("userId", userId);
 
         return new APIGatewayProxyResponseEvent().withStatusCode(200)
                 .withBody(objectMapper.writeValueAsString(responseBody));
@@ -152,17 +153,26 @@ public class AuthHandler {
             Map<String, String> requestBody = objectMapper.readValue(request.getBody(), Map.class);
             String refreshToken = requestBody.get("refreshToken");
 
+            // Verify the provided refresh token
             DecodedJWT decodedJWT = JWT.require(jwtAlgorithm).build().verify(refreshToken);
             String userId = decodedJWT.getSubject();
 
-            // Create new token
+            // Generate a new access token
             String newToken = JWT.create()
                     .withSubject(userId)
                     .withExpiresAt(new Date(System.currentTimeMillis() + 3600000)) // 1 hour expiration
                     .sign(jwtAlgorithm);
 
+            // Generate a new refresh token
+            String newRefreshToken = JWT.create()
+                    .withSubject(userId)
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 86400000)) // 1 day expiration
+                    .sign(jwtAlgorithm);
+
+            // Return both tokens
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("token", newToken);
+            responseBody.put("refreshToken", newRefreshToken);
 
             return new APIGatewayProxyResponseEvent().withStatusCode(200)
                     .withBody(objectMapper.writeValueAsString(responseBody));
@@ -180,7 +190,7 @@ public class AuthHandler {
         return tokenBlacklist.contains(token);
     }
 
-    public APIGatewayProxyResponseEvent validateToken(APIGatewayProxyRequestEvent request, Context context)
+    public APIGatewayProxyResponseEvent handleValidateTokenRequest(APIGatewayProxyRequestEvent request, Context context)
             throws JsonProcessingException {
         Map<String, Object> errorResponse = new HashMap<>();
         try {

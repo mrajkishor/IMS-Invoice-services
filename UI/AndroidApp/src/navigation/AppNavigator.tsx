@@ -12,6 +12,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import TemplateSelectorScreen from '../screens/TemplateSelectorScreen'; // Import the new screen
 import { RootStackParamList } from '../navigationTypes';
 import WebViewScreen from '../screens/WebViewScreen';
+import OnboardingScreen from '../screens/OnboardingScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -20,9 +21,11 @@ const screenOptions: StackNavigationOptions = {
 };
 
 const AppNavigator = () => {
+
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Login" screenOptions={screenOptions}>
+            <Stack.Navigator initialRouteName="Onboarding" screenOptions={screenOptions}>
+                <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Main" component={MainScreen} />
                 <Stack.Screen name="Shop" component={ShopScreen} />

@@ -172,6 +172,25 @@ Resources:
             Path: /auth/refresh
             Method: post
 
+  AuthValidateTokenFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: com.ims.invoice.AuthHandler::handleValidateTokenRequest
+      Runtime: java17
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 10
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref UsersTable
+      Events:
+        ValidateToken:
+          Type: Api
+          Properties:
+            Path: /auth/validate
+            Method: post
+
   CreateUserFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -417,6 +436,44 @@ Resources:
           Properties:
             Path: /invoices/{invoiceId}
             Method: put
+
+  MarkInvoiceAsPaidFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: com.ims.invoice.InvoiceHandler::handleMarkAsPaidRequest
+      Runtime: java17
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 10
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref InvoicesTable
+      Events:
+        MarkInvoiceAsPaid:
+          Type: Api
+          Properties:
+            Path: /invoices/{invoiceId}/markPaid
+            Method: post
+
+  CancelInvoiceFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: com.ims.invoice.InvoiceHandler::handleCancelInvoiceRequest
+      Runtime: java17
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 10
+      Role: !GetAtt LambdaExecutionRoleWithoutLogs.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref InvoicesTable
+      Events:
+        CancelInvoice:
+          Type: Api
+          Properties:
+            Path: /invoices/{invoiceId}/cancel
+            Method: post
 
   DeleteInvoiceFunction:
     Type: 'AWS::Serverless::Function'

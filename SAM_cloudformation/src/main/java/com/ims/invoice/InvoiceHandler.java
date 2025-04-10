@@ -2,6 +2,7 @@ package com.ims.invoice;
 
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.UpdateItemOutcome;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.ItemCollection;
 import com.amazonaws.services.dynamodbv2.document.ScanOutcome;
@@ -10,7 +11,9 @@ import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.ScanSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
+import com.amazonaws.services.dynamodbv2.document.utils.NameMap;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
+import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
@@ -103,6 +106,120 @@ public class InvoiceHandler {
         }
     }
 
+    public APIGatewayProxyResponseEvent handleUpdateInvoiceRequest(APIGatewayProxyRequestEvent request, Context context)
+            throws JsonProcessingException {
+        try {
+            String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
+            String userIdFromToken = getUserIdFromToken(token);
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> requestBody = objectMapper.readValue(request.getBody(), Map.class);
+
+            String invoiceId = request.getPathParameters().get("invoiceId");
+            Item existingItem = invoicesTable.getItem("invoiceId", invoiceId);
+
+            if (existingItem == null) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(404)
+                        .withBody("{\"message\":\"Invoice not found\"}");
+            }
+
+            if (!existingItem.getString("userId").equals(userIdFromToken)) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}");
+            }
+
+            // Replace existing item with new data
+            @SuppressWarnings("unchecked")
+            Item updatedItem = new Item()
+                    .withPrimaryKey("invoiceId", invoiceId)
+                    .withString("shopId", requestBody.get("shopId").toString())
+                    .withString("userId", requestBody.get("userId").toString())
+                    .withMap("billedTo", (Map<String, Object>) requestBody.get("billedTo"))
+                    .withMap("invoiceCreator", (Map<String, Object>) requestBody.get("invoiceCreator"))
+                    .withMap("paymentMethod", (Map<String, Object>) requestBody.get("paymentMethod"))
+                    .withMap("business", (Map<String, Object>) requestBody.get("business"))
+                    .withString("invoiceDateTimeStamp", requestBody.get("invoiceDateTimeStamp").toString())
+                    .withString("dueDateTimeStamp", requestBody.get("dueDateTimeStamp").toString())
+                    .withString("paymentStatus", requestBody.get("paymentStatus").toString())
+                    .withString("invoiceTemplateId", requestBody.get("invoiceTemplateId").toString())
+                    .withMap("invoiceTable", (Map<String, Object>) requestBody.get("invoiceTable"))
+                    .withString("subTotal", requestBody.get("subTotal").toString())
+                    .withMap("tax", (Map<String, Object>) requestBody.get("tax"))
+                    .withMap("packageDiscount", (Map<String, Object>) requestBody.get("packageDiscount"))
+                    .withString("total", requestBody.get("total").toString())
+                    .withString("thankYouNote", requestBody.get("thankYouNote").toString())
+                    .withMap("termsNServicesMessage", (Map<String, Object>) requestBody.get("termsNServicesMessage"));
+
+            invoicesTable.putItem(updatedItem);
+
+            // return new
+            // APIGatewayProxyResponseEvent().withStatusCode(200).withBody("{\"message\":\"Invoice
+            // updated\"}");
+
+            // Fetch the updated item from DynamoDB
+            Item fetchedUpdatedItem = invoicesTable.getItem("invoiceId", invoiceId);
+
+            // Prepare the response
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Invoice updated successfully");
+            responseBody.put("updatedInvoice", fetchedUpdatedItem.asMap());
+
+            return new APIGatewayProxyResponseEvent()
+                    .withStatusCode(200)
+                    .withBody(objectMapper.writeValueAsString(responseBody));
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Internal server error");
+            errorResponse.put("error", e.getMessage());
+            return new APIGatewayProxyResponseEvent().withStatusCode(500)
+                    .withBody(objectMapper.writeValueAsString(errorResponse));
+        }
+    }
+
+    public APIGatewayProxyResponseEvent handleMarkAsPaidRequest(APIGatewayProxyRequestEvent request, Context context)
+            throws JsonProcessingException {
+        try {
+            // Extract Authorization token and verify user
+            String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
+            String userIdFromToken = getUserIdFromToken(token);
+
+            // Extract invoice ID from path parameters
+            String invoiceId = request.getPathParameters().get("invoiceId");
+            Item existingItem = invoicesTable.getItem(new GetItemSpec().withPrimaryKey("invoiceId", invoiceId));
+
+            if (existingItem == null) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(404)
+                        .withBody("{\"message\":\"Invoice not found\"}");
+            }
+
+            // Check if user is authorized to update the invoice
+            if (!existingItem.getString("userId").equals(userIdFromToken)) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(403)
+                        .withBody("{\"message\":\"Forbidden\"}");
+            }
+
+            // Update paymentStatus to "Paid"
+            UpdateItemSpec updateSpec = new UpdateItemSpec()
+                    .withPrimaryKey("invoiceId", invoiceId)
+                    .withUpdateExpression("set paymentStatus = :status")
+                    .withValueMap(new ValueMap().withString(":status", "Paid"))
+                    .withReturnValues(ReturnValue.UPDATED_NEW);
+
+            UpdateItemOutcome outcome = invoicesTable.updateItem(updateSpec);
+
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Invoice marked as Paid successfully");
+            responseBody.put("updatedAttributes", outcome.getItem().asMap());
+
+            return new APIGatewayProxyResponseEvent()
+                    .withStatusCode(200)
+                    .withBody(objectMapper.writeValueAsString(responseBody));
+        } catch (Exception e) {
+            errorResponse.put("Error Details", e.getMessage());
+            return new APIGatewayProxyResponseEvent().withStatusCode(500)
+                    .withBody(objectMapper.writeValueAsString(errorResponse));
+        }
+    }
+
     public APIGatewayProxyResponseEvent handleGetInvoiceRequest(APIGatewayProxyRequestEvent request, Context context)
             throws JsonProcessingException {
         try {
@@ -129,46 +246,43 @@ public class InvoiceHandler {
         }
     }
 
-    public APIGatewayProxyResponseEvent handleUpdateInvoiceRequest(APIGatewayProxyRequestEvent request, Context context)
+    public APIGatewayProxyResponseEvent handleCancelInvoiceRequest(APIGatewayProxyRequestEvent request, Context context)
             throws JsonProcessingException {
         try {
             String token = request.getHeaders().get("Authorization").replace("Bearer ", "");
             String userIdFromToken = getUserIdFromToken(token);
 
             String invoiceId = request.getPathParameters().get("invoiceId");
-            @SuppressWarnings("unchecked")
-            Map<String, String> requestBody = objectMapper.readValue(request.getBody(), Map.class);
+            Item existingItem = invoicesTable.getItem(new GetItemSpec().withPrimaryKey("invoiceId", invoiceId));
 
-            Item item = invoicesTable.getItem(new GetItemSpec().withPrimaryKey("invoiceId", invoiceId));
-
-            if (item != null) {
-                if (!item.getString("userId").equals(userIdFromToken)) {
-                    return new APIGatewayProxyResponseEvent().withStatusCode(403)
-                            .withBody("{\"message\":\"Forbidden\"}");
-                }
-
-                invoicesTable.updateItem(new UpdateItemSpec().withPrimaryKey("invoiceId", invoiceId)
-                        .withUpdateExpression("set shopId = :shopId, userId = :userId, customerName = :customerName, " +
-                                "customerAddress = :customerAddress, details = :details, invoiceDate = :invoiceDate, " +
-                                "dueDate = :dueDate, status = :status, amount = :amount, templateId = :templateId")
-                        .withValueMap(new ValueMap()
-                                .withString(":shopId", requestBody.get("shopId"))
-                                .withString(":userId", requestBody.get("userId"))
-                                .withString(":customerName", requestBody.get("customerName"))
-                                .withString(":customerAddress", requestBody.get("customerAddress"))
-                                .withString(":details", requestBody.get("details"))
-                                .withString(":invoiceDate", requestBody.get("invoiceDate"))
-                                .withString(":dueDate", requestBody.get("dueDate"))
-                                .withString(":status", requestBody.get("status"))
-                                .withNumber(":amount", Integer.parseInt(requestBody.get("amount")))
-                                .withNumber(":templateId", Integer.parseInt(requestBody.get("templateId")))));
-
-                return new APIGatewayProxyResponseEvent().withStatusCode(200)
-                        .withBody("{\"message\":\"Invoice updated\"}");
-            } else {
+            if (existingItem == null) {
                 return new APIGatewayProxyResponseEvent().withStatusCode(404)
                         .withBody("{\"message\":\"Invoice not found\"}");
             }
+
+            if (!existingItem.getString("userId").equals(userIdFromToken)) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(403).withBody("{\"message\":\"Forbidden\"}");
+            }
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> requestBody = objectMapper.readValue(request.getBody(), Map.class);
+            String remarks = requestBody.get("remarks") != null ? requestBody.get("remarks").toString() : "";
+
+            // Update the invoice's paymentStatus to "Cancelled" and add remarks
+            UpdateItemSpec updateSpec = new UpdateItemSpec()
+                    .withPrimaryKey("invoiceId", invoiceId)
+                    .withUpdateExpression("set paymentStatus = :status, remarks = :remarks")
+                    .withValueMap(new ValueMap().withString(":status", "Cancelled").withString(":remarks", remarks))
+                    .withReturnValues(ReturnValue.UPDATED_NEW);
+
+            UpdateItemOutcome outcome = invoicesTable.updateItem(updateSpec);
+
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("message", "Invoice cancelled successfully");
+            responseBody.put("updatedAttributes", outcome.getItem().asMap());
+
+            return new APIGatewayProxyResponseEvent().withStatusCode(200)
+                    .withBody(objectMapper.writeValueAsString(responseBody));
         } catch (Exception e) {
             errorResponse.put("Error Details", e);
             return new APIGatewayProxyResponseEvent().withStatusCode(500)
@@ -185,20 +299,30 @@ public class InvoiceHandler {
             String invoiceId = request.getPathParameters().get("invoiceId");
             Item item = invoicesTable.getItem(new GetItemSpec().withPrimaryKey("invoiceId", invoiceId));
 
-            if (item != null) {
-                if (!item.getString("userId").equals(userIdFromToken)) {
-                    return new APIGatewayProxyResponseEvent().withStatusCode(403)
-                            .withBody("{\"message\":\"Forbidden\"}");
-                }
-
-                invoicesTable.deleteItem(new DeleteItemSpec().withPrimaryKey("invoiceId", invoiceId));
-
-                return new APIGatewayProxyResponseEvent().withStatusCode(200)
-                        .withBody("{\"message\":\"Invoice deleted\"}");
-            } else {
+            if (item == null) {
                 return new APIGatewayProxyResponseEvent().withStatusCode(404)
                         .withBody("{\"message\":\"Invoice not found\"}");
             }
+
+            if (!item.getString("userId").equals(userIdFromToken)) {
+                return new APIGatewayProxyResponseEvent().withStatusCode(403)
+                        .withBody("{\"message\":\"Forbidden\"}");
+            }
+
+            // Optional: Add remarks for deletion
+            @SuppressWarnings("unchecked")
+            Map<String, Object> requestBody = objectMapper.readValue(request.getBody(), Map.class);
+            String remarks = requestBody.get("remarks") != null ? requestBody.get("remarks").toString() : "";
+
+            // Delete the item
+            invoicesTable.deleteItem(new DeleteItemSpec().withPrimaryKey("invoiceId", invoiceId));
+
+            Map<String, String> responseBody = new HashMap<>();
+            responseBody.put("message", "Invoice deleted successfully");
+            responseBody.put("remarks", remarks);
+
+            return new APIGatewayProxyResponseEvent().withStatusCode(200)
+                    .withBody(objectMapper.writeValueAsString(responseBody));
         } catch (Exception e) {
             errorResponse.put("Error Details", e);
             return new APIGatewayProxyResponseEvent().withStatusCode(500)
@@ -235,4 +359,5 @@ public class InvoiceHandler {
                     .withBody(objectMapper.writeValueAsString(errorResponse));
         }
     }
+
 }

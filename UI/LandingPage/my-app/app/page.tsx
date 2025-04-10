@@ -109,11 +109,22 @@ export default function Home() {
                   <a href="#feature" className="main-btn btn-hover wow fadeInUp" data-wow-delay=".6s">Get Started</a>
                 </div>
               </div>
-              <div className="col-lg-6">
-                <div className="hero-img wow fadeInUp" data-wow-delay=".5s">
-                  <img src="/assets/img/hero/invoice-app-hero.png" alt="Chalaan Invoice App" className="img-1" />
+
+              <div className="card-game-container">
+                <div className="card card-1">
+                  <img src="/assets/img/hero/ss1.png" alt="Card 1" />
+                </div>
+                <div className="card card-2">
+                  <img src="/assets/img/hero/ss2.png" alt="Card 2" />
+                </div>
+                <div className="card card-3">
+                  <img src="/assets/img/hero/ss3.png" alt="Card 3" />
                 </div>
               </div>
+
+
+
+
             </div>
           </div>
         </section>
@@ -344,7 +355,17 @@ export default function Home() {
         </footer>
 
         {/* Scroll to Top */}
-        <a href="#" onClick={(e) => e.preventDefault()} className="scroll-top btn-hover">
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }}
+          className="scroll-top btn-hover"
+        >
           <i className="lni lni-chevron-up"></i>
         </a>
 

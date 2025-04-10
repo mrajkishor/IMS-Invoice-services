@@ -7,7 +7,7 @@ import { RootStackParamList } from '../navigationTypes';
 
 const TemplateSelector: React.FC = () => {
     const [templateMenuVisible, setTemplateMenuVisible] = useState(false);
-    const [selectedTemplate, setSelectedTemplate] = useState('Template 1');
+    const [selectedTemplate, setSelectedTemplate] = useState('Modern Template');
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const handleTemplateSelect = (template: string) => {
@@ -29,14 +29,14 @@ const TemplateSelector: React.FC = () => {
                         anchor={
                             <Button mode="outlined" onPress={() => setTemplateMenuVisible(true)}>
                                 {/* {selectedTemplate} */}
-                                Select
+                                Select Template
                             </Button>
                         }>
-                        {[...Array(14)].map((_, index) => (
+                        {[...Array(2)].map((_, index) => (
                             <Menu.Item
                                 key={index}
-                                onPress={() => handleTemplateSelect(`Template ${index + 1}`)}
-                                title={`Template ${index + 1}`}
+                                onPress={() => handleTemplateSelect(`${index === 0 ? 'Modern' : 'Classical'} Template`)}
+                                title={`${index === 0 ? 'Modern (Template 1)' : 'Classical (Template 2)'}`}
                             />
                         ))}
                     </Menu>
@@ -48,7 +48,7 @@ const TemplateSelector: React.FC = () => {
                 </View>
 
             </View>
-            <Text style={styles.preview} variant="bodyMedium">{`Template Selected: ${selectedTemplate}`}</Text>
+            <Text style={styles.preview} variant="bodyMedium">{`${selectedTemplate} is selected.`}</Text>
 
         </>
     );

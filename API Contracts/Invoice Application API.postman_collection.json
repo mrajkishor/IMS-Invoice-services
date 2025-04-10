@@ -280,6 +280,16 @@
 				{
 					"name": "Update Shop",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3YTI1NGQzMi05ODYzLTQzYzItOTgwOS1kNWM2Mjg5ODVjZTEiLCJleHAiOjE3MjcwMjA0OTl9.AwLa6KYX30R141n_geZKIsoslvwFV7A4u2k6Ov68DZA",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
 							{
@@ -293,12 +303,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"shopName\": \"Updated Shop\", \"address\": \"456 Main St\"}"
+							"raw": "{\r\n    \"ownerId\": \"7a254d32-9863-43c2-9809-d5c628985ce1\",\r\n    \"address\": \"123 Red St\",\r\n    \"email\": \"mservice@gmail.com\",\r\n    \"mobile\": \"+91-2834723893\",\r\n    \"logo\": \"https://imsinvoicelogos.s3.ap-south-1.amazonaws.com/uploads/1000120063.jpg\",\r\n    \"slogan\": \"Satya meva Jayate\",\r\n    \"shopName\": \"xyz\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/shops/:shopId",
+							"raw": "{{base_url}}/shops/:shopId",
 							"host": [
-								"{{baseUrl}}"
+								"{{base_url}}"
 							],
 							"path": [
 								"shops",
@@ -306,7 +316,8 @@
 							],
 							"variable": [
 								{
-									"key": "shopId"
+									"key": "shopId",
+									"value": "3a4b3141-1671-47f3-a53e-78d713d534e4"
 								}
 							]
 						}
@@ -344,8 +355,35 @@
 				{
 					"name": "Get all Shops",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNTAwYmUzZC1jMjQwLTQ1OTMtOTEwOC01MzVhZWQ5ZTI1YzciLCJleHAiOjE3MzIwMDExMDB9.-bRZFGl3KFiqQ33DRcxTRVrtDG3l7ip_B6VU2Rg2dzI",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/shops/user/:userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"shops",
+								"user",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "2500be3d-c240-4593-9108-535aed9e25c7"
+								}
+							]
+						}
 					},
 					"response": []
 				}
@@ -362,7 +400,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhODE0NGI1OS0yNWYyLTRjZGMtOGI3OC1iN2E3ODg2NGFjZDYiLCJleHAiOjE3MjYyOTQ0MTJ9.1i8vKCC-bvJjZkEUCPyvfK8Or--k1dyXTzcM5ckdTvU",
+									"value": "0a79b40a-5c82-400c-92ba-cbc2db7c6ece",
 									"type": "string"
 								}
 							]
@@ -380,7 +418,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"userId\": \"a8144b59-25f2-4cdc-8b78-b7a78864acd6\",\r\n  \"shopId\": \"shop-67890\",\r\n  \"billedTo\": {\r\n    \"customer\": {\r\n      \"name\": \"Abhishek Prasad\",\r\n      \"phone\": \"+91-7893495048\",\r\n      \"email\": \"abhishek.prasad@gmail.com\",\r\n      \"address\": \"Mira road, Navi Mumbai, IN\"\r\n    }\r\n  },\r\n  \"invoiceCreator\": {\r\n    \"name\": \"Braja Kishor Maharana\",\r\n    \"signaturePhoto\": \"https://adsflakjdsf.com/asdlfa.jpg\",\r\n    \"signatureInWords\": \"Braja Kishor Maharana\",\r\n    \"designation\": \"Administrator\"\r\n  },\r\n  \"paymentMethod\": {\r\n    \"isCash\": true,\r\n    \"isUPI\": false,\r\n    \"isBank\": false,\r\n    \"UpisMaxLimit\": 3,\r\n    \"Upis\": [\"7683922389@ybl\", \"88998383722@okAxis\", \"99902302383@ybl\"],\r\n    \"bank\": {\r\n      \"accountHolderName\": \"Braja Kishor Maharana\",\r\n      \"accountNumber\": \"232379823462\"\r\n    }\r\n  },\r\n  \"business\": {\r\n    \"address\": \"RC Road, Bhanjanagar, Ganajam, IN\",\r\n    \"email\": \"abhishek.prasad@gmail.com\",\r\n    \"mobile\": \"+91-7873228311\",\r\n    \"logo\": \"https://asdfasdfds/asdfas.jpg\",\r\n    \"name\": \"Maharana Work Shop\",\r\n    \"slogan\": \"shaana service\"\r\n  },\r\n  \"invoiceDateTimeStamp\": \"2024-08-10 14:35\",\r\n  \"dueDateTimeStamp\": \"2024-08-30 14:35\",\r\n  \"paymentStatus\": \"Unpaid\",\r\n  \"invoiceTemplateId\": \"4\",\r\n  \"invoiceTable\": {\r\n    \"maxColLimit\": 6,\r\n    \"columns\": [\"Description\", \"unitPrice\", \"QTY\", \"Total\"],\r\n    \"value\": [\r\n      [\"kurkure\", \"5\", \"2\", \"10\"],\r\n      [\"rice\", \"30\", \"1\", \"30\"]\r\n    ],\r\n    \"totalableIndex\": 3\r\n  },\r\n  \"subTotal\": \"40\",\r\n  \"tax\": {\r\n    \"isTaxable\": true,\r\n    \"amount\": 1,\r\n    \"percentage\": \"1%\"\r\n  },\r\n  \"packageDiscount\": {\r\n    \"amount\": 3,\r\n    \"percentage\": \"2%\"\r\n  },\r\n  \"total\": \"38\",\r\n  \"thankYouNote\": \"Thank you for choosing us!\",\r\n  \"termsNServicesMessage\": {\r\n    \"toShow\": true,\r\n    \"showDefaultMsg\": false,\r\n    \"defaultMessage\": \"Please send payment within {##}time{##} days of receiving this invoice\",\r\n    \"customMessage\": \"Please send payment within 30 days of receiving this invoice. There will be 10% interest charge per month on late invoice\"\r\n  }\r\n}\r\n"
+							"raw": "{\r\n    \"shopId\": \"f6da847b-d3f5-4057-a8e0-d8f7bae712b8\",\r\n    \"userId\": \"2500be3d-c240-4593-9108-535aed9e25c7\",\r\n     \"billedTo\": {\r\n        \"customer\": {\r\n            \"name\": \"Updated Customer Name\",\r\n            \"phone\": \"+1-111-222-3333\",\r\n            \"email\": \"updated.email@example.com\",\r\n            \"address\": \"456 Oak Avenue, Updated City\"\r\n        }\r\n    },\r\n    \"invoiceCreator\": {\r\n        \"name\": \"Updated Creator Name\",\r\n        \"designation\": \"Manager\",\r\n        \"signatureInWords\": \"Updated Creator\",\r\n        \"signaturePhoto\": \"https://example.com/updated-signature.jpg\"\r\n    },\r\n    \"paymentMethod\": {\r\n        \"isCash\": false,\r\n        \"isBank\": true,\r\n        \"isUPI\": false,\r\n        \"UpisMaxLimit\": 2,\r\n        \"Upis\": [\r\n            \"updated@upi\"\r\n        ],\r\n        \"bank\": {\r\n            \"accountHolderName\": \"Updated Account Holder\",\r\n            \"accountNumber\": \"9876543210\"\r\n        }\r\n    },\r\n    \"business\": {\r\n        \"name\": \"Updated Business Name\",\r\n        \"address\": \"789 Birch Road, Updated City\",\r\n        \"email\": \"updated.business@example.com\",\r\n        \"mobile\": \"+1-444-555-6666\",\r\n        \"logo\": \"https://example.com/updated-logo.jpg\",\r\n        \"slogan\": \"Updated Excellence in Service\"\r\n    },\r\n    \"invoiceDateTimeStamp\": \"2024-12-01\",\r\n    \"dueDateTimeStamp\": \"2024-12-15\",\r\n    \"paymentStatus\": \"Completed\",\r\n    \"invoiceTemplateId\": \"2\",\r\n    \"invoiceTable\": {\r\n        \"columns\": [\r\n            \"Item Name\",\r\n            \"Price per Unit\",\r\n            \"Quantity\",\r\n            \"Line Total\"\r\n        ],\r\n        \"maxColLimit\": 5,\r\n        \"value\": [\r\n            [\r\n                \"Updated Item A\",\r\n                \"75\",\r\n                \"3\",\r\n                \"225\"\r\n            ],\r\n            [\r\n                \"Updated Item B\",\r\n                \"100\",\r\n                \"1\",\r\n                \"100\"\r\n            ]\r\n        ],\r\n        \"totalableIndex\": 3\r\n    },\r\n    \"subTotal\": \"325\",\r\n    \"tax\": {\r\n        \"isTaxable\": true,\r\n        \"percentage\": \"15%\",\r\n        \"amount\": \"48.75\"\r\n    },\r\n    \"packageDiscount\": {\r\n        \"amount\": \"20\",\r\n        \"percentage\": \"5%\"\r\n    },\r\n    \"total\": \"353.75\",\r\n    \"thankYouNote\": \"Thank you for your updated business!\",\r\n    \"termsNServicesMessage\": {\r\n        \"toShow\": true,\r\n        \"showDefaultMsg\": true,\r\n        \"defaultMessage\": \"Please pay within the updated timeframe.\",\r\n        \"customMessage\": \"Updated: Payment is due within 15 days.\"\r\n    }\r\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/invoices",
@@ -389,6 +427,54 @@
 							],
 							"path": [
 								"invoices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Invoice as Paid",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "0a79b40a-5c82-400c-92ba-cbc2db7c6ece",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"remarks\": \"Payment received\" }"
+						},
+						"url": {
+							"raw": "{{base_url}}/invoices/:invoiceId/markPaid",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"invoices",
+								":invoiceId",
+								"markPaid"
+							],
+							"variable": [
+								{
+									"key": "invoiceId",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -449,6 +535,16 @@
 				{
 					"name": "Update Invoice",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNTAwYmUzZC1jMjQwLTQ1OTMtOTEwOC01MzVhZWQ5ZTI1YzciLCJleHAiOjE3MzIwMTI1Njh9.dnJ_MFb4Thn9rjEUVvJF9h8upKubMyZoU5jWFeD9esw",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
 							{
@@ -462,12 +558,12 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"items\": [{\"itemId\": \"item1\", \"quantity\": 3, \"price\": 10.0}], \"totalAmount\": 30.0, \"date\": \"2024-05-30\"}"
+							"raw": "{\r\n    \"shopId\": \"f6da847b-d3f5-4057-a8e0-d8f7bae712b8\",\r\n    \"userId\": \"2500be3d-c240-4593-9108-535aed9e25c7\",\r\n    \"billedTo\": {\r\n        \"customer\": {\r\n            \"name\": \"John Doe 2\",\r\n            \"phone\": \"+1-123-456-7890\",\r\n            \"email\": \"john.doe@example.com\",\r\n            \"address\": \"123 Elm Street, Springfield\"\r\n        }\r\n    },\r\n    \"invoiceCreator\": {\r\n        \"name\": \"Jane Doe\",\r\n        \"designation\": \"Owner\",\r\n        \"signatureInWords\": \"Jane Doe\",\r\n        \"signaturePhoto\": \"\"\r\n    },\r\n    \"paymentMethod\": {\r\n        \"isCash\": true,\r\n        \"isBank\": false,\r\n        \"isUPI\": true,\r\n        \"UpisMaxLimit\": 3,\r\n        \"Upis\": [\r\n            \"john@upi\"\r\n        ],\r\n        \"bank\": {\r\n            \"accountHolderName\": \"\",\r\n            \"accountNumber\": \"\"\r\n        }\r\n    },\r\n    \"business\": {\r\n        \"name\": \"XYZ Enterprises\",\r\n        \"address\": \"456 Maple Drive, Springfield\",\r\n        \"email\": \"contact@xyz.com\",\r\n        \"mobile\": \"+1-987-654-3210\",\r\n        \"logo\": \"https://example.com/logo.jpg\",\r\n        \"slogan\": \"Excellence in Service\"\r\n    },\r\n    \"invoiceDateTimeStamp\": \"2024-11-17\",\r\n    \"dueDateTimeStamp\": \"2024-11-30\",\r\n    \"paymentStatus\": \"Pending\",\r\n    \"invoiceTemplateId\": \"1\",\r\n    \"invoiceTable\": {\r\n        \"columns\": [\r\n            \"Description\",\r\n            \"Unit Price\",\r\n            \"Quantity\",\r\n            \"Total\"\r\n        ],\r\n        \"maxColLimit\": 6,\r\n        \"value\": [\r\n            [\r\n                \"Item A\",\r\n                \"50\",\r\n                \"2\",\r\n                \"100\"\r\n            ]\r\n        ],\r\n        \"totalableIndex\": 3\r\n    },\r\n    \"subTotal\": \"100\",\r\n    \"tax\": {\r\n        \"isTaxable\": true,\r\n        \"percentage\": \"10%\",\r\n        \"amount\": \"10\"\r\n    },\r\n    \"packageDiscount\": {\r\n        \"amount\": \"5\",\r\n        \"percentage\": \"5%\"\r\n    },\r\n    \"total\": \"105\",\r\n    \"thankYouNote\": \"Thank you for your business!\",\r\n    \"termsNServicesMessage\": {\r\n        \"toShow\": true,\r\n        \"showDefaultMsg\": false,\r\n        \"defaultMessage\": \"Please make payment within {##} days.\",\r\n        \"customMessage\": \"Payment due within 30 days. Late fees may apply.\"\r\n    }\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/invoices/:invoiceId",
+							"raw": "{{base_url}}/invoices/:invoiceId",
 							"host": [
-								"{{baseUrl}}"
+								"{{base_url}}"
 							],
 							"path": [
 								"invoices",
@@ -475,7 +571,8 @@
 							],
 							"variable": [
 								{
-									"key": "invoiceId"
+									"key": "invoiceId",
+									"value": "ec40ef03-c8c2-4185-9ac2-990940a57856"
 								}
 							]
 						}
@@ -504,6 +601,45 @@
 							"variable": [
 								{
 									"key": "invoiceId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Invoice",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"remarks\": \"Customer canceled the order.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/invoices/:invoiceId/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"invoices",
+								":invoiceId",
+								"cancel"
+							],
+							"variable": [
+								{
+									"key": "invoiceId",
+									"value": ""
 								}
 							]
 						}

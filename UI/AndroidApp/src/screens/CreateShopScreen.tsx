@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Alert, Image } from 'react-native';
-import { TextInput, Button, Appbar, ActivityIndicator } from 'react-native-paper';
+import { TextInput, Button, Appbar, ActivityIndicator, Snackbar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/reducers';
 import { createShopRequest } from '../store/actions/shopActions';
@@ -8,6 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import { MainScreenNavigationProp } from 'navigationTypes';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { EventRegister } from 'react-native-event-listeners';
+
 import AWS from 'aws-sdk';
 
 // Configure AWS S3
@@ -30,12 +32,70 @@ const CreateShopScreen: React.FC = () => {
     const [logoUrl, setLogoUrl] = useState('');
     const [slogan, setSlogan] = useState('');
     const [isUploading, setIsUploading] = useState(false);
+    const [snackbarVisible, setSnackbarVisible] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const dispatch = useDispatch();
     const { user } = useSelector((state: RootState) => state.auth);
-    const navigation = useNavigation<MainScreenNavigationProp>();
+    const { error, loading } = useSelector((state: RootState) => state.shops);
 
+    const navigation = useNavigation<MainScreenNavigationProp>();
+    useEffect(() => {
+        if (error) {
+            setSnackbarMessage(error); // Set the error message in Snackbar
+            setSnackbarVisible(true); // Show the Snackbar
+        }
+    }, [error]);
     const handleCreateShop = () => {
+
+        // Email regex pattern
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Mobile number regex pattern (Indian example, modify if necessary)
+        const mobileRegex = /^[0-9]{10}$/;
+
+
+        // Validate that all fields are filled
+        if (!shopName || !shopName.trim()) {
+            showSnackbar('Please enter the Business Name.');
+            return;
+        }
+
+        if (!address || !address.trim()) {
+            showSnackbar('Please enter the Business Address.');
+            return;
+        }
+
+        // if (!email || !email.trim()) {
+        //     showSnackbar('Please enter a valid Email.');
+        //     return;
+        // }
+
+        // if (!emailRegex.test(email)) {
+        //     showSnackbar('Please enter a valid Email.');
+        //     return;
+        // }
+
+        if (!mobile || !mobile.trim()) {
+            showSnackbar('Please enter the Mobile Number.');
+            return;
+        }
+
+        if (!mobileRegex.test(mobile)) {
+            showSnackbar('Please enter a valid 10-digit Mobile Number.');
+            return;
+        }
+
+        // if (!slogan || !slogan.trim()) {
+        //     showSnackbar('Please enter a Slogan.');
+        //     return;
+        // }
+
+        // if (!logoUrl || !logoUrl.trim()) {
+        //     showSnackbar('Please upload a Business Logo.');
+        //     return;
+        // }
+
+        // Proceed only if all fields are valid
         if (user?.userId) {
             const payload = {
                 shopName,
@@ -46,9 +106,22 @@ const CreateShopScreen: React.FC = () => {
                 logo: logoUrl,
                 slogan,
             };
+
             dispatch(createShopRequest(payload));
-            navigation.navigate('Main');
+
+            // Notify shop list screen to refresh
+            EventRegister.emit('refreshShopList');
+            // navigation.navigate('Main', { refresh: true });
+            // Show success toast
+            showSnackbar('Business created successfully!');
         }
+    };
+
+
+
+    const showSnackbar = (message: string) => {
+        setSnackbarMessage(message);
+        setSnackbarVisible(true);
     };
 
     const handleLogoUpload = async () => {
@@ -109,7 +182,7 @@ const CreateShopScreen: React.FC = () => {
             </Appbar.Header>
             <View style={styles.container}>
                 <TextInput
-                    label="Business Name"
+                    label="Business Name*"
                     mode={"outlined"}
                     value={shopName}
                     onChangeText={setShopName}
@@ -117,7 +190,7 @@ const CreateShopScreen: React.FC = () => {
                 />
                 <TextInput
                     mode={"outlined"}
-                    label="Business Address"
+                    label="Business Address*"
                     value={address}
                     onChangeText={setAddress}
                     style={styles.input}
@@ -132,7 +205,7 @@ const CreateShopScreen: React.FC = () => {
                 />
                 <TextInput
                     mode={"outlined"}
-                    label="Mobile"
+                    label="Mobile*"
                     value={mobile}
                     onChangeText={setMobile}
                     style={styles.input}
@@ -168,6 +241,19 @@ const CreateShopScreen: React.FC = () => {
                     Create new Business
                 </Button>
             </View>
+            <Snackbar
+                visible={snackbarVisible}
+                onDismiss={() => setSnackbarVisible(false)}
+                duration={3000}
+                action={{
+                    label: 'OK',
+                    onPress: () => {
+                        setSnackbarVisible(false);
+                    },
+                }}
+            >
+                {snackbarMessage}
+            </Snackbar>
         </>
     );
 };

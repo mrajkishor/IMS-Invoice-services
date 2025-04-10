@@ -1,0 +1,67 @@
+{
+  "invoiceId": "0d286992-bb78-46c1-8f00-2b3553dbb78b",
+  "billedTo": {
+    "customer": {
+      "name": "Abhishek Prasad",
+      "phone": "+91-7893495048",
+      "email": "abhishek.prasad@gmail.com",
+      "address": "Mira road, Navi Mumbai, IN"
+    }
+  },
+  "invoiceCreator's": {
+    "name": "Braja Kishor Maharana",
+    "signaturePhoto": "https://adsflakjdsf.com/asdlfa.jpg",
+    "signatureInWords": "Braja Kishor Maharana",
+    "designation": "Administrator"
+  },
+  "paymentMethod": {
+    "isCash": true,
+    "isUPI": false,
+    "isBank": false,
+    "UpisMaxLimit": 3,
+    "Upis": ["7683922389@ybl", "88998383722@okAxis", "99902302383@ybl"],
+    "bank": {
+      "accountHolderName": "Braja Kishor Maharana",
+      "accountNumber": "232379823462"
+    }
+  },
+  "business": {
+    "address": "RC Road, Bhanjanagar, Ganajam, IN",
+    "email": "abhishek.prasad@gmail.com",
+    "mobile": "+91-7873228311",
+    "logo": "https://asdfasdfds/asdfas.jpg",
+    "name": "Maharana Work Shop",
+    "slogan": "shaana service"
+  },
+  "invoiceDateTimeStamp": "2024-08-10 14:35",
+  "dueDateTimeStamp": "2024-08-30 14:35",
+  "paymentStatus": "Unpaid",
+  "invoiceTemplateId": "4",
+  "invoiceTable": {
+    "maxColLimit": 6,
+    "columns": ["Description", "unitPrice", "QTY", "Total"],
+    "value": [
+      ["kurkure", "5", "2", "10"],
+      ["rice", "30", "1", "20"]
+    ],
+    "totalableIndex": 3
+  },
+  "subTotal": "30",
+  "tax": {
+    "isTaxable": true,
+    "amount": 1,
+    "percentage": "1%"
+  },
+  "packageDiscount": {
+    "amount": 3,
+    "percentage": "2%"
+  },
+  "total": "26",
+  "thankYouNote": "Thank you for choosing us!",
+  "termsNServicesMessage": {
+    "toShow": true,
+    "showDefaultMsg": false,
+    "defaultMessage": "Please send payment within {##}time{##} days of receiving this invoice",
+    "customMessage": "Please send payment within 30 days of receiving this invoice. There will be 10% interest charge per month on late invoice"
+  }
+}

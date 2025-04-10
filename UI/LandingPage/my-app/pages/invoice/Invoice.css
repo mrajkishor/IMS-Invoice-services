@@ -1,17 +1,17 @@
 /* General Styles */
 .invoice-main {
     min-height: 100vh;
-    padding: 1.5rem;
+    /* padding: 1.5rem; */
     background-color: #f7fafc;
 }
 
 .invoice-container {
     max-width: 64rem;
     margin: 0 auto;
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* background-color: white; */
+    padding: 1rem;
+    /* border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
 }
 
 /* Invoice Template Styles */
@@ -664,3 +664,320 @@
 }
 
 
+/**New Invoice Schema Default Template: START**/
+
+/* Base Styles */
+
+
+.default-template-wrapper {
+    border: solid thin #ddd;
+    border-radius: 10px;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+
+.invoice-header-default-details {
+    width: 100%;
+}
+
+.invoice-header-default {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1.5rem;
+}
+
+.default-shop-logo {
+    display: flex;
+    justify-content: center; /* Horizontally center the logo */
+    align-items: center; /* Vertically center the logo */
+    text-align: center; /* Ensure any text inside is also centered */
+    margin: 20px 0; /* Optional: add some vertical margin */
+}
+
+.default-shop-logo img {
+    max-width: 25vw;
+    height: auto;
+}
+
+.default-invoice-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.default-invoice-details p {
+    margin: 0.5rem 0;
+}
+
+.invoice-left, .invoice-right {
+    width: 48%;
+}
+
+/* Invoice Table */
+.invoice-details-table {
+    width: 100%;
+    margin-top: 1.5rem;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.invoice-table th, .invoice-table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.invoice-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.invoice-table tfoot {
+    font-weight: bold;
+}
+
+.invoice-table .footer-label {
+    text-align: right;
+}
+
+.invoice-right {
+    text-align: right;
+}
+
+.qr-code-classic {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Horizontally center the QR code */
+    justify-content: center; /* Vertically center the QR code */
+    text-align: center; /* Center the heading text */
+    margin-top: 20px; /* Optional: add some margin at the top */
+}
+
+.qr-code-classic h3 {
+    margin-bottom: 10px;
+}
+
+/* Payment and Contact Details */
+.default-payment-details, .default-owner-details {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+}
+
+
+.default-payment-details h3, .default-owner-details h3 {
+    font-size: 1.25rem;
+    color: #555;
+}
+
+/* Footer */
+.invoice-footer-classic {
+    margin-top: 1.5rem;
+    text-align: center;
+    padding: 1rem;
+    background-color: #f0f0f0;
+    font-size: 0.875rem;
+}
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+    .default-invoice-details {
+        flex-direction: column;
+    }
+
+    .invoice-left, .invoice-right {
+        width: 100%;
+        margin-bottom: 1rem;
+        text-align: left;
+    }
+
+    .invoice-header-default {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .invoice-header-default img {
+        margin-bottom: 1rem;
+    }
+
+    .default-owner-details img {
+        width: 100%;
+    }
+    
+}
+
+/* Tablet Styles */
+@media (min-width: 601px) and (max-width: 992px) {
+    .invoice-left, .invoice-right {
+        width: 48%;
+    }
+
+    .invoice-header-default {
+        flex-direction: row;
+    }
+
+    .invoice-table td, .invoice-table th {
+        padding: 0.5rem;
+    }
+}
+
+/* Desktop Styles */
+@media (min-width: 993px) {
+    .default-invoice-details {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .invoice-left, .invoice-right {
+        width: 48%;
+    }
+
+    .invoice-table td, .invoice-table th {
+        padding: 1rem;
+    }
+}
+/**New Invoice Schema Default Template: END**/
+
+
+
+
+/**POS machine style : START**/
+
+/* POS Machine Style */
+.template-pos {
+    font-family: 'Courier New', monospace; /* Classic POS receipt font */
+    color: #000;
+    background-color: #fff;
+    width: 320px; /* Typical POS receipt width */
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px dashed #000;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+    .template-pos {
+        width: auto; 
+    }
+}
+
+.pos-header,
+.pos-footer {
+    border-bottom: 1px dashed #000;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.pos-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.pos-shop-info,
+.pos-customer-info,
+.pos-details,
+.pos-summary {
+    font-size: 14px;
+    text-align: left;
+}
+
+.pos-customer-info,
+.pos-details {
+    margin-bottom: 10px;
+}
+
+.pos-details p,
+.pos-summary p {
+    margin: 5px 0;
+}
+
+.pos-footer p {
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+/* Table for Itemized List */
+.pos-table {
+    width: 100%;
+    font-size: 14px;
+    border-top: 1px dashed #000;
+    margin-top: 10px;
+    padding-top: 10px;
+    text-align: left;
+}
+
+.pos-table th,
+.pos-table td {
+    padding: 5px 0;
+    text-align: left;
+}
+
+.pos-table th {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.pos-total {
+    font-weight: bold;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #000;
+}
+
+/* QR Code Section */
+.pos-qrcode {
+    margin: 10px 0;
+}
+
+.pos-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/**POS machine style : END**/
+
+
+
+/**powered by **/
+.invoice-powered-by {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    color: #718096; /* Muted text color */
+}
+
+.invoice-powered-by a {
+    color: #2b6cb0; /* Link color */
+    text-decoration: none;
+}
+
+.invoice-powered-by a:hover {
+    text-decoration: underline;
+}

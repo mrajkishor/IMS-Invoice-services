@@ -65,6 +65,7 @@ function* handleCreateShop(action: any): Generator<any, void, any> {
         const response = yield call(api.post, `/shops`, action.payload);
         yield put(createShopSuccess(response.data));
     } catch (error) {
+
         if (error instanceof Error) {
             yield put(createShopFailure(error.message));
         } else {

@@ -22,3 +22,16 @@ export const register = async (email: string, username: string, password: string
     const response = await api.post(AUTH_REGISTER, { email, username, password });
     return response.data;
 };
+
+export const refreshTokenService = async (refreshToken: string) => {
+    try {
+        const response = await api.post(AUTH_REFRESH, { refreshToken });
+        if (!response.data.refreshToken) {
+            throw new Error('API did not return a refreshToken');
+        }
+        return response.data; // Assuming the response contains the new accessToken and refreshToken
+    } catch (error) {
+        console.error('Error refreshing token:', error);
+        throw error; // Re-throw the error to handle it in the calling code
+    }
+};

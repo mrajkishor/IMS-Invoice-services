@@ -8,6 +8,9 @@ export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 export const REGISTER_REQUEST = 'REGISTER_REQUEST';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAILURE = 'REGISTER_FAILURE';
+export const VALIDATE_TOKEN_REQUEST = 'VALIDATE_TOKEN_REQUEST';
+export const VALIDATE_TOKEN_SUCCESS = 'VALIDATE_TOKEN_SUCCESS';
+export const VALIDATE_TOKEN_FAILURE = 'VALIDATE_TOKEN_FAILURE';
 
 // Action Creators
 export const loginRequest = (identifier: string, password: string) => ({
@@ -52,6 +55,22 @@ export const registerSuccess = (user: any) => ({
 
 export const registerFailure = (error: string) => ({
     type: REGISTER_FAILURE,
+    payload: error,
+});
+
+
+export const validateTokenRequest = (token: string) => ({
+    type: VALIDATE_TOKEN_REQUEST,
+    payload: { token },
+});
+
+export const validateTokenSuccess = (user: any) => ({
+    type: VALIDATE_TOKEN_SUCCESS,
+    payload: user,
+});
+
+export const validateTokenFailure = (error: string) => ({
+    type: VALIDATE_TOKEN_FAILURE,
     payload: error,
 });
 

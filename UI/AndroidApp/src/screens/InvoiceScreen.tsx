@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, FlatList, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, FlatList, StyleSheet, TouchableWithoutFeedback, RefreshControl } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, ActivityIndicator, List, Appbar } from 'react-native-paper';
 import { fetchInvoicesRequest } from '../store/actions/invoiceActions';
@@ -12,6 +12,21 @@ const InvoiceScreen: React.FC<{ route: any }> = ({ route }) => {
     const { shopId } = route.params;
     const dispatch = useDispatch();
     const { loading, invoices, error } = useSelector((state: RootState) => state.invoices);
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+
+        try {
+            // Fetch updated data
+            await dispatch(fetchInvoicesRequest(shopId));
+        } catch (error) {
+            console.error('Failed to refresh invoices:', error);
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
 
     useEffect(() => {
         dispatch(fetchInvoicesRequest(shopId));
@@ -51,6 +66,9 @@ const InvoiceScreen: React.FC<{ route: any }> = ({ route }) => {
                     data={invoices}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id.toString()}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 />
                 <Button style={styles.fab} icon="plus" onPress={() => console.log('Create Invoice')}>
                     Create Invoice
@@ -65,6 +83,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+
     },
     card: {
         marginBottom: 10,

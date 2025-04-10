@@ -261,8 +261,14 @@ public class UserHandler {
             // Update the item in DynamoDB
             usersTable.updateItem(updateItemSpec);
 
-            return new APIGatewayProxyResponseEvent().withStatusCode(200)
-                    .withBody("{\"message\":\"User updated\"}");
+            // Fetch the updated item from DynamoDB
+            Item updatedUser = usersTable.getItem(new GetItemSpec().withPrimaryKey("userId", userId));
+            // Convert the updated item to JSON
+            String responseBody = updatedUser.toJSON();
+
+            return new APIGatewayProxyResponseEvent().withStatusCode(200).withBody(responseBody);
+            // return new APIGatewayProxyResponseEvent().withStatusCode(200)
+            // .withBody("{\"message\":\"User updated\"}");
         } catch (Exception e) {
             return new APIGatewayProxyResponseEvent().withStatusCode(500)
                     .withBody("{\"message\":\"Internal Server Error\"}");

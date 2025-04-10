@@ -1803,7 +1803,84 @@ p {
 
 
 
+.card-game-container {
+  position: relative;
+  display: flex;
+  justify-content: flex-end; /* Align cards to the right */
+  align-items: center;
+  height: 100%; /* Full height */
+  margin: 20px;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
 
+.card {
+  position: relative;
+  width: 30%; /* Adjusted width for better responsiveness */
+  max-width: 200px; /* Ensure consistent size on smaller screens */
+  height: auto; /* Maintain aspect ratio */
+  margin-right: -30px; /* Reduced overlap for smaller screens */
+  border-radius: 10px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  transform: scale(0.9);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #fff;
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  height: auto; /* Maintain image aspect ratio */
+  object-fit: cover; /* Ensures the image scales correctly */
+}
+
+.card-1 {
+  transform: rotate(-10deg) translateY(-10px) scale(0.9);
+  z-index: 1;
+}
+
+.card-2 {
+  transform: rotate(0deg) translateY(0) scale(1);
+  z-index: 2;
+}
+
+.card-3 {
+  transform: rotate(10deg) translateY(10px) scale(0.9);
+  z-index: 1;
+}
+
+.card:hover {
+  transform: scale(1.1) !important;
+  z-index: 3;
+  box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card-game-container {
+    justify-content: center; /* Center-align cards on mobile */
+    flex-direction: column; /* Stack cards vertically */
+    margin: 0;
+  }
+
+  .card {
+    width: 80%; /* Increase width for better visibility */
+    max-width: 300px; /* Ensure consistent size */
+    margin: 0 auto 20px; /* Center cards with spacing */
+    transform: rotate(0deg) scale(1); /* Remove rotation for better stacking */
+    z-index: auto; /* Remove z-index layering */
+  }
+
+  .card-1,
+  .card-2,
+  .card-3 {
+    transform: none; /* Remove specific transforms */
+  }
+
+  .card:hover {
+    transform: scale(1.05); /* Slight hover effect */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+  }
+}
 
 
 

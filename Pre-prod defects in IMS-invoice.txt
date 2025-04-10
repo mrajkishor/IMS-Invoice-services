@@ -1,0 +1,13 @@
+Pre-prod defects in IMS-invoice 
+
+(Android app)
+- issue with login session retention (fixed by sending a refresh token. missing in the lambda before. )
+- Profile update screen : post update the screen is not auto refreshing with updated value. 
+- Create business : Post creation of business the page is redirected to back. Instead this should stay there itself and a toast should appear saying the business is added. show a loader
+until the business is updated. till then don't let the user to go back. Once updation ack is received let the user navigate back to the main page. (use webhook if possible)
+- Create invoice : Do the same in Create business. (its working fine already.)
+- Testing issues in "state changes of invoice" => in progress
+
+
+Pre-prod test and close : 30th and 31st Dec 2024
+Prod roll out date : 1st Jan 2025
